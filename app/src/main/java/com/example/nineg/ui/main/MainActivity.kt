@@ -1,9 +1,10 @@
-package com.example.nineg
+package com.example.nineg.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import com.example.nineg.R
 import com.example.nineg.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 

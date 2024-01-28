@@ -1,4 +1,4 @@
-package com.example.nineg
+package com.example.nineg.base
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

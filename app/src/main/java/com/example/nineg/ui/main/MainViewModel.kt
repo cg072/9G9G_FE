@@ -1,4 +1,4 @@
-package com.example.nineg
+package com.example.nineg.ui.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
