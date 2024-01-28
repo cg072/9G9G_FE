@@ -1,23 +1,22 @@
 package com.example.nineg.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.databinding.DataBindingUtil
 import com.example.nineg.R
+import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    private val binding: ActivityMainBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_main)
-    }
     private val viewModel: MainViewModel by viewModels()
+
+    override val layoutResourceId: Int
+        get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.lifecycleOwner = this
+
     }
 }
