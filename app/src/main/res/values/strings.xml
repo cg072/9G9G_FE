@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NineG</string>
+    <string name="mission_title">미션</string>
+    <string name="calendar_title">달력</string>
 </resources>
