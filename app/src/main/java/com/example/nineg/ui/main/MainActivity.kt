@@ -25,8 +25,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(binding.toolbar)
-
         val host: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment? ?: return
 
