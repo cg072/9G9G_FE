@@ -22,14 +22,6 @@ class MissionCardAdapter: ListAdapter<MissionCardInfo, MissionCardViewHolder>(Mi
     override fun onBindViewHolder(holder: MissionCardViewHolder, position: Int) {
         val cardInfo = currentList[position]
         holder.bind(cardInfo)
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.let { it(cardInfo) }
-        }
-    }
-
-    private var onItemClickListener: ((MissionCardInfo) -> Unit)? = null
-    fun setOnItemClickListener(listener: (MissionCardInfo) -> Unit) {
-        onItemClickListener = listener
     }
 
     companion object {

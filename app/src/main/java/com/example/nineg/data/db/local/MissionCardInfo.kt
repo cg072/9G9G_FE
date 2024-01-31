@@ -10,5 +10,5 @@ data class MissionCardInfo(
     val level: String = "1",
     val title: String = "title",
     val description: String = "description",
-    val isBookmarked: Boolean = true
+    var isBookmarked: Boolean = true
 ): Parcelable

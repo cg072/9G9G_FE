@@ -11,30 +11,33 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="@string/TEXT_TODAYS_GOODY"
-            app:layout_constraintVertical_weight="1"
             app:layout_constraintBottom_toTopOf="@+id/tvDate"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="2024.01.29"
-            app:layout_constraintVertical_weight="1"
             app:layout_constraintBottom_toTopOf="@+id/rvMission"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintVertical_weight="1" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMission"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintVertical_weight="5"
+            android:clipToPadding="false"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
             app:layout_constraintBottom_toTopOf="@+id/tvCreateMission"
-            app:layout_constraintTop_toBottomOf="@id/tvDate" />
+            app:layout_constraintTop_toBottomOf="@id/tvDate"
+            app:layout_constraintVertical_weight="5" />
 
         <TextView
             android:id="@+id/tvCreateMission"
@@ -42,9 +45,9 @@
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/TEXT_CREATE_MISSION"
-            app:layout_constraintVertical_weight="2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvMission" />
+            app:layout_constraintTop_toBottomOf="@+id/rvMission"
+            app:layout_constraintVertical_weight="2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
