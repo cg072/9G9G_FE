@@ -13,14 +13,16 @@ class MissionViewModel : ViewModel() {
 
     // 테스트 용도입니다.
     var i = 0
-
+    init {
+        addMissionCard()
+    }
     fun addMissionCard() {
         testList.addAll(createMissionCard())
         _missionCards.postValue(ArrayList(testList))
     }
 
     private fun createMissionCard(): List<MissionCardInfo> {
-        val a = arrayListOf<MissionCardInfo>()
+        val a = mutableListOf<MissionCardInfo>()
         a.add(
             MissionCardInfo(
                 id = i++,

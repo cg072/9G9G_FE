@@ -3,7 +3,7 @@ package com.example.nineg.ui.mission
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -19,7 +19,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         get() = R.layout.fragment_mission
 
     private lateinit var missionCardAdapter: MissionCardAdapter
-    private val viewModel: MissionViewModel by viewModels()
+    private val viewModel: MissionViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
