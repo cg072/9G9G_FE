@@ -1,3 +1,5 @@
 package com.example.nineg.model
 
-data class DayAttribute(val dayOfTheWeek: String)
+import androidx.annotation.StringRes
+
+data class DayAttribute(@StringRes val dayOfTheWeekRes: Int)

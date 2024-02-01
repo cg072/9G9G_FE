@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.databinding.ItemCalendarDateBinding
 import com.example.nineg.databinding.ItemCalendarDayAttributeBinding
+import com.example.nineg.databinding.ItemCalendarEmpyBinding
 import com.example.nineg.model.CalendarUI
 import com.example.nineg.model.Day
 import com.example.nineg.model.DayAttribute
@@ -19,6 +20,7 @@ class CalendarAdapter :
         return when (getItem(position)) {
             is CalendarUI.DayAttr -> R.layout.item_calendar_day_attribute
             is CalendarUI.Date -> R.layout.item_calendar_date
+            is CalendarUI.EmptyDate -> R.layout.item_calendar_empy
         }
     }
 
@@ -41,6 +43,14 @@ class CalendarAdapter :
                 )
                 DateViewHolder(binding)
             }
+            R.layout.item_calendar_empy -> {
+                val binding = ItemCalendarEmpyBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                EmptyViewHolder(binding)
+            }
             else -> throw RuntimeException()
         }
     }
@@ -59,7 +69,7 @@ class CalendarAdapter :
     class DayAttributeViewHolder(private val binding: ItemCalendarDayAttributeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DayAttribute) {
-            binding.itemCalendarDayAttributeTitle.text = item.dayOfTheWeek
+            binding.itemCalendarDayAttributeTitle.setText(item.dayOfTheWeekRes)
         }
     }
 
@@ -69,6 +79,8 @@ class CalendarAdapter :
             binding.itemCalendarDateTitle.text = day.date.toString()
         }
     }
+
+    class EmptyViewHolder(binding: ItemCalendarEmpyBinding): RecyclerView.ViewHolder(binding.root)
 }
 
 object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
@@ -77,6 +89,8 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
             return oldItem.dayAttribute == newItem.dayAttribute
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
             return oldItem.day.date == newItem.day.date
+        } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {
+            return oldItem == newItem
         }
 
         return false
@@ -87,6 +101,8 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
             return oldItem.dayAttribute == newItem.dayAttribute
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
             return oldItem.day.date == newItem.day.date
+        } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {
+            return oldItem == newItem
         }
 
         return false
