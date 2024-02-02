@@ -100,4 +100,8 @@
     <color name="grayscale_90">#E0E0E0</color>
     <color name="grayscale_100">#F5F5F5</color>
 
+    <color name="calendar_filter_attr_select">#49454F</color>
+    <color name="calendar_filter_attr_unselect">#6049454F</color>
+    <color name="calendar_check_filter_title">#1D1B20</color>
+
 </resources>
