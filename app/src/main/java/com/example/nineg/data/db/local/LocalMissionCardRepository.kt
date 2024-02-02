@@ -13,6 +13,9 @@ interface LocalMissionCardRepository {
     // 카드 리스트 추가
     suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfo>)
 
+    // 카드 리스트 클리어
+    suspend fun clearMissionCard()
+
     // 등록된 오늘의 구디 카드 반환
     suspend fun getTodayMissionCard(): MissionCardInfo?
 

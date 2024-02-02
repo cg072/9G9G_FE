@@ -20,6 +20,10 @@ class LocalMissionCardImpl @Inject constructor(
         missionCardDao.insertMissionCard(missionCardInfoList)
     }
 
+    override suspend fun clearMissionCard() {
+        missionCardDao.clearMissionCard()
+    }
+
     override suspend fun getTodayMissionCard(): MissionCardInfo? {
         TODO("Not yet implemented")
     }

@@ -30,7 +30,6 @@ class MissionViewModel @Inject constructor(
                 Log.d("TAG", "$it")
                 _missionCards.postValue((it))
             }
-
         }
     }
 

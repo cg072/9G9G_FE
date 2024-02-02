@@ -24,6 +24,10 @@ class MissionCardRepositoryImpl @Inject constructor(
         localMissionCardImpl.addMissionCardList(missionCardInfoList)
     }
 
+    override suspend fun clearMissionCard() {
+        localMissionCardImpl.clearMissionCard()
+    }
+
     override suspend fun getTodayMissionCard(): MissionCardInfo? {
 //        TODO("Not yet implemented")
         return null

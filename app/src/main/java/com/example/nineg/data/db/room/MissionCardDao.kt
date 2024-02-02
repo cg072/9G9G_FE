@@ -25,4 +25,11 @@ interface MissionCardDao {
             insertMissionCard(it)
         }
     }
+
+    @Query("DELETE FROM missionCardInfo")
+    suspend fun clearMissionCard() {
+        getMissionCardList().forEach {
+            deleteMissionCard(it)
+        }
+    }
 }
