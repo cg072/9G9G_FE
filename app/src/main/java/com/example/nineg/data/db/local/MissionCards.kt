@@ -1,5 +1,7 @@
 package com.example.nineg.data.db.local
 
+import com.example.nineg.data.MissionCardInfo
+
 data class MissionCards(private val missionCardList: MutableList<MissionCardInfo> = mutableListOf()) {
 
     // 카드 리스트 반환

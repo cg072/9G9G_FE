@@ -1,7 +1,7 @@
 package com.example.nineg.ui.mission
 
 import androidx.lifecycle.ViewModel
-import com.example.nineg.data.db.local.MissionCardInfo
+import com.example.nineg.data.MissionCardInfo
 import com.example.nineg.util.ListLiveData
 
 class MissionViewModel : ViewModel() {

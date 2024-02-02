@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.nineg.data.db.local.MissionCardInfo
+import com.example.nineg.data.MissionCardInfo
 import com.example.nineg.databinding.ItemMissionCardBinding
 
 class MissionCardAdapter: ListAdapter<MissionCardInfo, MissionCardViewHolder>(MissionCardDiffUtil) {

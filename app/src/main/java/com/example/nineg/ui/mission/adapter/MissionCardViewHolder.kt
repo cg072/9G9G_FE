@@ -4,10 +4,9 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
-import com.example.nineg.data.db.local.MissionCardInfo
+import com.example.nineg.data.MissionCardInfo
 import com.example.nineg.databinding.ItemMissionCardBinding
 
 class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
