@@ -1,6 +1,7 @@
 package com.example.nineg.ui.mission
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,9 @@ import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     override val layoutResourceId: Int
@@ -36,6 +39,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun initObserve() {
         viewModel.missionCards.observe(viewLifecycleOwner) {
+            Log.d(TAG, "initObserve: $it")
             missionCardAdapter.submitList(it)
         }
     }
@@ -74,7 +78,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private fun adjustFabVisibilityOnScroll(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val visiblePosition = layoutManager.findLastVisibleItemPosition()
-
+        Log.d(TAG, "adjustFabVisibilityOnScroll: $visiblePosition")
         if (visiblePosition >= VISIBLE_FAB_POSITION) {
             binding.fabBackToFirst.show()
         } else {
@@ -89,6 +93,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     companion object {
         private const val TAG = "MissionFragment"
         private const val POSITION_FIRST = 0
-        private const val VISIBLE_FAB_POSITION = 6
+        private const val VISIBLE_FAB_POSITION = 4
     }
 }

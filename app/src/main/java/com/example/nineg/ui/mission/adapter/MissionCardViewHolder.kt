@@ -48,14 +48,14 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
             }
 
             when(cardInfo.level) {
-                "1" -> binding.ivLevel.load(R.drawable.ic_level_1)
-                "2" -> binding.ivLevel.load(R.drawable.ic_level_2)
-                "3" -> binding.ivLevel.load(R.drawable.ic_level_3)
+                1 -> binding.ivLevel.load(R.drawable.ic_level_1)
+                2 -> binding.ivLevel.load(R.drawable.ic_level_2)
+                3 -> binding.ivLevel.load(R.drawable.ic_level_3)
                 else -> binding.ivLevel.load(R.drawable.ic_level_1)
             }
 
             binding.tvMissionTitle.text = cardInfo.title + cardInfo.id
-            binding.tvMissionDescription.text = cardInfo.description
+            binding.tvMissionDescription.text = cardInfo.guide
         }
     }
 
