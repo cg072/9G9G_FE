@@ -10,6 +10,7 @@ import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
 import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
+import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 
 class MissionFragment : BaseFragment<FragmentMissionBinding>() {
@@ -24,6 +25,13 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initObserve()
+        initBinding()
+    }
+
+    private fun initBinding() {
+        binding.tvDate.text = DateUtil.getToday()
+        binding.view = this
+        binding.viewModel = viewModel
     }
 
     private fun initObserve() {
@@ -49,10 +57,38 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         binding.rvMission.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!binding.rvMission.canScrollHorizontally(1)) {
-                    viewModel.addMissionCard()
-                }
+                loadMoreItemsIfAtEnd()
+
+                adjustFabVisibilityOnScroll(recyclerView)
             }
         })
+        binding.rvMission.getChildAdapterPosition(binding.rvMission.getChildAt(0))
+    }
+
+    private fun loadMoreItemsIfAtEnd() {
+        if (!binding.rvMission.canScrollHorizontally(1)) {
+            viewModel.addMissionCard()
+        }
+    }
+
+    private fun adjustFabVisibilityOnScroll(recyclerView: RecyclerView) {
+        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        val visiblePosition = layoutManager.findLastVisibleItemPosition()
+
+        if (visiblePosition >= VISIBLE_FAB_POSITION) {
+            binding.fabBackToFirst.show()
+        } else {
+            binding.fabBackToFirst.hide()
+        }
+    }
+
+    fun backToFirstPosition() {
+        binding.rvMission.smoothScrollToPosition(POSITION_FIRST)
+    }
+
+    companion object {
+        private const val TAG = "MissionFragment"
+        private const val POSITION_FIRST = 0
+        private const val VISIBLE_FAB_POSITION = 6
     }
 }
