@@ -1,10 +1,8 @@
 package com.example.nineg.ui.mission
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +10,7 @@ import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
 import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
+import com.example.nineg.util.HorizontalMarginItemDecoration
 
 class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
@@ -29,7 +28,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun initObserve() {
         viewModel.missionCards.observe(viewLifecycleOwner) {
-            Log.d(TAG, "initObserve: ${it.size}")
             missionCardAdapter.submitList(it)
         }
     }
@@ -40,8 +38,8 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             setHasFixedSize(true)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
             adapter = missionCardAdapter
+            addItemDecoration(HorizontalMarginItemDecoration(12))
         }
 
         PagerSnapHelper().also {
@@ -52,14 +50,9 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!binding.rvMission.canScrollHorizontally(1)) {
-                    Log.d(TAG, "onScrollStateChanged: end")
                     viewModel.addMissionCard()
                 }
             }
         })
-    }
-
-    companion object {
-        private const val TAG = "MissionFragment"
     }
 }

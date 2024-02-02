@@ -1,10 +1,11 @@
 package com.example.nineg.ui.mission.adapter
 
 import android.util.Log
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.size.Scale
+import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.data.db.local.MissionCardInfo
 import com.example.nineg.databinding.ItemMissionCardBinding
@@ -17,7 +18,8 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
             val clickedPosition = adapterPosition
             val recyclerView = itemView.parent as RecyclerView
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val centerPosition = layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
+            val centerPosition =
+                layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
 
             if (clickedPosition == centerPosition) {
                 // 화면 중앙의 아이템을 클릭했다면 아이템 정보를 다른 프레그먼트에 전달합니다.
@@ -30,18 +32,36 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
             }
         }
     }
-        
+
     fun bind(cardInfo: MissionCardInfo) {
 
         itemView.apply {
-            binding.ivMissionImage.load(cardInfo.image)
-            binding.ivBookmark.load(R.drawable.ic_launcher_foreground)
-            if(!cardInfo.isBookmarked) binding.ivBookmark.isVisible = false
+            binding.ivMissionImage.post {
+                binding.ivMissionImage.load(cardInfo.image) {
+                    transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
+                }
+            }
+
+            if (cardInfo.isBookmarked) {
+                binding.ivBookmark.load(R.drawable.ic_bookmark_on)
+            } else {
+                binding.ivBookmark.load(R.drawable.ic_bookmark_off)
+            }
+
+            when(cardInfo.level) {
+                "1" -> binding.ivLevel.load(R.drawable.ic_level_1)
+                "2" -> binding.ivLevel.load(R.drawable.ic_level_2)
+                "3" -> binding.ivLevel.load(R.drawable.ic_level_3)
+                else -> binding.ivLevel.load(R.drawable.ic_level_1)
+            }
+
             binding.tvMissionTitle.text = cardInfo.title + cardInfo.id
             binding.tvMissionDescription.text = cardInfo.description
         }
     }
+
     companion object {
         private const val TAG = "MissionCardViewHolder"
+        const val ROUNDED_CORNERS_VALUE = 30f
     }
 }

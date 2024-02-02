@@ -22,29 +22,24 @@ class MissionViewModel : ViewModel() {
     }
 
     private fun createMissionCard(): List<MissionCardInfo> {
-        val a = mutableListOf<MissionCardInfo>()
-        a.add(
+        return listOf(
             MissionCardInfo(
                 id = i++,
                 image = "https://i.ytimg.com/vi/RncY8aNDr8U/maxresdefault.jpg",
-                title = "title1",
-                description = "description1",
                 isBookmarked = true
-            )
-        )
-        a.add(
+            ),
             MissionCardInfo(
                 id = i++,
                 image = "https://m.segye.com/content/image/2023/07/06/20230706511066.jpg",
-                title = "title2",
-                description = "description2",
+                level = "2",
+                isBookmarked = false
+            ),
+            MissionCardInfo(
+                id = i++,
+                image = "https://img2.sbs.co.kr/img/seditor/VD/2022/05/11/0Df1652234259596-640-0.jpg",
+                level = "3",
                 isBookmarked = false
             )
         )
-        return a
-    }
-
-    companion object {
-        private const val TAG = "MissionViewModel"
     }
 }
