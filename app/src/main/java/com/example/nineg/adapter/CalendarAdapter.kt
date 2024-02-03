@@ -77,6 +77,8 @@ class CalendarAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(day: Day) {
             binding.itemCalendarDateTitle.text = day.date.toString()
+            binding.itemCalendarDateImageTitle.text = day.date.toString()
+            binding.itemCalendarDateImage.clipToOutline = true
         }
     }
 
