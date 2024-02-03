@@ -42,7 +42,14 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
         ).map { CalendarUI.DayAttr(it) }
 
         val emptyDateList = List(emptyDateSize) {}.map { CalendarUI.EmptyDate }
-        val dateList = List(dateSize) { i -> i + 1 }.map { CalendarUI.Date(Day(it)) }
+        val dateList = List(dateSize) { i -> i + 1 }.map {
+            CalendarUI.Date(
+                Day(
+                    it,
+                    if (it % 2 == 0) "1" else "" // Image input
+                )
+            )
+        }
 
         return buildList {
             addAll(dayAttributeList)

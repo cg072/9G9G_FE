@@ -1,6 +1,7 @@
 package com.example.nineg.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -79,6 +80,13 @@ class CalendarAdapter :
             binding.itemCalendarDateTitle.text = day.date.toString()
             binding.itemCalendarDateImageTitle.text = day.date.toString()
             binding.itemCalendarDateImage.clipToOutline = true
+
+            if (day.image.isEmpty()) {
+                binding.itemCalendarDateImageContainer.visibility = View.GONE
+            } else {
+                binding.itemCalendarDateImageContainer.visibility = View.VISIBLE
+                binding.itemCalendarDateImage.setImageResource(R.color.primary)
+            }
         }
     }
 
