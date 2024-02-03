@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nineg.R
 import com.example.nineg.databinding.ItemCheckFilterBinding
 import com.example.nineg.model.CheckFilterModel
 
@@ -30,8 +31,10 @@ class CalendarFilterAdapter(private val onClick: (CheckFilterModel) -> Unit) :
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CheckFilterModel) {
-            binding.itemCheckFilterTitle.text = item.title.toString()
+            binding.itemCheckFilterTitle.text = item.title
             binding.itemCheckFilterIcon.visibility =
+                if (item.isCheck) View.VISIBLE else View.INVISIBLE
+            binding.itemCheckFilterDim.visibility =
                 if (item.isCheck) View.VISIBLE else View.INVISIBLE
 
             binding.root.setOnClickListener {
@@ -44,7 +47,7 @@ class CalendarFilterAdapter(private val onClick: (CheckFilterModel) -> Unit) :
 
 object CalendarFilterDiffUtil : DiffUtil.ItemCallback<CheckFilterModel>() {
     override fun areItemsTheSame(oldItem: CheckFilterModel, newItem: CheckFilterModel): Boolean {
-        return oldItem.title == newItem.title
+        return oldItem.data == newItem.data
     }
 
     override fun areContentsTheSame(oldItem: CheckFilterModel, newItem: CheckFilterModel): Boolean {

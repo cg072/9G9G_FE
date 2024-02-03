@@ -2,7 +2,6 @@ package com.example.nineg.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
@@ -52,13 +51,32 @@ class CalendarFilterDialog(
         yearList = List(todayYear - MIN_YEAR + 1) { i -> MIN_YEAR + i }.map {
             CheckFilterModel(
                 it,
+                it.toString(),
                 it == checkYear
             )
         }
 
-        monthList = List(12) { i -> i + 1 }.map { CheckFilterModel(it) }
+        monthList = List(12) { i -> i + 1 }.map {
+            val titleRes = when (it) {
+                1 -> R.string.january
+                2 -> R.string.february
+                3 -> R.string.march
+                4 -> R.string.april
+                5 -> R.string.may
+                6 -> R.string.june
+                7 -> R.string.july
+                8 -> R.string.august
+                9 -> R.string.september
+                10 -> R.string.october
+                11 -> R.string.november
+                12 -> R.string.december
+                else -> R.string.app_name
+            }
+
+            CheckFilterModel(it, context.getString(titleRes))
+        }
         val checkMonth = calendar.get(Calendar.MONTH) + 1
-        monthList.find { it.title == checkMonth }?.isCheck = true
+        monthList.find { it.data == checkMonth }?.isCheck = true
     }
 
     override fun show() {
@@ -96,12 +114,12 @@ class CalendarFilterDialog(
         adapter = CalendarFilterAdapter {
             if (binding.dialogCalendarFilterMonthBtn.isSelected) {
                 val year = calendar.get(Calendar.YEAR)
-                val month = it.title - 1
+                val month = it.data - 1
                 onClick(year, month)
             }
 
             if (binding.dialogCalendarFilterYearBtn.isSelected) {
-                val year = it.title
+                val year = it.data
                 val month = calendar.get(Calendar.MONTH)
                 onClick(year, month)
             }

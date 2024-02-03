@@ -23,6 +23,7 @@
 
     <color name="surface_dim_60">#99000000</color>
     <color name="surface_dim_40">#66000000</color>
+    <color name="calendar_filter_dim_8">#1D1B2014</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
