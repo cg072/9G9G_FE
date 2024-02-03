@@ -27,5 +27,15 @@
 <!--        <item name="android:windowAnimationStyle">anim</item>-->
     </style>
 
+    <style name="OptionDialog">
+        <item name="android:background">@drawable/dialog_record_option_bg</item>
+
+        <!-- Dim(Activity 배경) -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
 
 </resources>

@@ -8,6 +8,7 @@ import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityRecordDetailBinding
+import com.example.nineg.dialog.RecordOptionDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +22,20 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding.fragmentRecordDetailOptionBtn.setOnClickListener {
+            val dialog = RecordOptionDialog(this, it.left, it.bottom,
+                object : RecordOptionDialog.OnClickListener {
+                    override fun onEdit() {
+                        // TODO : 수정하기 로직 추가
+                    }
+
+                    override fun onDelete() {
+                        // TODO : 삭제하기 로직 추가
+                    }
+                })
+
+            dialog.show()
+        }
         subscribe()
         viewModel.requestRecordApi()
     }
