@@ -110,7 +110,11 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
         if (oldItem is CalendarUI.DayAttr && newItem is CalendarUI.DayAttr) {
             return oldItem.dayAttribute == newItem.dayAttribute
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
-            return oldItem.day.date == newItem.day.date
+            if (oldItem.day.date != newItem.day.date) return false
+
+            if (oldItem.day.image != newItem.day.image) return false
+
+            return true
         } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {
             return oldItem == newItem
         }
