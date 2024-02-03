@@ -22,4 +22,7 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
+
+    <string name="option_edit">수정하기</string>
+    <string name="option_delete">삭제하기</string>
 </resources>
