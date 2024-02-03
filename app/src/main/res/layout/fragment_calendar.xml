@@ -96,7 +96,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="32dp"
             android:padding="16dp"
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_edit_white"
             android:background="@drawable/shape_ellipse"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
