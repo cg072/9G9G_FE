@@ -23,6 +23,7 @@
 
     <color name="surface_dim_60">#99000000</color>
     <color name="surface_dim_40">#66000000</color>
+    <color name="calendar_filter_dim_8">#1D1B2014</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -99,5 +100,9 @@
     <color name="grayscale_80">#CCCCCC</color>
     <color name="grayscale_90">#E0E0E0</color>
     <color name="grayscale_100">#F5F5F5</color>
+
+    <color name="calendar_filter_attr_select">#49454F</color>
+    <color name="calendar_filter_attr_unselect">#6049454F</color>
+    <color name="calendar_check_filter_title">#1D1B20</color>
 
 </resources>

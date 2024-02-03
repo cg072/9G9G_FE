@@ -13,4 +13,41 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="filterDialog">
+        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/dialog_min_width_minor</item>
+        <item name="android:background">@drawable/dialog_calendar_filter_bg</item>
+
+        <!-- Dim(Activity 배경) -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
+<!--        <item name="android:windowAnimationStyle">anim</item>-->
+    </style>
+
+    <style name="OptionDialog">
+        <item name="android:background">@drawable/dialog_record_option_bg</item>
+
+        <!-- Dim(Activity 배경) -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="BasicDialog">
+        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/dialog_min_width_minor</item>
+        <item name="android:background">@drawable/dialog_record_delete_bg</item>
+
+        <!-- Dim(Activity 배경) -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+
 </resources>
