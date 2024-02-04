@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,6 +17,7 @@ import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityPostingFormBinding
+import com.example.nineg.dialog.PostingFormExitDialog
 import com.example.nineg.extension.hideKeyboard
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -58,6 +60,12 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             }
         }
 
+    private val callback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            showExitDialog()
+        }
+    }
+
     override val layoutResourceId: Int
         get() = R.layout.activity_posting_form
 
@@ -68,6 +76,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         binding.activityPostingFormDate.text = format.format(calendar.time)
         initContentEditTextActionEvent()
         initListener()
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onDestroy() {
@@ -82,7 +91,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private fun initListener() {
         binding.activityPostingFormBackBtn.setOnClickListener {
-            finish()
+            showExitDialog()
         }
 
         binding.activityPostingFormDateBtn.setOnClickListener {
@@ -129,13 +138,21 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
     }
 
+    private fun showExitDialog() {
+        val dialog = PostingFormExitDialog(this) {
+            finish()
+        }
+
+        dialog.show()
+    }
+
     private fun showDatePicker() {
         val periodSettingCalendar = Calendar.getInstance()
         periodSettingCalendar[Calendar.YEAR] = MIN_YEAR
         periodSettingCalendar[Calendar.MONTH] = Calendar.JANUARY
 
         val janThisYear = periodSettingCalendar.timeInMillis
-        
+
         val constraintsBuilder = CalendarConstraints.Builder().setStart(janThisYear)
 
         val datePicker =
