@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -18,12 +17,19 @@ import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.extension.hideKeyboard
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private val viewModel: PostingFormViewModel by viewModels()
+
+    private lateinit var calendar: Calendar
+    private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -58,6 +64,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        calendar = Calendar.getInstance()
+        binding.activityPostingFormDate.text = format.format(calendar.time)
         initContentEditTextActionEvent()
         initListener()
     }
@@ -78,7 +86,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormDateBtn.setOnClickListener {
-            // TODO : 달력 팝업 표시
+            showDatePicker()
         }
 
         binding.activityPostingFormImageCancelBtn.setOnClickListener {
@@ -92,10 +100,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
             if (validContent()) {
-                // TODO : 저장 처리 로직 추가
+                // TODO : calendar 이용하여 저장 처리 로직 추가
                 Log.d("PostingFormActivity", "Goody Card save")
-            } else {
-                Toast.makeText(this, R.string.save_error_message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -123,10 +129,36 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
     }
 
+    private fun showDatePicker() {
+        val periodSettingCalendar = Calendar.getInstance()
+        periodSettingCalendar[Calendar.YEAR] = MIN_YEAR
+        periodSettingCalendar[Calendar.MONTH] = Calendar.JANUARY
+
+        val janThisYear = periodSettingCalendar.timeInMillis
+        
+        val constraintsBuilder = CalendarConstraints.Builder().setStart(janThisYear)
+
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setSelection(calendar.timeInMillis)
+                .setCalendarConstraints(constraintsBuilder.build())
+                .build()
+
+        datePicker.addOnPositiveButtonClickListener {
+            calendar.timeInMillis = it
+            binding.activityPostingFormDate.text = format.format(calendar.time)
+        }
+
+        datePicker.show(supportFragmentManager, "date_picker")
+    }
+
     private fun validContent() =
         !binding.activityPostingFormEmptyImageContainer.isVisible && binding.activityPostingFormTitleEditText.length() > 0
 
     companion object {
         private const val ROUNDED_CORNERS_VALUE = 30f
+        private const val MIN_YEAR = 2024
+
     }
 }
