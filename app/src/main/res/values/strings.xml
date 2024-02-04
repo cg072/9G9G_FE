@@ -29,4 +29,6 @@
 
     <string name="option_edit">수정하기</string>
     <string name="option_delete">삭제하기</string>
+
+    <string name="save_error_message">제목과 이미지를 등록해주세요.</string>
 </resources>

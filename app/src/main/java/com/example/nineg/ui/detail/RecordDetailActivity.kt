@@ -63,6 +63,6 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     }
 
     companion object {
-        const val ROUNDED_CORNERS_VALUE = 30f
+        private const val ROUNDED_CORNERS_VALUE = 30f
     }
 }
