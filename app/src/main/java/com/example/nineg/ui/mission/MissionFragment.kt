@@ -1,8 +1,12 @@
 package com.example.nineg.ui.mission
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -10,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
 import com.example.nineg.databinding.FragmentMissionBinding
+import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
@@ -24,11 +29,21 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private lateinit var missionCardAdapter: MissionCardAdapter
     private val viewModel: MissionViewModel by activityViewModels()
 
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initObserve()
         initBinding()
+        binding.btnEdit.setOnClickListener {
+            startForResult.launch(Intent(binding.root.context, PostingFormActivity::class.java))
+        }
     }
 
     private fun initBinding() {

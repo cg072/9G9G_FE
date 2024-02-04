@@ -33,7 +33,7 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:padding="8dp"
-                android:src="@drawable/arrow_left"
+                android:src="@drawable/ab_arrow_left"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
