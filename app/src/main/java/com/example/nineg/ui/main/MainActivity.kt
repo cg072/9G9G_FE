@@ -3,15 +3,14 @@ package com.example.nineg.ui.main
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +22,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initSplashScreen()
         super.onCreate(savedInstanceState)
 
         val host: NavHostFragment = supportFragmentManager
@@ -39,6 +39,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
 
             Log.d("MainActivity", "Navigated to $dest")
+        }
+    }
+
+    private fun initSplashScreen() {
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepVisibleCondition {
+            // true == 지속 false == 종료
+            !viewModel.isReady
         }
     }
 
