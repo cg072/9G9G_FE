@@ -2,6 +2,8 @@ package com.example.nineg.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.nineg.data.db.CalendarRepository
+import com.example.nineg.data.db.CalendarRepositoryImpl
 import com.example.nineg.data.db.room.MissionCardDao
 import com.example.nineg.data.db.room.MissionCardDatabase
 import com.example.nineg.data.db.MissionCardRepositoryImpl
@@ -10,6 +12,8 @@ import com.example.nineg.data.db.local.LocalMissionCardImpl
 import com.example.nineg.data.db.local.LocalMissionCardRepository
 import com.example.nineg.data.db.remote.RemoteMissionCardImpl
 import com.example.nineg.data.db.remote.RemoteMissionCardRepository
+import com.example.nineg.data.db.remote.UserRemoteDataSource
+import com.example.nineg.data.db.remote.UserRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,6 +35,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindMissionCardRepository(missionCardRepository: MissionCardRepositoryImpl): MissionCardRepository
+
+    @Binds
+    abstract fun bindCalendarRepository(repository: CalendarRepositoryImpl): CalendarRepository
 
     companion object {
 
