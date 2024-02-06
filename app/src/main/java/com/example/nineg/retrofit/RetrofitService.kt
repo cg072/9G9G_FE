@@ -1,15 +1,14 @@
 package com.example.nineg.retrofit
 
 import com.example.nineg.data.db.dto.UserDto
-import com.example.nineg.data.db.remote.RemoteMissionCard
-import okhttp3.RequestBody
+import com.example.nineg.data.db.dto.MissionCardDto
 import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitService {
     @GET("/todo")
     suspend fun getGitHubUserData(
-    ): Response<RemoteMissionCard>
+    ): Response<MissionCardDto>
 
 //    @Headers("Content-Type: application/json")
     @POST("/users")

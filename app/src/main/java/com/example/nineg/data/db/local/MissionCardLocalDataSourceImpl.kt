@@ -1,22 +1,22 @@
 package com.example.nineg.data.db.local
 
 import com.example.nineg.data.db.room.MissionCardDao
-import com.example.nineg.data.MissionCardInfo
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import javax.inject.Inject
 
 class MissionCardLocalDataSourceImpl @Inject constructor(
     private val missionCardDao: MissionCardDao
 ): MissionCardLocalDataSource {
-    override suspend fun getMissionCardList(): List<MissionCardInfo> {
+    override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         return missionCardDao.getMissionCardList()
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMissionCard(missionCardInfo: MissionCardInfo) {
+    override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfo>) {
+    override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
         missionCardDao.insertMissionCard(missionCardInfoList)
     }
 
@@ -24,11 +24,11 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
         missionCardDao.clearMissionCard()
     }
 
-    override suspend fun getTodayMissionCard(): MissionCardInfo? {
+    override suspend fun getTodayMissionCard(): MissionCardInfoEntity? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfo> {
+    override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity> {
         TODO("Not yet implemented")
     }
 

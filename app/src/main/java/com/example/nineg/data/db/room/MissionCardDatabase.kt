@@ -2,12 +2,11 @@ package com.example.nineg.data.db.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.nineg.data.MissionCardInfo
-import com.example.nineg.data.db.room.MissionCardDao
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 
 @Database(
-    entities = [MissionCardInfo::class],
+    entities = [MissionCardInfoEntity::class],
     version = 1,
     exportSchema = false
 )
