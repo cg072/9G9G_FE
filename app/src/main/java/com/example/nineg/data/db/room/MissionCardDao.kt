@@ -6,21 +6,21 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.nineg.data.MissionCardInfo
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 @Dao
 interface MissionCardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMissionCard(missionCardInfo: MissionCardInfo)
+    suspend fun insertMissionCard(missionCardInfo: MissionCardInfoEntity)
 
     @Delete
-    suspend fun deleteMissionCard(missionCardInfo: MissionCardInfo)
+    suspend fun deleteMissionCard(missionCardInfo: MissionCardInfoEntity)
 
     @Query("SELECT * FROM missionCardInfo")
-    suspend fun getMissionCardList(): List<MissionCardInfo>
+    suspend fun getMissionCardList(): List<MissionCardInfoEntity>
 
     @Transaction
-    suspend fun insertMissionCard(missionCardInfoList: List<MissionCardInfo>) {
+    suspend fun insertMissionCard(missionCardInfoList: List<MissionCardInfoEntity>) {
         missionCardInfoList.forEach {
             insertMissionCard(it)
         }
