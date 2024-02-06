@@ -2,7 +2,7 @@ package com.example.nineg.data.db.remote
 
 import com.example.nineg.data.MissionCardInfo
 
-interface RemoteMissionCardRepository {
+interface MissionCardRemoteDataSource {
 
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfo>

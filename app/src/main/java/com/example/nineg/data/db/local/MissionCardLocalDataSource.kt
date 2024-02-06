@@ -2,7 +2,7 @@ package com.example.nineg.data.db.local
 
 import com.example.nineg.data.MissionCardInfo
 
-interface LocalMissionCardRepository {
+interface MissionCardLocalDataSource {
 
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfo>

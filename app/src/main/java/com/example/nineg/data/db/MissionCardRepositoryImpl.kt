@@ -1,13 +1,13 @@
 package com.example.nineg.data.db
 
 import com.example.nineg.data.MissionCardInfo
-import com.example.nineg.data.db.local.LocalMissionCardRepository
-import com.example.nineg.data.db.remote.RemoteMissionCardRepository
+import com.example.nineg.data.db.local.MissionCardLocalDataSource
+import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
 import javax.inject.Inject
 
 class MissionCardRepositoryImpl @Inject constructor(
-    private val localMissionCardImpl: LocalMissionCardRepository,
-    private val remoteMissionCardImpl: RemoteMissionCardRepository
+    private val localMissionCardImpl: MissionCardLocalDataSource,
+    private val remoteMissionCardImpl: MissionCardRemoteDataSource
 ) : MissionCardRepository {
     override suspend fun getMissionCardList(): List<MissionCardInfo> {
         //        TODO("Not yet implemented")

@@ -8,12 +8,10 @@ import com.example.nineg.data.db.room.MissionCardDao
 import com.example.nineg.data.db.room.MissionCardDatabase
 import com.example.nineg.data.db.MissionCardRepositoryImpl
 import com.example.nineg.data.db.MissionCardRepository
-import com.example.nineg.data.db.local.LocalMissionCardImpl
-import com.example.nineg.data.db.local.LocalMissionCardRepository
-import com.example.nineg.data.db.remote.RemoteMissionCardImpl
-import com.example.nineg.data.db.remote.RemoteMissionCardRepository
-import com.example.nineg.data.db.remote.UserRemoteDataSource
-import com.example.nineg.data.db.remote.UserRemoteDataSourceImpl
+import com.example.nineg.data.db.local.MissionCardLocalDataSourceImpl
+import com.example.nineg.data.db.local.MissionCardLocalDataSource
+import com.example.nineg.data.db.remote.MissionCardRemoteDataSourceImpl
+import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -27,11 +25,6 @@ import javax.inject.Singleton
 abstract class DataModule {
 
     // 저장소
-    @Binds
-    abstract fun bindRemoteMissionCardRepository(remoteMissionCardRepository: RemoteMissionCardImpl): RemoteMissionCardRepository
-
-    @Binds
-    abstract fun bindLocalMissionCardRepository(localMissionCardRepository: LocalMissionCardImpl): LocalMissionCardRepository
 
     @Binds
     abstract fun bindMissionCardRepository(missionCardRepository: MissionCardRepositoryImpl): MissionCardRepository
