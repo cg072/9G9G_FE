@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.nineg.data.MissionCardInfo
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.databinding.ItemMissionCardBinding
 
-class MissionCardAdapter: ListAdapter<MissionCardInfo, MissionCardViewHolder>(MissionCardDiffUtil) {
+class MissionCardAdapter: ListAdapter<MissionCardInfoEntity, MissionCardViewHolder>(MissionCardDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionCardViewHolder {
         return MissionCardViewHolder(
@@ -25,12 +25,12 @@ class MissionCardAdapter: ListAdapter<MissionCardInfo, MissionCardViewHolder>(Mi
     }
 
     companion object {
-        private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCardInfo>() {
-            override fun areItemsTheSame(oldItem: MissionCardInfo, newItem: MissionCardInfo): Boolean {
+        private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCardInfoEntity>() {
+            override fun areItemsTheSame(oldItem: MissionCardInfoEntity, newItem: MissionCardInfoEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: MissionCardInfo, newItem: MissionCardInfo): Boolean {
+            override fun areContentsTheSame(oldItem: MissionCardInfoEntity, newItem: MissionCardInfoEntity): Boolean {
                 return oldItem == newItem
             }
         }

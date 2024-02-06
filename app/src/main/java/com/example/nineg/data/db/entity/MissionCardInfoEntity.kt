@@ -1,4 +1,4 @@
-package com.example.nineg.data
+package com.example.nineg.data.db.entity
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "missionCardInfo")
-data class MissionCardInfo(
+data class MissionCardInfoEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val image: String,

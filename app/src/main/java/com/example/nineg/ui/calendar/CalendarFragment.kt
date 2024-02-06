@@ -3,6 +3,7 @@ package com.example.nineg.ui.calendar
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,6 +69,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
         setupCalendarRecyclerView()
         adapter.submitList(viewModel.getCalendarList(calendar))
+
+        val ssaid = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.searchUser(ssaid)
     }
 
     private fun setupCalendarRecyclerView() {
