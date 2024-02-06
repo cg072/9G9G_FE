@@ -16,7 +16,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class DataSourceModule {
 
     @Binds
-    abstract fun bindMissionCardRemoteDataSource(dataSource: MissionCardLocalDataSourceImpl): MissionCardLocalDataSource
+    abstract fun bindMissionCardLocalDataSource(dataSource: MissionCardLocalDataSourceImpl): MissionCardLocalDataSource
 
     @Binds
     abstract fun bindMissionCardRemoteDataSource(dataSource: MissionCardRemoteDataSourceImpl): MissionCardRemoteDataSource
