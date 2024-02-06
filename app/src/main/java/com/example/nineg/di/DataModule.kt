@@ -2,12 +2,9 @@ package com.example.nineg.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.nineg.data.db.CalendarRepository
-import com.example.nineg.data.db.CalendarRepositoryImpl
+import com.example.nineg.data.db.*
 import com.example.nineg.data.db.room.MissionCardDao
 import com.example.nineg.data.db.room.MissionCardDatabase
-import com.example.nineg.data.db.MissionCardRepositoryImpl
-import com.example.nineg.data.db.MissionCardRepository
 import com.example.nineg.data.db.local.MissionCardLocalDataSourceImpl
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSourceImpl
@@ -31,6 +28,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindCalendarRepository(repository: CalendarRepositoryImpl): CalendarRepository
+
+    @Binds
+    abstract fun bindGoodyRepository(repository: GoodyRepositoryImpl): GoodyRepository
 
     companion object {
 

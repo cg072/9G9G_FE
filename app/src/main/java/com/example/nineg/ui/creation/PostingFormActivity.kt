@@ -1,6 +1,7 @@
 package com.example.nineg.ui.creation
 
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -19,9 +20,11 @@ import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.dialog.PostingFormExitDialog
 import com.example.nineg.extension.hideKeyboard
+import com.example.nineg.util.ImageUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,6 +35,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
+    private var imageUrl: MultipartBody.Part? = null
 
     private val titleTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -66,6 +70,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
                     binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
                     binding.activityPostingFormSaveBtn.isSelected = validContent()
+                    imageUrl = ImageUtil.getMultipartBody(contentResolver, it)
                 }
             }
         }
@@ -110,6 +115,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormImageCancelBtn.setOnClickListener {
+            imageUrl = null
             binding.activityPostingFormImage.setImageDrawable(null)
             binding.activityPostingFormEmptyImageContainer.visibility = View.VISIBLE
         }
@@ -119,8 +125,17 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
-            if (validContent()) {
+            if (validContent() && imageUrl != null) {
                 // TODO : calendar 이용하여 저장 처리 로직 추가
+                val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+                viewModel.registerGoody2(
+                    ssaid,
+                    binding.activityPostingFormTitleEditText.text.toString(),
+                    binding.activityPostingFormTitleEditText.text.toString(),
+                    binding.activityPostingFormContentEditText.text.toString(),
+                    "",
+                    imageUrl!!
+                )
                 Log.d("PostingFormActivity", "Goody Card save")
             }
         }
