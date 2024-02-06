@@ -103,7 +103,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             binding.activityPostingFormEmptyImageContainer.visibility = View.VISIBLE
         }
 
-        binding.activityPostingFormImageContainer.setOnClickListener {
+        binding.activityPostingFormEmptyImageContainer.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
