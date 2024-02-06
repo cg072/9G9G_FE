@@ -66,4 +66,12 @@ class MissionViewModel @Inject constructor(
             )
         )
     }
+
+    fun isFirstLaunch(): Boolean {
+        return missionCardRepository.getIsFirstLaunch()
+    }
+
+    fun setIsFirstLaunch(isFirstLaunch: Boolean) {
+        missionCardRepository.setIsFirstLaunch(isFirstLaunch)
+    }
 }

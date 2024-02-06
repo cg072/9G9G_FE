@@ -8,10 +8,6 @@ import com.example.nineg.data.db.room.MissionCardDao
 import com.example.nineg.data.db.room.MissionCardDatabase
 import com.example.nineg.data.db.MissionCardRepositoryImpl
 import com.example.nineg.data.db.MissionCardRepository
-import com.example.nineg.data.db.local.MissionCardLocalDataSourceImpl
-import com.example.nineg.data.db.local.MissionCardLocalDataSource
-import com.example.nineg.data.db.remote.MissionCardRemoteDataSourceImpl
-import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -46,6 +46,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initObserve()
         initBinding()
         initTutorial()
+
         binding.btnEdit.setOnClickListener {
             startForResult.launch(Intent(binding.root.context, PostingFormActivity::class.java))
         }
@@ -90,7 +91,10 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initTutorial() {
-        tutorialMissionCard()
+        if(viewModel.isFirstLaunch()) {
+            tutorialMissionCard()
+            viewModel.setIsFirstLaunch(false)
+        }
     }
 
     private fun tutorialMissionCard() {
