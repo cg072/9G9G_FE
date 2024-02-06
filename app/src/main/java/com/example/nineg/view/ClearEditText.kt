@@ -16,7 +16,7 @@ import com.example.nineg.R
 
 class ClearEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : AppCompatEditText(context, attrs), TextWatcher, OnTouchListener, OnFocusChangeListener {
+) : AppCompatEditText(context, attrs), OnTouchListener, OnFocusChangeListener {
     private lateinit var clearDrawable: Drawable
     private var focusChangeListener: OnFocusChangeListener? = null
     private var touchListener: OnTouchListener? = null
@@ -46,16 +46,10 @@ class ClearEditText @JvmOverloads constructor(
         setClearIconVisible(false)
         super.setOnTouchListener(this)
         super.setOnFocusChangeListener(this)
-        addTextChangedListener(this)
     }
 
     override fun onFocusChange(view: View?, hasFocus: Boolean) {
-        if (hasFocus) {
-            setClearIconVisible((text?.length ?: 0) > 0)
-        } else {
-            setClearIconVisible(false)
-        }
-
+        setClearIconVisible(hasFocus)
         focusChangeListener?.onFocusChange(view, hasFocus)
     }
 
@@ -72,14 +66,6 @@ class ClearEditText @JvmOverloads constructor(
         return touchListener?.onTouch(view, motionEvent) ?: false
     }
 
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (isFocused) {
-            setClearIconVisible(s.isNotEmpty())
-        }
-    }
-
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-    override fun afterTextChanged(s: Editable) {}
     private fun setClearIconVisible(visible: Boolean) {
         clearDrawable.setVisible(visible, false)
         setCompoundDrawables(null, null, if (visible) clearDrawable else null, null)
