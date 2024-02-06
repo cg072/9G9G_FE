@@ -19,6 +19,10 @@ import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
+import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener
 
 @AndroidEntryPoint
 class MissionFragment : BaseFragment<FragmentMissionBinding>() {
@@ -41,6 +45,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initRecyclerView()
         initObserve()
         initBinding()
+        initTutorial()
         binding.btnEdit.setOnClickListener {
             startForResult.launch(Intent(binding.root.context, PostingFormActivity::class.java))
         }
@@ -82,6 +87,41 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             }
         })
         binding.rvMission.getChildAdapterPosition(binding.rvMission.getChildAt(0))
+    }
+
+    private fun initTutorial() {
+        tutorialMissionCard()
+    }
+
+    private fun tutorialMissionCard() {
+        GuideView.Builder(requireActivity())
+            .setContentText(getString(R.string.TEXT_TUTORIAL_SLIDE_MISSION_CARD))
+            .setDismissType(DismissType.anywhere)
+            .setTargetView(binding.ivPointMissionCard)
+            .setGravity(Gravity.center)
+            .setGuideListener(object : GuideListener {
+                override fun onDismiss(view: View?) {
+                    tutorialEditButton()
+                }
+            })
+            .build()
+            .show()
+    }
+
+    private fun tutorialEditButton() {
+        GuideView.Builder(requireActivity())
+            .setContentText(getString(R.string.TEXT_TUTORIAL_CREATE_MISSION_CARD))
+            .setDismissType(DismissType.anywhere)
+
+            .setTargetView(binding.btnEdit)
+            .setGuideListener(object : GuideListener {
+                override fun onDismiss(view: View?) {
+                    Log.d(TAG, "onDismiss: btnEdit")
+                    viewModel.startNavShowCase()
+                }
+            })
+            .build()
+            .show()
     }
 
     private fun loadMoreItemsIfAtEnd() {
