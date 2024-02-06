@@ -1,21 +1,21 @@
 package com.example.nineg.data.db.local
 
-import com.example.nineg.data.MissionCardInfo
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
-data class MissionCards(private val missionCardList: MutableList<MissionCardInfo> = mutableListOf()) {
+data class MissionCards(private val missionCardList: MutableList<MissionCardInfoEntity> = mutableListOf()) {
 
     // 카드 리스트 반환
-    fun getMissionCardList(): List<MissionCardInfo> {
+    fun getMissionCardList(): List<MissionCardInfoEntity> {
         return missionCardList
     }
 
     // 카드 추가.
-    fun addMissionCard(missionCardInfo: MissionCardInfo) {
+    fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
         missionCardList.add(missionCardInfo)
     }
 
     // 카드 리스트 추가
-    fun addMissionCardList(missionCardInfoList: List<MissionCardInfo>) {
+    fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
         missionCardList.addAll(missionCardInfoList)
     }
 

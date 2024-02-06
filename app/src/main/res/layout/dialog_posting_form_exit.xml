@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:background="@drawable/dialog_record_delete_bg">
+
+        <TextView
+            android:id="@+id/dialogPostingFormExitTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="작성을 그만두시겠어요?"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:fontFamily="@font/pretendard_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/dialogPostingFormExitMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="입력한 내용은 저장되지 않아요"
+            android:textSize="16dp"
+            android:textColor="@color/grayscale_10"
+            android:fontFamily="@font/pretendard_medium"
+            app:layout_constraintTop_toBottomOf="@+id/dialogPostingFormExitTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/dialogPostingFormExitBtnContainer"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/dialogPostingFormExitMessage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/dialogPostingFormExitCancelBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/button_cancel_bg"
+                android:text="계속쓰기"
+                android:textColor="@color/grayscale_20"
+                android:textSize="16dp"
+                android:fontFamily="@font/pretendard_medium"/>
+
+            <TextView
+                android:id="@+id/dialogPostingFormExitBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:background="@drawable/button_confirm_bg"
+                android:text="그만두기"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:fontFamily="@font/pretendard_medium"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

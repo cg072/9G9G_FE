@@ -1,8 +1,8 @@
-package com.example.nineg.data.db
+package com.example.nineg.data.db.remote
 
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
-interface MissionCardRepository {
+interface MissionCardRemoteDataSource {
 
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfoEntity>
@@ -12,9 +12,6 @@ interface MissionCardRepository {
 
     // 카드 리스트 추가
     suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>)
-
-    // 카드 리스트 클리어
-    suspend fun clearMissionCard()
 
     // 등록된 오늘의 구디 카드 반환
     suspend fun getTodayMissionCard(): MissionCardInfoEntity?
@@ -27,8 +24,4 @@ interface MissionCardRepository {
 
     // 즐겨찾기 해제
     suspend fun unBookmarkMissionCard(position: Int)
-
-    fun getIsFirstLaunch(): Boolean
-
-    fun setIsFirstLaunch(isFirstLaunch: Boolean)
 }

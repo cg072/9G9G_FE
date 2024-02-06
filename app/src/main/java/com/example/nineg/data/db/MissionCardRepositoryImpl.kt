@@ -1,25 +1,32 @@
 package com.example.nineg.data.db
 
-import com.example.nineg.data.MissionCardInfo
-import com.example.nineg.data.db.local.LocalMissionCardRepository
-import com.example.nineg.data.db.remote.RemoteMissionCardRepository
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.nineg.data.db.entity.MissionCardInfoEntity
+import com.example.nineg.data.db.local.MissionCardLocalDataSource
+import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class MissionCardRepositoryImpl @Inject constructor(
-    private val localMissionCardImpl: LocalMissionCardRepository,
-    private val remoteMissionCardImpl: RemoteMissionCardRepository
+    @ApplicationContext private val context: Context,
+    private val localMissionCardImpl: MissionCardLocalDataSource,
+    private val remoteMissionCardImpl: MissionCardRemoteDataSource
 ) : MissionCardRepository {
-    override suspend fun getMissionCardList(): List<MissionCardInfo> {
+
+    private val statusPref : SharedPreferences = context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
+
+    override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         //        TODO("Not yet implemented")
         return localMissionCardImpl.getMissionCardList()
     }
 
-    override suspend fun addMissionCard(missionCardInfo: MissionCardInfo) {
+    override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
 //        TODO("Not yet implemented")
         localMissionCardImpl.addMissionCard(missionCardInfo)
     }
 
-    override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfo>) {
+    override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
 //        TODO("Not yet implemented")
         localMissionCardImpl.addMissionCardList(missionCardInfoList)
     }
@@ -28,12 +35,12 @@ class MissionCardRepositoryImpl @Inject constructor(
         localMissionCardImpl.clearMissionCard()
     }
 
-    override suspend fun getTodayMissionCard(): MissionCardInfo? {
+    override suspend fun getTodayMissionCard(): MissionCardInfoEntity? {
 //        TODO("Not yet implemented")
         return null
     }
 
-    override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfo> {
+    override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity> {
 //        TODO("Not yet implemented")
         return listOf()
     }
@@ -44,5 +51,18 @@ class MissionCardRepositoryImpl @Inject constructor(
 
     override suspend fun unBookmarkMissionCard(position: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun getIsFirstLaunch(): Boolean {
+        return statusPref.getBoolean(IS_FIRST_LAUNCH, true)
+    }
+
+    override fun setIsFirstLaunch(isFirstLaunch: Boolean) {
+        statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
+    }
+
+    companion object {
+        private const val STATUS_PREFS = "status_prefs"
+        private const val IS_FIRST_LAUNCH = "isFirstLaunch"
     }
 }

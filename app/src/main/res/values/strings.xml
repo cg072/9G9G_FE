@@ -29,4 +29,8 @@
 
     <string name="option_edit">수정하기</string>
     <string name="option_delete">삭제하기</string>
+
+    <string name="TEXT_TUTORIAL_SLIDE_MISSION_CARD">마음에 드는 구디 카드를 찾아,\n오른쪽으로 넘겨보세요</string>
+    <string name="TEXT_TUTORIAL_CREATE_MISSION_CARD">마음에 쏙 드는 카드가 없다면,\n직접 구디카드를 작성해 보세요</string>
+    <string name="TEXT_TUTORIAL_CALENDAR">내 기록을 한눈에 확인할 수 있어요</string>
 </resources>

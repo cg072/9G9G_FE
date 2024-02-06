@@ -1,8 +1,8 @@
-package com.example.nineg.data.db
+package com.example.nineg.data.db.local
 
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
-interface MissionCardRepository {
+interface MissionCardLocalDataSource {
 
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfoEntity>
@@ -27,8 +27,4 @@ interface MissionCardRepository {
 
     // 즐겨찾기 해제
     suspend fun unBookmarkMissionCard(position: Int)
-
-    fun getIsFirstLaunch(): Boolean
-
-    fun setIsFirstLaunch(isFirstLaunch: Boolean)
 }

@@ -2,20 +2,39 @@ package com.example.nineg.ui.calendar
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.nineg.R
+import com.example.nineg.data.db.CalendarRepository
 import com.example.nineg.model.CalendarUI
 import com.example.nineg.model.Day
 import com.example.nineg.model.DayAttribute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarViewModel @Inject constructor() : ViewModel() {
+class CalendarViewModel @Inject constructor(private val calendarRepository: CalendarRepository) :
+    ViewModel() {
 
     companion object {
         private const val TAG = "CalendarViewModel"
+    }
+
+    fun searchUser(deviceId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            calendarRepository.searchUser(deviceId).body()?.let {
+                Log.d(TAG, "kch ${it.deviceId} ${it.createdAt}")
+            }
+        }
+    }
+
+    fun createUser(deviceId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            calendarRepository.createUser(deviceId)
+        }
     }
 
     fun getCalendarList(calendar: Calendar): List<CalendarUI> {
