@@ -3,7 +3,6 @@ package com.example.nineg.ui.calendar
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,6 +13,7 @@ import com.example.nineg.adapter.CalendarAdapter
 import com.example.nineg.base.BaseFragment
 import com.example.nineg.databinding.FragmentCalendarBinding
 import com.example.nineg.dialog.CalendarFilterDialog
+import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.detail.RecordDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -33,7 +33,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월", Locale.getDefault())
 
-    private val startForResult =
+    private val startRecordDetailActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+            }
+        }
+
+    private val startPostingFormActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
@@ -46,38 +53,66 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initData()
+        initListener()
+        initCalendarRecyclerView()
+        adapter.submitList(viewModel.getCalendarList(calendar))
+
+    }
+
+
+    private fun initData() {
         calendar = Calendar.getInstance()
         binding.fragmentCalendarDateFilterTitle.text = format.format(calendar.time)
+    }
 
+    private fun initListener() {
         binding.fragmentCalendarDateFilterContainer.setOnClickListener {
-            val dialog = CalendarFilterDialog(
-                binding.root.context,
-                it.bottom,
-                calendar.clone() as Calendar
-            ) { year, month ->
-                calendar.set(year, month, 1)
-                binding.fragmentCalendarDateFilterTitle.text = format.format(calendar.time)
-                adapter.submitList(viewModel.getCalendarList(calendar))
-            }
-
-            dialog.show()
+            showCalendarFilterDialog(it)
         }
 
         binding.fragmentCalendarFloatingBtn.setOnClickListener {
-            startForResult.launch(Intent(binding.root.context, RecordDetailActivity::class.java))
+            startPostingFormActivity()
+//            startRecordDetailActivity()
         }
-
-        setupCalendarRecyclerView()
-        adapter.submitList(viewModel.getCalendarList(calendar))
-
-        val ssaid = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.searchUser(ssaid)
     }
 
-    private fun setupCalendarRecyclerView() {
+    private fun initCalendarRecyclerView() {
         adapter = CalendarAdapter()
         binding.fragmentCalendarRecyclerView.adapter = adapter
         binding.fragmentCalendarRecyclerView.layoutManager =
             GridLayoutManager(binding.root.context, 7)
+    }
+
+    private fun showCalendarFilterDialog(it: View) {
+        val dialog = CalendarFilterDialog(
+            binding.root.context,
+            it.bottom,
+            calendar.clone() as Calendar
+        ) { year, month ->
+            calendar.set(year, month, 1)
+            binding.fragmentCalendarDateFilterTitle.text = format.format(calendar.time)
+            adapter.submitList(viewModel.getCalendarList(calendar))
+        }
+
+        dialog.show()
+    }
+
+    private fun startPostingFormActivity() {
+        startPostingFormActivityForResult.launch(
+            Intent(
+                binding.root.context,
+                PostingFormActivity::class.java
+            )
+        )
+    }
+
+    private fun startRecordDetailActivity() {
+        startRecordDetailActivityForResult.launch(
+            Intent(
+                binding.root.context,
+                RecordDetailActivity::class.java
+            )
+        )
     }
 }
