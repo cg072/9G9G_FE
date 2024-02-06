@@ -99,6 +99,12 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     }
 
     private fun startPostingFormActivity() {
+        /**
+         * 1. 카드 선택할 경우 이미지, 타이틀, 내용 갖고 진입 (타이틀은 텍스트, 내용은 가이드 힌트)
+         * 2. 직접 작성 선택할 경우, 내용 - 가이드 노출 일상 속에서 어떤 낭만을 찾아내셨나요? / 느꼈던 감정과 생각을 자유롭게 적어주세요 (선택)
+         * 타이틀은 힌트 카드의 제목을 작성해주세요
+         */
+
         startPostingFormActivityForResult.launch(
             Intent(
                 binding.root.context,

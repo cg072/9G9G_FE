@@ -33,7 +33,19 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
 
-    private val textWatcher: TextWatcher = object : TextWatcher {
+    private val titleTextWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            limitTitleText(p0)
+        }
+
+        override fun afterTextChanged(p0: Editable?) {
+            binding.activityPostingFormSaveBtn.isSelected = validContent()
+        }
+    }
+
+    private val contentTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -41,9 +53,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             binding.activityPostingFormContentCount.text = count.toString()
         }
 
-        override fun afterTextChanged(p0: Editable?) {
-            binding.activityPostingFormSaveBtn.isSelected = validContent()
-        }
+        override fun afterTextChanged(p0: Editable?) {}
     }
 
     private val pickMedia =
@@ -80,7 +90,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     }
 
     override fun onDestroy() {
-        binding.activityPostingFormTitleEditText.removeTextChangedListener(textWatcher)
+        binding.activityPostingFormTitleEditText.removeTextChangedListener(titleTextWatcher)
+        binding.activityPostingFormContentEditText.removeTextChangedListener(contentTextWatcher)
         super.onDestroy()
     }
 
@@ -114,7 +125,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             }
         }
 
-        binding.activityPostingFormTitleEditText.addTextChangedListener(textWatcher)
+        binding.activityPostingFormTitleEditText.addTextChangedListener(titleTextWatcher)
+        binding.activityPostingFormContentEditText.addTextChangedListener(contentTextWatcher)
 
         binding.activityPostingFormTitleEditText.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
@@ -173,9 +185,19 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     private fun validContent() =
         !binding.activityPostingFormEmptyImageContainer.isVisible && binding.activityPostingFormTitleEditText.length() > 0
 
+    private fun limitTitleText(sequence: CharSequence?) {
+        val textLength = (sequence?.length ?: 0) - 1
+        val trimTextLength = sequence?.trim()?.length ?: 0
+
+        if (trimTextLength > MAX_TEXT_LENGTH) {
+            binding.activityPostingFormTitleEditText.setText(sequence?.subSequence(0, textLength))
+            binding.activityPostingFormTitleEditText.setSelection(textLength)
+        }
+    }
+
     companion object {
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
-
+        private const val MAX_TEXT_LENGTH = 28
     }
 }
