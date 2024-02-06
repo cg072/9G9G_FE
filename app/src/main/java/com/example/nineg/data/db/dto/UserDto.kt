@@ -1,5 +1,6 @@
 package com.example.nineg.data.db.dto
 
+import com.example.nineg.data.db.domain.User
 import java.util.*
 
 data class UserDto(
@@ -11,3 +12,5 @@ data class UserDto(
     val createdAt: Date?,
     val updatedAt: Date?
 )
+
+fun UserDto.asDomainModel() = User(deviceId, name, age, gender)
