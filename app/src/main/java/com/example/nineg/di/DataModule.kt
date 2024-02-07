@@ -26,6 +26,9 @@ abstract class DataModule {
     abstract fun bindMissionCardRepository(missionCardRepository: MissionCardRepositoryImpl): MissionCardRepository
 
     @Binds
+    abstract fun bindCUserRepository(repository: UserRepositoryImpl): UserRepository
+
+    @Binds
     abstract fun bindCalendarRepository(repository: CalendarRepositoryImpl): CalendarRepository
 
     companion object {
