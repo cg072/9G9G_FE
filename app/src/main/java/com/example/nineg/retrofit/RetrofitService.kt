@@ -1,5 +1,6 @@
 package com.example.nineg.retrofit
 
+import com.example.nineg.data.db.dto.BookmarkDto
 import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.data.db.dto.UserDto
@@ -38,4 +39,19 @@ interface RetrofitService {
     suspend fun searchGoody(
         @Path("deviceId") deviceId: String
     ): Response<GoodyDto>
+
+    @POST("/bookmarks")
+    suspend fun createBookmark(
+        @Body params: HashMap<String, String>
+    ): Response<BookmarkDto>
+
+    @GET("/bookmarks/user/{deviceId}")
+    suspend fun searchBookmark(
+        @Path("deviceId") deviceId: String
+    ): Response<BookmarkDto>
+
+    @DELETE("/bookmarks/{id}")
+    suspend fun removeBookmark(
+        @Path("id") bookmarkId: String
+    ): Response<Unit>
 }
