@@ -1,6 +1,8 @@
 package com.example.nineg.ui.calendar
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nineg.R
@@ -23,6 +25,9 @@ class CalendarViewModel @Inject constructor(private val calendarRepository: Cale
         private const val TAG = "CalendarViewModel"
     }
 
+    private val _calendarUiList = MutableLiveData<List<CalendarUI>>()
+    val calendarUiList: LiveData<List<CalendarUI>> get() = _calendarUiList
+
     fun searchUser(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             calendarRepository.searchUser(deviceId).body()?.let {
@@ -37,43 +42,47 @@ class CalendarViewModel @Inject constructor(private val calendarRepository: Cale
         }
     }
 
-    fun getCalendarList(calendar: Calendar): List<CalendarUI> {
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
+    fun getCalendarList(calendar: Calendar) {
+        viewModelScope.launch(Dispatchers.IO) {
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
 
-        val emptyDateSize = calendar.get(Calendar.DAY_OF_WEEK) - 1
-        calendar.printDateFormat()
+            val emptyDateSize = calendar.get(Calendar.DAY_OF_WEEK) - 1
+            calendar.printDateFormat()
 
-        val cloneCalendar = calendar.clone() as Calendar
-        cloneCalendar.add(Calendar.MONTH, 1)
-        cloneCalendar.add(Calendar.DATE, -1)
+            val cloneCalendar = calendar.clone() as Calendar
+            cloneCalendar.add(Calendar.MONTH, 1)
+            cloneCalendar.add(Calendar.DATE, -1)
 
-        val dateSize = cloneCalendar.get(Calendar.DATE)
-        cloneCalendar.printDateFormat()
+            val dateSize = cloneCalendar.get(Calendar.DATE)
+            cloneCalendar.printDateFormat()
 
-        val dayAttributeList = listOf(
-            DayAttribute(R.string.sunday),
-            DayAttribute(R.string.monday),
-            DayAttribute(R.string.tuesday),
-            DayAttribute(R.string.wednesday),
-            DayAttribute(R.string.thursday),
-            DayAttribute(R.string.friday),
-            DayAttribute(R.string.saturday)
-        ).map { CalendarUI.DayAttr(it) }
+            val dayAttributeList = listOf(
+                DayAttribute(R.string.sunday),
+                DayAttribute(R.string.monday),
+                DayAttribute(R.string.tuesday),
+                DayAttribute(R.string.wednesday),
+                DayAttribute(R.string.thursday),
+                DayAttribute(R.string.friday),
+                DayAttribute(R.string.saturday)
+            ).map { CalendarUI.DayAttr(it) }
 
-        val emptyDateList = List(emptyDateSize) {}.map { CalendarUI.EmptyDate }
-        val dateList = List(dateSize) { i -> i + 1 }.map {
-            CalendarUI.Date(
-                Day(
-                    it,
-                    if (it % 2 == 0) "1" else "" // Image input
+            val emptyDateList = List(emptyDateSize) {}.map { CalendarUI.EmptyDate }
+            val dateList = List(dateSize) { i -> i + 1 }.map {
+                CalendarUI.Date(
+                    Day(
+                        it,
+                        if (it % 2 == 0) "1" else "" // Image input
+                    )
                 )
-            )
-        }
+            }
 
-        return buildList {
-            addAll(dayAttributeList)
-            addAll(emptyDateList)
-            addAll(dateList)
+            _calendarUiList.postValue(
+                buildList {
+                    addAll(dayAttributeList)
+                    addAll(emptyDateList)
+                    addAll(dateList)
+                }
+            )
         }
     }
 
