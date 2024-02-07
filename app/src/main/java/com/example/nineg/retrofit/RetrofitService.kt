@@ -24,7 +24,7 @@ interface RetrofitService {
 
     @Multipart
     @POST("/records")
-    fun registerGoody(
+    suspend fun registerGoody(
         @PartMap params: HashMap<String, String>,
         @Part image: MultipartBody.Part
     ): Response<GoodyDto>
