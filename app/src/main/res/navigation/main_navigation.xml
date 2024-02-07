@@ -5,12 +5,12 @@
     android:id="@+id/main_navigation"
     app:startDestination="@id/missionFragment">
 
-    <fragment
+    <MaintainStatusNavigator
         android:id="@+id/missionFragment"
         android:name="com.example.nineg.ui.mission.MissionFragment"
         android:label="MissionFragment"
         tools:layout="@layout/fragment_mission"/>
-    <fragment
+    <MaintainStatusNavigator
         android:id="@+id/calendarFragment"
         android:name="com.example.nineg.ui.calendar.CalendarFragment"
         android:label="CalendarFragment"
