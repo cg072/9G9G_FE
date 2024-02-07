@@ -5,6 +5,7 @@ import com.example.nineg.data.db.remote.GoodyRemoteDataSource
 import com.example.nineg.retrofit.ApiResult
 import okhttp3.MultipartBody
 import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 class GoodyRepositoryImpl @Inject constructor(private val goodyRemoteDataSource: GoodyRemoteDataSource) :
@@ -38,19 +39,15 @@ class GoodyRepositoryImpl @Inject constructor(private val goodyRemoteDataSource:
         }
     }
 
-    override suspend fun removeGoody() {
+    override suspend fun removeGoody(goodyId: String): Response<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateGoody() {
+    override suspend fun getGoody(deviceId: String): Response<GoodyDto> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getGoody() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getGoodyList() {
+    override suspend fun getGoodyList(deviceId: String): Response<GoodyDto> {
         TODO("Not yet implemented")
     }
 }

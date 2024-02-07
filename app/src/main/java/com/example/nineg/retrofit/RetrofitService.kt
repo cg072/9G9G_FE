@@ -28,4 +28,14 @@ interface RetrofitService {
         @PartMap params: HashMap<String, String>,
         @Part image: MultipartBody.Part
     ): Response<GoodyDto>
+
+    @DELETE("/records/{id}")
+    suspend fun removeGoody(
+        @Path("id") goodyId: String
+    ): Response<Unit>
+
+    @GET("/records/user/{deviceId}")
+    suspend fun searchGoody(
+        @Path("deviceId") deviceId: String
+    ): Response<GoodyDto>
 }

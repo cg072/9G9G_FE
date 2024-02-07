@@ -14,11 +14,9 @@ interface GoodyRemoteDataSource {
         image: MultipartBody.Part
     ): Response<GoodyDto>
 
-    suspend fun removeGoody()
+    suspend fun removeGoody(goodyId: String): Response<Unit>
 
-    suspend fun updateGoody()
+    suspend fun getGoody(deviceId: String): Response<GoodyDto>
 
-    suspend fun getGoody()
-
-    suspend fun getGoodyList()
+    suspend fun getGoodyList(deviceId: String): Response<GoodyDto>
 }

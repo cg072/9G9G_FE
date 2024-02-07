@@ -3,6 +3,7 @@ package com.example.nineg.data.db
 import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.retrofit.ApiResult
 import okhttp3.MultipartBody
+import retrofit2.Response
 
 interface GoodyRepository {
     suspend fun registerGoody(
@@ -14,11 +15,9 @@ interface GoodyRepository {
         image: MultipartBody.Part
     ): ApiResult<GoodyDto>
 
-    suspend fun removeGoody()
+    suspend fun removeGoody(goodyId: String): Response<Unit>
 
-    suspend fun updateGoody()
+    suspend fun getGoody(deviceId: String): Response<GoodyDto>
 
-    suspend fun getGoody()
-
-    suspend fun getGoodyList()
+    suspend fun getGoodyList(deviceId: String): Response<GoodyDto>
 }
