@@ -5,10 +5,8 @@ import androidx.room.Room
 import com.example.nineg.data.db.*
 import com.example.nineg.data.db.room.MissionCardDao
 import com.example.nineg.data.db.room.MissionCardDatabase
-import com.example.nineg.data.db.local.MissionCardLocalDataSourceImpl
-import com.example.nineg.data.db.local.MissionCardLocalDataSource
-import com.example.nineg.data.db.remote.MissionCardRemoteDataSourceImpl
-import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
+import com.example.nineg.data.db.MissionCardRepositoryImpl
+import com.example.nineg.data.db.MissionCardRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -25,6 +23,9 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindMissionCardRepository(missionCardRepository: MissionCardRepositoryImpl): MissionCardRepository
+
+    @Binds
+    abstract fun bindCUserRepository(repository: UserRepositoryImpl): UserRepository
 
     @Binds
     abstract fun bindCalendarRepository(repository: CalendarRepositoryImpl): CalendarRepository

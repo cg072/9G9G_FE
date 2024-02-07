@@ -27,4 +27,8 @@ interface MissionCardRepository {
 
     // 즐겨찾기 해제
     suspend fun unBookmarkMissionCard(position: Int)
+
+    fun getIsFirstLaunch(): Boolean
+
+    fun setIsFirstLaunch(isFirstLaunch: Boolean)
 }

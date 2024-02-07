@@ -1,6 +1,5 @@
 package com.example.nineg.ui.mission
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,15 +18,21 @@ class MissionViewModel @Inject constructor(
     private val _missionCards = MutableLiveData<List<MissionCardInfoEntity>>()
     val missionCards: LiveData<List<MissionCardInfoEntity>> = _missionCards
 
+    private val _startNavShowCase = MutableLiveData<Any>()
+    val startNavShowCase: LiveData<Any> = _startNavShowCase
+
     init {
         addMissionCard()
+    }
+
+    fun startNavShowCase() {
+        _startNavShowCase.postValue(Any())
     }
 
     fun addMissionCard() {
         viewModelScope.launch(Dispatchers.IO) {
             missionCardRepository.addMissionCardList(createMissionCard())
             missionCardRepository.getMissionCardList().also {
-                Log.d("TAG", "$it")
                 _missionCards.postValue((it))
             }
         }
@@ -60,5 +65,13 @@ class MissionViewModel @Inject constructor(
                 isBookmarked = true
             )
         )
+    }
+
+    fun isFirstLaunch(): Boolean {
+        return missionCardRepository.getIsFirstLaunch()
+    }
+
+    fun setIsFirstLaunch(isFirstLaunch: Boolean) {
+        missionCardRepository.setIsFirstLaunch(isFirstLaunch)
     }
 }

@@ -1,14 +1,21 @@
 package com.example.nineg.data.db
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class MissionCardRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val localMissionCardImpl: MissionCardLocalDataSource,
     private val remoteMissionCardImpl: MissionCardRemoteDataSource
 ) : MissionCardRepository {
+
+    private val statusPref : SharedPreferences = context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
+
     override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         //        TODO("Not yet implemented")
         return localMissionCardImpl.getMissionCardList()
@@ -44,5 +51,18 @@ class MissionCardRepositoryImpl @Inject constructor(
 
     override suspend fun unBookmarkMissionCard(position: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun getIsFirstLaunch(): Boolean {
+        return statusPref.getBoolean(IS_FIRST_LAUNCH, true)
+    }
+
+    override fun setIsFirstLaunch(isFirstLaunch: Boolean) {
+        statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
+    }
+
+    companion object {
+        private const val STATUS_PREFS = "status_prefs"
+        private const val IS_FIRST_LAUNCH = "isFirstLaunch"
     }
 }
