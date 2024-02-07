@@ -56,10 +56,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         initData()
         initListener()
         initCalendarRecyclerView()
-        adapter.submitList(viewModel.getCalendarList(calendar))
-
+        initObserve()
+        viewModel.getCalendarList(calendar)
     }
-
 
     private fun initData() {
         calendar = Calendar.getInstance()
@@ -84,6 +83,12 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
             GridLayoutManager(binding.root.context, 7)
     }
 
+    private fun initObserve() {
+        viewModel.calendarUiList.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+        }
+    }
+
     private fun showCalendarFilterDialog(it: View) {
         val dialog = CalendarFilterDialog(
             binding.root.context,
@@ -92,7 +97,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         ) { year, month ->
             calendar.set(year, month, 1)
             binding.fragmentCalendarDateFilterTitle.text = format.format(calendar.time)
-            adapter.submitList(viewModel.getCalendarList(calendar))
+            viewModel.getCalendarList(calendar)
         }
 
         dialog.show()
