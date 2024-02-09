@@ -121,7 +121,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             .setGuideListener(object : GuideListener {
                 override fun onDismiss(view: View?) {
                     Log.d(TAG, "onDismiss: btnEdit")
-                    viewModel.startNavShowCase()
+                    viewModel.startTutorialNav()
                 }
             })
             .build()
