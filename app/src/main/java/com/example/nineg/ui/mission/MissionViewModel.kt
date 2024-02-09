@@ -25,7 +25,7 @@ class MissionViewModel @Inject constructor(
         addMissionCard()
     }
 
-    fun startNavShowCase() {
+    fun startTutorialNav() {
         _startNavShowCase.postValue(Any())
     }
 

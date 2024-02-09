@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityMainBinding
-
+import com.example.nineg.navigation.MaintainStatusNavigator
 import com.example.nineg.ui.mission.MissionViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,11 +33,20 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         initSplashScreen()
         super.onCreate(savedInstanceState)
 
+        initNavigation()
+        initObserve()
+    }
+
+    private fun initNavigation() {
         val host: NavHostFragment = supportFragmentManager
-            .findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment? ?: return
+            .findFragmentById(R.id.navHostFragmentContainer) as NavHostFragment
 
         val navController = host.navController
-        setupBottomNavMenu(navController)
+        val navigator =
+            MaintainStatusNavigator(this, host.childFragmentManager, R.id.navHostFragmentContainer)
+        navController.navigatorProvider.addNavigator(navigator)
+        navController.setGraph(R.navigation.main_navigation)
+        binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val dest: String = try {
@@ -48,6 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
             Log.d("MainActivity", "Navigated to $dest")
         }
+
         initObserve()
     }
 
