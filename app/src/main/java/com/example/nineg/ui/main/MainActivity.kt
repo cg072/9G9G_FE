@@ -2,7 +2,7 @@ package com.example.nineg.ui.main
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
+import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
@@ -54,18 +54,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             } catch (e: Resources.NotFoundException) {
                 destination.id.toString()
             }
-
-            Log.d("MainActivity", "Navigated to $dest")
         }
 
         initObserve()
+        initUser()
+
+    }
+
+    private fun initUser() {
+        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.initUserData(ssaid + "OYJ_1")
     }
 
     private fun initSplashScreen() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepVisibleCondition {
             // true == 지속 false == 종료
-            !viewModel.isReady
+            !viewModel.isUReady()
         }
     }
 
