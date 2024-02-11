@@ -22,16 +22,19 @@ class MissionViewModel @Inject constructor(
     val startNavShowCase: LiveData<Any> = _startNavShowCase
 
     init {
-        addMissionCard()
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = missionCardRepository.downloadMissionCardList()
+            addMissionCard(result)
+        }
     }
 
     fun startTutorialNav() {
         _startNavShowCase.postValue(Any())
     }
 
-    fun addMissionCard() {
+    fun addMissionCard(missionCardList: List<MissionCardInfoEntity> = createMissionCard()) {
         viewModelScope.launch(Dispatchers.IO) {
-            missionCardRepository.addMissionCardList(createMissionCard())
+            missionCardRepository.addMissionCardList(missionCardList)
             missionCardRepository.getMissionCardList().also {
                 _missionCards.postValue((it))
             }

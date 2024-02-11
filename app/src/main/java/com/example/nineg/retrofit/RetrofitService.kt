@@ -1,7 +1,7 @@
 package com.example.nineg.retrofit
 
-import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.dto.GoodyDto
+import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.dto.UserDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -28,4 +28,8 @@ interface RetrofitService {
         @PartMap params: HashMap<String, String>,
         @Part image: MultipartBody.Part
     ): Response<GoodyDto>
+
+    @GET("/missions")
+    suspend fun getMissionCardList(
+    ): Response<MissionCardDto>
 }

@@ -2,9 +2,12 @@ package com.example.nineg.data.db
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import com.example.nineg.data.db.dto.asDomainModel
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
+import com.example.nineg.retrofit.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -14,7 +17,8 @@ class MissionCardRepositoryImpl @Inject constructor(
     private val remoteMissionCardImpl: MissionCardRemoteDataSource
 ) : MissionCardRepository {
 
-    private val statusPref : SharedPreferences = context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
+    private val statusPref: SharedPreferences =
+        context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
 
     override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         //        TODO("Not yet implemented")
@@ -61,8 +65,24 @@ class MissionCardRepositoryImpl @Inject constructor(
         statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
     }
 
+    override suspend fun downloadMissionCardList(): List<MissionCardInfoEntity> {
+        val result = remoteMissionCardImpl.downloadMissionCardList()
+
+        return when (result) {
+            is ApiResult.Success -> {
+                Log.d(TAG, "downloadMissionCardList: ${result.value}")
+                result.value.asDomainModel()
+            }
+
+            is ApiResult.Error -> {
+                Log.e(TAG, "downloadMissionCardList: ${result.exception}")
+                emptyList()
+            }
+        }
+    }
+
     companion object {
-        private const val STATUS_PREFS = "status_prefs"
+        private const val TAG = "MissionCardRepositoryIm"
         private const val IS_FIRST_LAUNCH = "isFirstLaunch"
     }
 }

@@ -1,6 +1,8 @@
 package com.example.nineg.data.db.remote
 
+import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
+import com.example.nineg.retrofit.ApiResult
 
 interface MissionCardRemoteDataSource {
 
@@ -24,4 +26,6 @@ interface MissionCardRemoteDataSource {
 
     // 즐겨찾기 해제
     suspend fun unBookmarkMissionCard(position: Int)
+
+    suspend fun downloadMissionCardList(): ApiResult<MissionCardDto>
 }

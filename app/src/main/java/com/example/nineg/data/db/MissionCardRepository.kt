@@ -31,4 +31,6 @@ interface MissionCardRepository {
     fun getIsFirstLaunch(): Boolean
 
     fun setIsFirstLaunch(isFirstLaunch: Boolean)
+
+    suspend fun downloadMissionCardList(): List<MissionCardInfoEntity>
 }
