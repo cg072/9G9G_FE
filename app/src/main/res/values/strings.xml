@@ -33,4 +33,9 @@
     <string name="TEXT_TUTORIAL_SLIDE_MISSION_CARD">마음에 드는 구디 카드를 찾아,\n오른쪽으로 넘겨보세요</string>
     <string name="TEXT_TUTORIAL_CREATE_MISSION_CARD">마음에 쏙 드는 카드가 없다면,\n직접 구디카드를 작성해 보세요</string>
     <string name="TEXT_TUTORIAL_CALENDAR">내 기록을 한눈에 확인할 수 있어요</string>
+
+    <string name="TEXT_NETWORK_ERROR">인터넷 연결을 확인해 주세요</string>
+    <string name="TEXT_NETWORK_CHECK_AND_RETRY">네트워크 상태를 확인 후 다시 시도해 주세요</string>
+    <string name="TEXT_RETRY">다시 시도하기</string>
+
 </resources>
