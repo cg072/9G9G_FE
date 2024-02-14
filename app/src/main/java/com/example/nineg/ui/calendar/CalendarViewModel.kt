@@ -90,4 +90,16 @@ class CalendarViewModel @Inject constructor(private val calendarRepository: Cale
         val format = SimpleDateFormat("yyyy MM월 dd일", Locale.getDefault())
         Log.d(TAG, "kch calendar date format : ${format.format(this.time)}")
     }
+
+    fun getFeed() {
+        val feedList = List(4) { i -> i + 1 }.map {
+            CalendarUI.Feed(
+                Day(
+                    it,
+                    "https://m.segye.com/content/image/2023/07/06/20230706511066.jpg"
+                )
+            )
+        }
+        _calendarUiList.postValue(feedList)
+    }
 }

@@ -27,11 +27,17 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         private const val TAG = "CalendarFragment"
     }
 
+    enum class GridType {
+        Calendar,
+        Feed
+    }
+
     private val viewModel: CalendarViewModel by viewModels()
 
     private lateinit var adapter: CalendarAdapter
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월", Locale.getDefault())
+    private var gridType: GridType = GridType.Calendar
 
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -66,6 +72,22 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     }
 
     private fun initListener() {
+        binding.fragmentCalendarImageFilter.setOnClickListener {
+            /**
+             * 세부 Fragment 로 나눌 예정 너무 조잡함
+             */
+            gridType = when (gridType) {
+                GridType.Calendar -> {
+                    convertFeedType()
+                    GridType.Feed
+                }
+                GridType.Feed -> {
+                    convertCalendarType()
+                    GridType.Calendar
+                }
+            }
+        }
+
         binding.fragmentCalendarDateFilterContainer.setOnClickListener {
             showCalendarFilterDialog(it)
         }
@@ -74,6 +96,27 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
             startPostingFormActivity()
 //            startRecordDetailActivity()
         }
+
+        /**
+         * 제거 예정 임시로 생성
+         */
+        binding.fragmentCalendarTitle.setOnClickListener {
+            startRecordDetailActivity()
+        }
+    }
+
+    private fun convertCalendarType() {
+        binding.fragmentCalendarDateFilterContainer.visibility = View.VISIBLE
+        binding.fragmentCalendarRecyclerView.layoutManager =
+            GridLayoutManager(binding.root.context, 7)
+        viewModel.getCalendarList(calendar)
+    }
+
+    private fun convertFeedType() {
+        binding.fragmentCalendarDateFilterContainer.visibility = View.INVISIBLE
+        binding.fragmentCalendarRecyclerView.layoutManager =
+            GridLayoutManager(binding.root.context, 3)
+        viewModel.getFeed()
     }
 
     private fun initCalendarRecyclerView() {

@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.nineg.R
 import com.example.nineg.databinding.ItemCalendarDateBinding
 import com.example.nineg.databinding.ItemCalendarDayAttributeBinding
 import com.example.nineg.databinding.ItemCalendarEmpyBinding
+import com.example.nineg.databinding.ItemFeedBinding
 import com.example.nineg.model.CalendarUI
 import com.example.nineg.model.Day
 import com.example.nineg.model.DayAttribute
@@ -22,6 +24,7 @@ class CalendarAdapter :
             is CalendarUI.DayAttr -> R.layout.item_calendar_day_attribute
             is CalendarUI.Date -> R.layout.item_calendar_date
             is CalendarUI.EmptyDate -> R.layout.item_calendar_empy
+            is CalendarUI.Feed -> R.layout.item_feed
         }
     }
 
@@ -52,6 +55,14 @@ class CalendarAdapter :
                 )
                 EmptyViewHolder(binding)
             }
+            R.layout.item_feed -> {
+                val binding = ItemFeedBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                FeedViewHolder(binding)
+            }
             else -> throw RuntimeException()
         }
     }
@@ -63,6 +74,9 @@ class CalendarAdapter :
             }
             is DateViewHolder -> {
                 holder.bind((getItem(position) as CalendarUI.Date).day)
+            }
+            is FeedViewHolder -> {
+                holder.bind((getItem(position) as CalendarUI.Feed).day)
             }
         }
     }
@@ -87,6 +101,13 @@ class CalendarAdapter :
                 binding.itemCalendarDateImageContainer.visibility = View.VISIBLE
                 binding.itemCalendarDateImage.setImageResource(R.color.primary)
             }
+        }
+    }
+
+
+    class FeedViewHolder(private val binding: ItemFeedBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(day: Day) {
+            binding.itemFeedImage.load(day.image)
         }
     }
 
