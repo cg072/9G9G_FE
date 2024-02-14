@@ -1,11 +1,13 @@
 package com.example.nineg.ui.mission
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.MissionCardRepository
+import com.example.nineg.data.db.local.MissionCards
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ import javax.inject.Inject
 class MissionViewModel @Inject constructor(
     private val missionCardRepository: MissionCardRepository
 ) : ViewModel() {
+    private val missionTestInstance = MissionCards()
     private val _missionCards = MutableLiveData<List<MissionCardInfoEntity>>()
     val missionCards: LiveData<List<MissionCardInfoEntity>> = _missionCards
 
@@ -24,7 +27,8 @@ class MissionViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val result = missionCardRepository.downloadMissionCardList()
-            addMissionCard(result)
+            missionTestInstance.addMissionCardList(result)
+            updateMissionCardList()
         }
     }
 
@@ -33,12 +37,12 @@ class MissionViewModel @Inject constructor(
     }
 
     fun addMissionCard(missionCardList: List<MissionCardInfoEntity> = createMissionCard()) {
-        viewModelScope.launch(Dispatchers.IO) {
-            missionCardRepository.addMissionCardList(missionCardList)
-            missionCardRepository.getMissionCardList().also {
-                _missionCards.postValue((it))
-            }
-        }
+        missionTestInstance.addMissionCardList(missionCardList)
+        updateMissionCardList()
+    }
+
+    private fun updateMissionCardList() {
+        _missionCards.postValue(missionTestInstance.getMissionCardList())
     }
 
     private fun createMissionCard(): List<MissionCardInfoEntity> {

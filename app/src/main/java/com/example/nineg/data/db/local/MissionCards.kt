@@ -1,22 +1,29 @@
 package com.example.nineg.data.db.local
 
+import android.util.Log
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 data class MissionCards(private val missionCardList: MutableList<MissionCardInfoEntity> = mutableListOf()) {
 
+    private var count = 0
+
     // 카드 리스트 반환
     fun getMissionCardList(): List<MissionCardInfoEntity> {
-        return missionCardList
+        return missionCardList.toList()
     }
 
     // 카드 추가.
-    fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
+    private fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
+        missionCardInfo.id = count++
         missionCardList.add(missionCardInfo)
     }
 
     // 카드 리스트 추가
     fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
-        missionCardList.addAll(missionCardInfoList)
+        for (missionCardInfo in missionCardInfoList) {
+            missionCardInfo.id = count++
+            addMissionCard(missionCardInfo)
+        }
     }
 
     // 즐겨찾기 등록

@@ -60,7 +60,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun initObserve() {
         viewModel.missionCards.observe(viewLifecycleOwner) {
-            Log.d(TAG, "initObserve: $it")
             missionCardAdapter.submitList(it)
         }
     }
@@ -120,7 +119,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             .setTargetView(binding.btnEdit)
             .setGuideListener(object : GuideListener {
                 override fun onDismiss(view: View?) {
-                    Log.d(TAG, "onDismiss: btnEdit")
                     viewModel.startTutorialNav()
                 }
             })
@@ -137,7 +135,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private fun adjustFabVisibilityOnScroll(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val visiblePosition = layoutManager.findLastVisibleItemPosition()
-        Log.d(TAG, "adjustFabVisibilityOnScroll: $visiblePosition")
         if (visiblePosition >= VISIBLE_FAB_POSITION) {
             binding.fabBackToFirst.show()
         } else {
@@ -150,7 +147,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     companion object {
-        private const val TAG = "MissionFragment"
         private const val POSITION_FIRST = 0
         private const val VISIBLE_FAB_POSITION = 4
     }
