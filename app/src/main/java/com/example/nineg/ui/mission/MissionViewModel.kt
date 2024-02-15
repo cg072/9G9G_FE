@@ -38,7 +38,7 @@ class MissionViewModel @Inject constructor(
 
     fun addMissionCard() {
         viewModelScope.launch(Dispatchers.IO) {
-            val cardList = missionCardRepository.getMissionCardList()
+            val cardList = missionCardRepository.getMissionCardPack().sortedBy { it.level }
             missionCards.addMissionCardList(cardList)
             updateMissionCardList()
         }

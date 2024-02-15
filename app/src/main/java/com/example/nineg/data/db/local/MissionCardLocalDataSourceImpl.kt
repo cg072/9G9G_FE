@@ -9,7 +9,17 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
 ): MissionCardLocalDataSource {
     override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         return missionCardDao.getMissionCardList()
-        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMissionCardPack(): List<MissionCardInfoEntity> {
+        val missionCardList = missionCardDao.getMissionCardList().shuffled()
+
+        val levelCardCount = mapOf(1 to 2, 2 to 2, 3 to 1)
+
+        return missionCardList.groupBy { it.level }
+            .flatMap { (level, cards) ->
+                cards.take(levelCardCount[level] ?: 0)
+            }
     }
 
     override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {

@@ -7,6 +7,8 @@ interface MissionCardLocalDataSource {
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfoEntity>
 
+    suspend fun getMissionCardPack(): List<MissionCardInfoEntity>
+
     // 카드 추가.
     suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity)
 

@@ -21,17 +21,18 @@ class MissionCardRepositoryImpl @Inject constructor(
         context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
 
     override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
-        //        TODO("Not yet implemented")
         return localMissionCardImpl.getMissionCardList()
     }
 
+    override suspend fun getMissionCardPack(): List<MissionCardInfoEntity> {
+        return localMissionCardImpl.getMissionCardPack()
+    }
+
     override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
-//        TODO("Not yet implemented")
         localMissionCardImpl.addMissionCard(missionCardInfo)
     }
 
     override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
-//        TODO("Not yet implemented")
         localMissionCardImpl.addMissionCardList(missionCardInfoList)
     }
 

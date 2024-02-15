@@ -7,6 +7,9 @@ interface MissionCardRepository {
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfoEntity>
 
+    // 카드 리스트 반환(레벨 혼합 총 5개)
+    suspend fun getMissionCardPack(): List<MissionCardInfoEntity>
+
     // 카드 추가.
     suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity)
 
