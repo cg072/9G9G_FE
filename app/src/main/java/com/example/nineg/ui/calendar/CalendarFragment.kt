@@ -3,6 +3,8 @@ package com.example.nineg.ui.calendar
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,6 +65,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         initListener()
         initCalendarRecyclerView()
         initObserve()
+        val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.requestGoodyList(ssaid)
         viewModel.getCalendarList(calendar)
     }
 
@@ -129,6 +133,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     private fun initObserve() {
         viewModel.calendarUiList.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
+        }
+
+        viewModel.goodyList.observe(viewLifecycleOwner) { list ->
+            Log.d(TAG, "kch goodyList : ${list}")
         }
     }
 

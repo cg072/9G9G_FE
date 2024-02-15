@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +18,7 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
+import com.example.nineg.base.UiState
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.dialog.PostingFormExitDialog
 import com.example.nineg.extension.hideKeyboard
@@ -35,6 +37,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
+    private val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private var imageUrl: MultipartBody.Part? = null
 
     private val titleTextWatcher: TextWatcher = object : TextWatcher {
@@ -91,6 +94,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         binding.activityPostingFormDate.text = format.format(calendar.time)
         initContentEditTextActionEvent()
         initListener()
+        observe()
+
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
@@ -126,17 +131,15 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
             if (validContent() && imageUrl != null) {
-                // TODO : calendar 이용하여 저장 처리 로직 추가
                 val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                viewModel.registerGoody2(
+
+                viewModel.registerGoody(
                     ssaid,
                     binding.activityPostingFormTitleEditText.text.toString(),
-                    binding.activityPostingFormTitleEditText.text.toString(),
                     binding.activityPostingFormContentEditText.text.toString(),
-                    "",
+                    inputFormat.format(calendar.time),
                     imageUrl!!
                 )
-                Log.d("PostingFormActivity", "Goody Card save")
             }
         }
 
@@ -162,6 +165,28 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             }
 
             return@setOnEditorActionListener false
+        }
+    }
+
+    private fun observe() {
+        viewModel.goodyState.observe(this) { state ->
+            when (state) {
+                is UiState.Uninitialized -> {
+
+                }
+                is UiState.Loading -> {
+
+                }
+                is UiState.Empty -> {
+
+                }
+                is UiState.Success -> {
+                    Toast.makeText(this, "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})", Toast.LENGTH_SHORT).show()
+                }
+                is UiState.Error -> {
+                    Toast.makeText(this, "저장에 실패했습니다.(${state.code} - ${state.exception?.message})", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

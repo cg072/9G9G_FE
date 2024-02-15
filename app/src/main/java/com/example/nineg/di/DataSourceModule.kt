@@ -23,4 +23,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindGoodyRemoteDataSource(dataSource: GoodyRemoteDataSourceImpl): GoodyRemoteDataSource
+
+    @Binds
+    abstract fun bindBookmarkRemoteDataSource(dataSource: BookmarkRemoteDataSourceImpl): BookmarkRemoteDataSource
 }

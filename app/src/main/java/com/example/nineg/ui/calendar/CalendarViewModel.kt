@@ -6,19 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nineg.R
-import com.example.nineg.data.db.CalendarRepository
+import com.example.nineg.data.db.GoodyRepository
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.model.CalendarUI
 import com.example.nineg.model.Day
 import com.example.nineg.model.DayAttribute
+import com.example.nineg.retrofit.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarViewModel @Inject constructor(private val calendarRepository: CalendarRepository) :
+class CalendarViewModel @Inject constructor(private val repository: GoodyRepository) :
     ViewModel() {
 
     companion object {
@@ -28,17 +31,23 @@ class CalendarViewModel @Inject constructor(private val calendarRepository: Cale
     private val _calendarUiList = MutableLiveData<List<CalendarUI>>()
     val calendarUiList: LiveData<List<CalendarUI>> get() = _calendarUiList
 
-    fun searchUser(deviceId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            calendarRepository.searchUser(deviceId).body()?.let {
-                Log.d(TAG, "kch ${it.deviceId} ${it.createdAt}")
-            }
-        }
-    }
+    private val _goodyList = MutableLiveData<List<Goody>>()
+    val goodyList: LiveData<List<Goody>> get() = _goodyList
 
-    fun createUser(deviceId: String) {
+
+    fun requestGoodyList(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            calendarRepository.createUser(deviceId)
+            val result = repository.getGoodyList(deviceId)
+
+            when (result) {
+                is ApiResult.Success -> {
+                    _goodyList.postValue(result.value!!)
+                }
+                is ApiResult.Error -> {
+                    _goodyList.postValue(emptyList())
+                    result.exception?.printStackTrace()
+                }
+            }
         }
     }
 
