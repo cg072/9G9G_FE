@@ -1,5 +1,6 @@
 package com.example.nineg.data.db
 
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.retrofit.ApiResult
 import okhttp3.MultipartBody
@@ -8,12 +9,11 @@ import retrofit2.Response
 interface GoodyRepository {
     suspend fun registerGoody(
         deviceId: String,
-        missionTitle: String,
         title: String,
         content: String,
-        photoUrl: String,
+        dueDate: String,
         image: MultipartBody.Part
-    ): ApiResult<GoodyDto>
+    ): ApiResult<Goody>
 
     suspend fun removeGoody(goodyId: String): Response<Unit>
 

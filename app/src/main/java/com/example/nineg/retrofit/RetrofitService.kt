@@ -5,6 +5,7 @@ import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.data.db.dto.UserDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -22,6 +23,13 @@ interface RetrofitService {
     suspend fun searchUser(
         @Path("deviceId") deviceId: String
     ): Response<UserDto>
+
+    @Multipart
+    @POST("/records")
+    suspend fun registerGoody(
+        @Part image: MultipartBody.Part,
+        @Part("recordDto") body: RequestBody
+    ): Response<GoodyDto>
 
     @Multipart
     @POST("/records")

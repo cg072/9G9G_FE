@@ -7,10 +7,9 @@ import retrofit2.Response
 interface GoodyRemoteDataSource {
     suspend fun registerGoody(
         deviceId: String,
-        missionTitle: String,
         title: String,
         content: String,
-        photoUrl: String,
+        dueDate: String,
         image: MultipartBody.Part
     ): Response<GoodyDto>
 
