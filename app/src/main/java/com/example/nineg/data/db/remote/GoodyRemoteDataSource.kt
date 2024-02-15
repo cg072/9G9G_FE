@@ -15,7 +15,5 @@ interface GoodyRemoteDataSource {
 
     suspend fun removeGoody(goodyId: String): Response<Unit>
 
-    suspend fun getGoody(deviceId: String): Response<GoodyDto>
-
     suspend fun getGoodyList(deviceId: String): Response<List<GoodyDto>>
 }

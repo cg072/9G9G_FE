@@ -2,6 +2,7 @@ package com.example.nineg.ui.detail
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -32,7 +33,7 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
 
                     override fun onDelete() {
                         val deleteDialog = RecordDeleteDialog(binding.root.context) {
-                            // TODO : 삭제하기 로직 추가
+                            viewModel.deleteGoody("72")
                         }
                         deleteDialog.show()
                     }
@@ -40,11 +41,11 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
 
             dialog.show()
         }
-        subscribe()
+        initObserve()
         viewModel.requestRecordApi()
     }
 
-    private fun subscribe() {
+    private fun initObserve() {
         viewModel.record.observe(this) {
             binding.fragmentRecordDetailImageCard.post {
                 binding.fragmentRecordDetailImageCard.load(it.image) {
@@ -59,6 +60,14 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
             if (it.level >= 1) binding.fragmentRecordDetailLevelOne.visibility = View.VISIBLE
             if (it.level >= 2) binding.fragmentRecordDetailLevelTwo.visibility = View.VISIBLE
             if (it.level >= 3) binding.fragmentRecordDetailLevelThree.visibility = View.VISIBLE
+        }
+
+        viewModel.deleteGoody.observe(this) { isDelete ->
+            if (isDelete) {
+                Toast.makeText(this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

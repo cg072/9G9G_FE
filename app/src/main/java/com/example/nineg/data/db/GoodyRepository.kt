@@ -15,9 +15,7 @@ interface GoodyRepository {
         image: MultipartBody.Part
     ): ApiResult<Goody>
 
-    suspend fun removeGoody(goodyId: String): Response<Unit>
-
-    suspend fun getGoody(deviceId: String): Response<GoodyDto>
+    suspend fun removeGoody(goodyId: String): ApiResult<Unit>
 
     suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>>
 }

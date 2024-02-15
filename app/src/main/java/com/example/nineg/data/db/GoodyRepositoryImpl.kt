@@ -39,12 +39,19 @@ class GoodyRepositoryImpl @Inject constructor(private val goodyRemoteDataSource:
         }
     }
 
-    override suspend fun removeGoody(goodyId: String): Response<Unit> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun removeGoody(goodyId: String): ApiResult<Unit> {
+        return try {
+            val response = goodyRemoteDataSource.removeGoody(goodyId)
 
-    override suspend fun getGoody(deviceId: String): Response<GoodyDto> {
-        TODO("Not yet implemented")
+            if (response.isSuccessful && response.body() != null) {
+                ApiResult.Success(Unit)
+            } else {
+                ApiResult.Error(response.code())
+            }
+        } catch (throwable: Throwable) {
+            val code = (throwable as? HttpException)?.code()
+            ApiResult.Error(code, throwable)
+        }
     }
 
     override suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>> {
