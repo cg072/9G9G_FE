@@ -3,7 +3,7 @@ package com.example.nineg.data.db
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.nineg.data.db.dto.asDomainModel
+import com.example.nineg.data.db.dto.asEntityModel
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
@@ -71,7 +71,7 @@ class MissionCardRepositoryImpl @Inject constructor(
         return when (result) {
             is ApiResult.Success -> {
                 Log.d(TAG, "downloadMissionCardList: ${result.value}")
-                result.value.asDomainModel()
+                result.value.asEntityModel()
             }
 
             is ApiResult.Error -> {

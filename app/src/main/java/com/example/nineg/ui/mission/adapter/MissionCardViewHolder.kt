@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
-import com.example.nineg.data.db.entity.MissionCardInfoEntity
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ItemMissionCardBinding
 
 class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
@@ -32,7 +32,7 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
         }
     }
 
-    fun bind(cardInfo: MissionCardInfoEntity) {
+    fun bind(cardInfo: MissionCard) {
 
         itemView.apply {
             binding.ivMissionImage.post {
@@ -47,7 +47,7 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
                 binding.ivBookmark.load(R.drawable.ic_bookmark_off)
             }
 
-            when(cardInfo.level) {
+            when (cardInfo.level) {
                 1 -> binding.ivLevel.load(R.drawable.ic_level_1)
                 2 -> binding.ivLevel.load(R.drawable.ic_level_2)
                 3 -> binding.ivLevel.load(R.drawable.ic_level_3)
@@ -55,7 +55,7 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
             }
 
             binding.tvMissionTitle.text = cardInfo.title + cardInfo.id
-            binding.tvMissionDescription.text = cardInfo.guide
+            binding.tvMissionDescription.text = cardInfo.subTitle
         }
     }
 

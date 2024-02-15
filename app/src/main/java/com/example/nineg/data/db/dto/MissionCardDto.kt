@@ -4,7 +4,7 @@ import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 class MissionCardDto : ArrayList<MissionCardDtoItem>()
 
-fun MissionCardDto.asDomainModel() : List<MissionCardInfoEntity> {
+fun MissionCardDto.asEntityModel(): List<MissionCardInfoEntity> {
     return map {
         MissionCardInfoEntity(
             id = it.id,

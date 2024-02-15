@@ -3,7 +3,6 @@ package com.example.nineg.ui.mission
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -59,7 +58,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initObserve() {
-        viewModel.missionCards.observe(viewLifecycleOwner) {
+        viewModel.missionCardList.observe(viewLifecycleOwner) {
             missionCardAdapter.submitList(it)
         }
     }
