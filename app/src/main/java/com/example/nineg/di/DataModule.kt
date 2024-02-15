@@ -33,6 +33,9 @@ abstract class DataModule {
     @Binds
     abstract fun bindGoodyRepository(repository: GoodyRepositoryImpl): GoodyRepository
 
+    @Binds
+    abstract fun bindBookmarkRepository(repository: BookmarkRepositoryImpl): BookmarkRepository
+
     companion object {
 
         // Room

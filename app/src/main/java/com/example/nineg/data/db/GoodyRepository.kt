@@ -1,24 +1,21 @@
 package com.example.nineg.data.db
 
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.retrofit.ApiResult
 import okhttp3.MultipartBody
+import retrofit2.Response
 
 interface GoodyRepository {
     suspend fun registerGoody(
         deviceId: String,
-        missionTitle: String,
         title: String,
         content: String,
-        photoUrl: String,
+        dueDate: String,
         image: MultipartBody.Part
-    ): ApiResult<GoodyDto>
+    ): ApiResult<Goody>
 
-    suspend fun removeGoody()
+    suspend fun removeGoody(goodyId: String): ApiResult<Unit>
 
-    suspend fun updateGoody()
-
-    suspend fun getGoody()
-
-    suspend fun getGoodyList()
+    suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>>
 }
