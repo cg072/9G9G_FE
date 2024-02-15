@@ -54,7 +54,7 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
                 else -> binding.ivLevel.load(R.drawable.ic_level_1)
             }
 
-            binding.tvMissionTitle.text = cardInfo.title + cardInfo.id
+            binding.tvMissionTitle.text = cardInfo.title
             binding.tvMissionDescription.text = cardInfo.subTitle
         }
     }

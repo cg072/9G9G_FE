@@ -65,21 +65,21 @@ class MissionCardRepositoryImpl @Inject constructor(
         statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
     }
 
-    override suspend fun downloadMissionCardList(): List<MissionCardInfoEntity> {
+    override suspend fun downloadMissionCardList() {
         val result = remoteMissionCardImpl.downloadMissionCardList()
 
-        return when (result) {
+        when (result) {
             is ApiResult.Success -> {
                 Log.d(TAG, "downloadMissionCardList: ${result.value}")
-                result.value.asEntityModel()
+                addMissionCardList(result.value.asEntityModel())
             }
 
             is ApiResult.Error -> {
                 Log.e(TAG, "downloadMissionCardList: ${result.exception}")
-                emptyList()
             }
         }
     }
+
 
     companion object {
         private const val TAG = "MissionCardRepositoryIm"

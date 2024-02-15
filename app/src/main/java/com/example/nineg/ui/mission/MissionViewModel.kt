@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MissionViewModel @Inject constructor(
     private val missionCardRepository: MissionCardRepository
 ) : ViewModel() {
-    
+
     private val missionCards = MissionCards()
     private val _missionCardList = MutableLiveData<List<MissionCard>>()
     val missionCardList: LiveData<List<MissionCard>> = _missionCardList
@@ -27,9 +27,8 @@ class MissionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = missionCardRepository.downloadMissionCardList()
-            missionCards.addMissionCardList(result)
-            updateMissionCardList()
+            missionCardRepository.downloadMissionCardList()
+            addMissionCard()
         }
     }
 
@@ -37,42 +36,16 @@ class MissionViewModel @Inject constructor(
         _startNavShowCase.postValue(Any())
     }
 
-    fun addMissionCard(missionCardList: List<MissionCardInfoEntity> = createMissionCard()) {
-        missionCards.addMissionCardList(missionCardList)
-        updateMissionCardList()
+    fun addMissionCard() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cardList = missionCardRepository.getMissionCardList()
+            missionCards.addMissionCardList(cardList)
+            updateMissionCardList()
+        }
     }
 
     private fun updateMissionCardList() {
         _missionCardList.postValue(missionCards.getMissionCardList())
-    }
-
-    private fun createMissionCard(): List<MissionCardInfoEntity> {
-        return listOf(
-            MissionCardInfoEntity(
-                image = "https://i.ytimg.com/vi/RncY8aNDr8U/maxresdefault.jpg",
-                level = 1,
-                title = "유나 입니다. Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "유나",
-                isBookmarked = false
-            ),
-            MissionCardInfoEntity(
-                image = "https://m.segye.com/content/image/2023/07/06/20230706511066.jpg",
-                level = 2,
-                title = "예지 입니다.Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "예지",
-                isBookmarked = false
-            ),
-            MissionCardInfoEntity(
-                image = "https://img2.sbs.co.kr/img/seditor/VD/2022/05/11/0Df1652234259596-640-0.jpg",
-                level = 3,
-                title = "카즈하 입니다. Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "카즈하",
-                isBookmarked = true
-            )
-        )
     }
 
     fun isFirstLaunch(): Boolean {
