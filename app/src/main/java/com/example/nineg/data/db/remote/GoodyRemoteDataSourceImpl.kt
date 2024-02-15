@@ -32,10 +32,10 @@ class GoodyRemoteDataSourceImpl @Inject constructor(private val service: Retrofi
     }
 
     override suspend fun getGoody(deviceId: String): Response<GoodyDto> {
-        return service.searchGoody(deviceId)
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getGoodyList(deviceId: String): Response<GoodyDto> {
-        TODO("Not yet implemented")
+    override suspend fun getGoodyList(deviceId: String): Response<List<GoodyDto>> {
+        return service.fetchGoodyList(deviceId)
     }
 }

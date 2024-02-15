@@ -17,5 +17,5 @@ interface GoodyRemoteDataSource {
 
     suspend fun getGoody(deviceId: String): Response<GoodyDto>
 
-    suspend fun getGoodyList(deviceId: String): Response<GoodyDto>
+    suspend fun getGoodyList(deviceId: String): Response<List<GoodyDto>>
 }

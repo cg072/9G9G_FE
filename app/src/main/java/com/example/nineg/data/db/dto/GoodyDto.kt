@@ -1,7 +1,6 @@
 package com.example.nineg.data.db.dto
 
 import com.example.nineg.data.db.domain.Goody
-import java.util.Date
 
 data class GoodyDto(
     val id: String,

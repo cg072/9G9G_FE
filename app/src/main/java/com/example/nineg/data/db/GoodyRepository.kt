@@ -19,5 +19,5 @@ interface GoodyRepository {
 
     suspend fun getGoody(deviceId: String): Response<GoodyDto>
 
-    suspend fun getGoodyList(deviceId: String): Response<GoodyDto>
+    suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>>
 }
