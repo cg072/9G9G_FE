@@ -7,7 +7,6 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
@@ -19,7 +18,6 @@ import androidx.core.view.isVisible
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
-import com.example.nineg.adapter.CalendarAdapter
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.base.UiState
 import com.example.nineg.data.db.domain.MissionCard
