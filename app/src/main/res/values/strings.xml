@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">NineG</string>
-    <string name="mission_title">미션</string>
+    <string name="mission_title">구디</string>
     <string name="calendar_title">달력</string>
+    <string name="my_page_title">마이페이지</string>
 
     <string name="TEXT_TODAYS_GOODY">Today\'s goody</string>
     <string name="TEXT_CREATE_MISSION">직접 작성하기</string>
