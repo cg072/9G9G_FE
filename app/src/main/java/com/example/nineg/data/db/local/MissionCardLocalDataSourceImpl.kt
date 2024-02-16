@@ -39,7 +39,7 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity> {
-        TODO("Not yet implemented")
+        return missionCardDao.getBookmarkedMissionCardList()
     }
 
     override suspend fun bookmarkMissionCard(id: Int) {

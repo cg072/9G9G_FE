@@ -10,7 +10,7 @@ import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 @Dao
 interface MissionCardDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMissionCard(missionCardInfo: MissionCardInfoEntity)
 
     @Delete
@@ -25,6 +25,9 @@ interface MissionCardDao {
             insertMissionCard(it)
         }
     }
+
+    @Query("SELECT * FROM missionCardInfo WHERE isBookmarked = 1")
+    suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity>
 
     @Query("UPDATE missionCardInfo SET isBookmarked = :isBookmarked WHERE id = :id")
     suspend fun bookmarkMissionCard(id: Int, isBookmarked: Boolean)

@@ -45,6 +45,21 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
         this.missionCardList.addAll(missionCardList)
     }
 
+    fun addBookmarkedMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
+        val missionCardList = missionCardInfoList.map {
+            MissionCard(
+                id = it.id,
+                index = count++,
+                image = it.image,
+                level = it.level,
+                title = it.title,
+                subTitle = it.guide,
+                isBookmarked = it.isBookmarked
+            )
+        }
+        this.bookmarkedMissionCardList.addAll(missionCardList)
+    }
+
     // 즐겨찾기 등록
     fun bookmarkMissionCard(id: Int) {
         Log.d(TAG, "bookmarkMissionCard 1: ${missionCardList.filter { it.id == id }[0]}")
