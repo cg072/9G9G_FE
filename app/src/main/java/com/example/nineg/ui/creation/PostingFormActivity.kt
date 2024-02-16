@@ -1,11 +1,12 @@
 package com.example.nineg.ui.creation
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
@@ -19,9 +20,11 @@ import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.base.UiState
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.dialog.PostingFormExitDialog
 import com.example.nineg.extension.hideKeyboard
+import com.example.nineg.ui.calendar.CalendarFragment
 import com.example.nineg.util.ImageUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -37,7 +40,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
-    private val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private var imageUrl: MultipartBody.Part? = null
 
     private val titleTextWatcher: TextWatcher = object : TextWatcher {
@@ -89,13 +91,10 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        calendar = Calendar.getInstance()
-        binding.activityPostingFormDate.text = format.format(calendar.time)
+        initData()
         initContentEditTextActionEvent()
         initListener()
         observe()
-
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
@@ -103,6 +102,23 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         binding.activityPostingFormTitleEditText.removeTextChangedListener(titleTextWatcher)
         binding.activityPostingFormContentEditText.removeTextChangedListener(contentTextWatcher)
         super.onDestroy()
+    }
+
+    private fun initData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(EXTRA_MISSION_CARD, MissionCard::class.java)
+        } else {
+            intent?.getParcelableExtra(EXTRA_MISSION_CARD)
+        }?.let { missionCard ->
+            binding.activityPostingFormImage.load(missionCard.image) {
+                transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
+            }
+            binding.activityPostingFormTitleEditText.setText(missionCard.title)
+            binding.activityPostingFormContentEditText.setText(missionCard.content)
+        }
+
+        calendar = Calendar.getInstance()
+        binding.activityPostingFormDate.text = format.format(calendar.time)
     }
 
     private fun initContentEditTextActionEvent() {
@@ -132,6 +148,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         binding.activityPostingFormSaveBtn.setOnClickListener {
             if (validContent() && imageUrl != null) {
                 val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
                 viewModel.registerGoody(
                     ssaid,
@@ -181,10 +198,24 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
                 }
                 is UiState.Success -> {
-                    Toast.makeText(this, "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val intent = Intent().apply {
+                        putExtra(CalendarFragment.EXTRA_SAVE_GOODY, state.data)
+                    }
+                    setResult(RESULT_OK, intent)
+                    finish()
                 }
                 is UiState.Error -> {
-                    Toast.makeText(this, "저장에 실패했습니다.(${state.code} - ${state.exception?.message})", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "저장에 실패했습니다.(${state.code} - ${state.exception?.message})",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -239,5 +270,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
         private const val MAX_TEXT_LENGTH = 28
+        const val EXTRA_MISSION_CARD = "mission_card"
     }
 }

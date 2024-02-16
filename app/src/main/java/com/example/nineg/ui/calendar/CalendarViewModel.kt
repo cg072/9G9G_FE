@@ -1,6 +1,5 @@
 package com.example.nineg.ui.calendar
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,8 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,23 +29,24 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
     private val _calendarUiList = MutableLiveData<List<CalendarUI>>()
     val calendarUiList: LiveData<List<CalendarUI>> get() = _calendarUiList
 
-    private val _goodyList = MutableLiveData<List<Goody>>()
-    val goodyList: LiveData<List<Goody>> get() = _goodyList
+    private var goodyMap: Map<String, Goody> = emptyMap()
+    private val format = SimpleDateFormat("yyyy-MM-", Locale.getDefault())
 
 
-    fun requestGoodyList(deviceId: String) {
+    fun requestGoodyList(deviceId: String, calendar: Calendar) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getGoodyList(deviceId)
 
             when (result) {
                 is ApiResult.Success -> {
-                    _goodyList.postValue(result.value!!)
+                    goodyMap = result.value.associateBy { it.dueDate }
                 }
                 is ApiResult.Error -> {
-                    _goodyList.postValue(emptyList())
                     result.exception?.printStackTrace()
                 }
             }
+
+            getCalendarList(calendar)
         }
     }
 
@@ -56,14 +55,12 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
             calendar.set(Calendar.DAY_OF_MONTH, 1)
 
             val emptyDateSize = calendar.get(Calendar.DAY_OF_WEEK) - 1
-            calendar.printDateFormat()
 
             val cloneCalendar = calendar.clone() as Calendar
             cloneCalendar.add(Calendar.MONTH, 1)
             cloneCalendar.add(Calendar.DATE, -1)
 
             val dateSize = cloneCalendar.get(Calendar.DATE)
-            cloneCalendar.printDateFormat()
 
             val dayAttributeList = listOf(
                 DayAttribute(R.string.sunday),
@@ -76,11 +73,14 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
             ).map { CalendarUI.DayAttr(it) }
 
             val emptyDateList = List(emptyDateSize) {}.map { CalendarUI.EmptyDate }
+            val yearMonthStr = format.format(calendar.time)
+
             val dateList = List(dateSize) { i -> i + 1 }.map {
+                val dueDate = yearMonthStr + it
                 CalendarUI.Date(
                     Day(
                         it,
-                        if (it % 2 == 0) "1" else "" // Image input
+                        goodyMap[dueDate]
                     )
                 )
             }
@@ -95,8 +95,7 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
         }
     }
 
-    private fun Calendar.printDateFormat() {
-        val format = SimpleDateFormat("yyyy MM월 dd일", Locale.getDefault())
-        Log.d(TAG, "kch calendar date format : ${format.format(this.time)}")
+    fun getFeed() {
+        _calendarUiList.postValue(goodyMap.values.map { CalendarUI.Feed(it) })
     }
 }

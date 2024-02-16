@@ -6,15 +6,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.ItemCalendarDateBinding
 import com.example.nineg.databinding.ItemCalendarDayAttributeBinding
 import com.example.nineg.databinding.ItemCalendarEmpyBinding
+import com.example.nineg.databinding.ItemFeedBinding
 import com.example.nineg.model.CalendarUI
 import com.example.nineg.model.Day
 import com.example.nineg.model.DayAttribute
 
-class CalendarAdapter :
+class CalendarAdapter(private val onClick: (Goody) -> Unit) :
     ListAdapter<CalendarUI, RecyclerView.ViewHolder>(CalendarDiffUtil) {
 
     override fun getItemViewType(position: Int): Int {
@@ -22,6 +26,7 @@ class CalendarAdapter :
             is CalendarUI.DayAttr -> R.layout.item_calendar_day_attribute
             is CalendarUI.Date -> R.layout.item_calendar_date
             is CalendarUI.EmptyDate -> R.layout.item_calendar_empy
+            is CalendarUI.Feed -> R.layout.item_feed
         }
     }
 
@@ -42,7 +47,7 @@ class CalendarAdapter :
                     parent,
                     false
                 )
-                DateViewHolder(binding)
+                DateViewHolder(binding, onClick)
             }
             R.layout.item_calendar_empy -> {
                 val binding = ItemCalendarEmpyBinding.inflate(
@@ -51,6 +56,14 @@ class CalendarAdapter :
                     false
                 )
                 EmptyViewHolder(binding)
+            }
+            R.layout.item_feed -> {
+                val binding = ItemFeedBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                FeedViewHolder(binding, onClick)
             }
             else -> throw RuntimeException()
         }
@@ -64,6 +77,9 @@ class CalendarAdapter :
             is DateViewHolder -> {
                 holder.bind((getItem(position) as CalendarUI.Date).day)
             }
+            is FeedViewHolder -> {
+                holder.bind((getItem(position) as CalendarUI.Feed).goody)
+            }
         }
     }
 
@@ -74,23 +90,51 @@ class CalendarAdapter :
         }
     }
 
-    class DateViewHolder(private val binding: ItemCalendarDateBinding) :
+    class DateViewHolder(
+        private val binding: ItemCalendarDateBinding,
+        private val onClick: (Goody) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(day: Day) {
             binding.itemCalendarDateTitle.text = day.date.toString()
             binding.itemCalendarDateImageTitle.text = day.date.toString()
             binding.itemCalendarDateImage.clipToOutline = true
 
-            if (day.image.isEmpty()) {
+            if (day.goody == null) {
                 binding.itemCalendarDateImageContainer.visibility = View.GONE
             } else {
                 binding.itemCalendarDateImageContainer.visibility = View.VISIBLE
-                binding.itemCalendarDateImage.setImageResource(R.color.primary)
+                binding.itemCalendarDateImage.load(day.goody?.photoUrl) {
+                    transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
+                }
+            }
+
+            binding.root.setOnClickListener {
+                day.goody?.let { onClick(it) }
+            }
+        }
+
+        companion object {
+            private const val ROUNDED_CORNERS_VALUE = 10f
+        }
+    }
+
+
+    class FeedViewHolder(
+        private val binding: ItemFeedBinding,
+        private val onClick: (Goody) -> Unit
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(goody: Goody) {
+            binding.itemFeedImage.load(goody.photoUrl)
+
+            binding.root.setOnClickListener {
+                onClick(goody)
             }
         }
     }
 
-    class EmptyViewHolder(binding: ItemCalendarEmpyBinding): RecyclerView.ViewHolder(binding.root)
+    class EmptyViewHolder(binding: ItemCalendarEmpyBinding) : RecyclerView.ViewHolder(binding.root)
 }
 
 object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
@@ -99,6 +143,8 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
             return oldItem.dayAttribute == newItem.dayAttribute
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
             return oldItem.day.date == newItem.day.date
+        } else if (oldItem is CalendarUI.Feed && newItem is CalendarUI.Feed) {
+            return oldItem.goody.id == newItem.goody.id
         } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {
             return oldItem == newItem
         }
@@ -112,7 +158,17 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
             if (oldItem.day.date != newItem.day.date) return false
 
-            if (oldItem.day.image != newItem.day.image) return false
+            if (oldItem.day.goody != newItem.day.goody) return false
+
+            if (oldItem.day.goody?.id != newItem.day.goody?.id) return false
+
+            if (oldItem.day.goody?.photoUrl != newItem.day.goody?.photoUrl) return false
+
+            return true
+        } else if (oldItem is CalendarUI.Feed && newItem is CalendarUI.Feed) {
+            if (oldItem.goody != newItem.goody) return false
+
+            if (oldItem.goody.photoUrl != newItem.goody.photoUrl) return false
 
             return true
         } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {

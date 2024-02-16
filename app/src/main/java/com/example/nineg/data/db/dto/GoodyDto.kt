@@ -10,4 +10,4 @@ data class GoodyDto(
     val dueDate: String
 )
 
-fun GoodyDto.asDomainModel() = Goody(id, title, content, photoUrl, dueDate)
+fun GoodyDto.asDomainModel() = Goody(id, title, content, photoUrl, 0, dueDate)

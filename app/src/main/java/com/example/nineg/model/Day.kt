@@ -1,3 +1,5 @@
 package com.example.nineg.model
 
-data class Day(val date: Int, var image: String = "")
+import com.example.nineg.data.db.domain.Goody
+
+data class Day(val date: Int, var goody: Goody?)
