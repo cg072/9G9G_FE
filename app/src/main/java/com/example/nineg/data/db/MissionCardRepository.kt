@@ -26,10 +26,10 @@ interface MissionCardRepository {
     suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity>
 
     // 즐겨찾기 등록
-    suspend fun bookmarkMissionCard(position: Int)
+    suspend fun bookmarkMissionCard(id: Int)
 
     // 즐겨찾기 해제
-    suspend fun unBookmarkMissionCard(position: Int)
+    suspend fun unBookmarkMissionCard(id: Int)
 
     fun getIsFirstLaunch(): Boolean
 

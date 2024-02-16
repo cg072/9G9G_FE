@@ -9,7 +9,8 @@ import com.example.nineg.R
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ItemMissionCardBinding
 
-class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
+class MissionCardViewHolder(
+    private val binding: ItemMissionCardBinding, private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) :
     RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -33,7 +34,7 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
     }
 
     fun bind(cardInfo: MissionCard) {
-
+        Log.d(TAG, "bind: $cardInfo")
         itemView.apply {
             binding.ivMissionImage.post {
                 binding.ivMissionImage.load(cardInfo.image) {
@@ -56,6 +57,10 @@ class MissionCardViewHolder(private val binding: ItemMissionCardBinding) :
 
             binding.tvMissionTitle.text = cardInfo.title
             binding.tvMissionDescription.text = cardInfo.subTitle
+
+            binding.ivBookmark.setOnClickListener {
+                recyclerViewClickListener.onRecyclerViewBookMarkClick(cardInfo)
+            }
         }
     }
 

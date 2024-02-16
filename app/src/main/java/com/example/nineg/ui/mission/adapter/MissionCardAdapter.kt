@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ItemMissionCardBinding
 
-class MissionCardAdapter : ListAdapter<MissionCard, MissionCardViewHolder>(MissionCardDiffUtil) {
+class MissionCardAdapter(private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) : ListAdapter<MissionCard, MissionCardViewHolder>(MissionCardDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionCardViewHolder {
         return MissionCardViewHolder(
@@ -15,7 +15,7 @@ class MissionCardAdapter : ListAdapter<MissionCard, MissionCardViewHolder>(Missi
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), recyclerViewClickListener
         )
     }
 
@@ -25,13 +25,18 @@ class MissionCardAdapter : ListAdapter<MissionCard, MissionCardViewHolder>(Missi
     }
 
     companion object {
+        private const val TAG = "MissionCardAdapter"
         private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCard>() {
             override fun areItemsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {
-                return oldItem.index == newItem.index
+                return (oldItem.index == newItem.index) && (oldItem.isBookmarked == newItem.isBookmarked)
             }
 
             override fun areContentsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {
                 return oldItem == newItem
+            }
+
+            override fun getChangePayload(oldItem: MissionCard, newItem: MissionCard): Boolean {
+                return oldItem.isBookmarked == newItem.isBookmarked
             }
         }
     }

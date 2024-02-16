@@ -18,5 +18,5 @@ data class MissionCardInfoEntity(
     val guide: String?,
     // 상세 설명
     val content: String,
-    var isBookmarked: Boolean = true
+    var isBookmarked: Boolean = false
 ): Parcelable

@@ -1,10 +1,10 @@
 package com.example.nineg.ui.mission
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.MissionCardRepository
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.local.MissionCards
@@ -45,7 +45,7 @@ class MissionViewModel @Inject constructor(
     }
 
     private fun updateMissionCardList() {
-        _missionCardList.postValue(missionCards.getMissionCardList())
+        _missionCardList.postValue(missionCards.getMissionCardList().toList())
     }
 
     fun isFirstLaunch(): Boolean {
@@ -54,5 +54,25 @@ class MissionViewModel @Inject constructor(
 
     fun setIsFirstLaunch(isFirstLaunch: Boolean) {
         missionCardRepository.setIsFirstLaunch(isFirstLaunch)
+    }
+
+    fun updateBookmarkMissionCard(cardInfo: MissionCard) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if (cardInfo.isBookmarked) {
+                missionCardRepository.unBookmarkMissionCard(cardInfo.id)
+                missionCards.unBookmarkMissionCard(cardInfo.id)
+            } else {
+                missionCardRepository.bookmarkMissionCard(cardInfo.id)
+                missionCards.bookmarkMissionCard(cardInfo.id)
+            }
+
+            // 변경 내역이 실시간으로 적용되어야함.
+            updateMissionCardList()
+        }
+    }
+
+    companion object {
+        private const val TAG = "MissionViewModel"
     }
 }

@@ -3,6 +3,7 @@ package com.example.nineg.ui.mission
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,9 +13,11 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
+import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,7 +67,11 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initRecyclerView() {
-        missionCardAdapter = MissionCardAdapter()
+        missionCardAdapter = MissionCardAdapter(object : MissionCardRecyclerViewClickListener {
+            override fun onRecyclerViewBookMarkClick(cardInfo: MissionCard) {
+                viewModel.updateBookmarkMissionCard(cardInfo)
+            }
+        })
         binding.rvMission.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -146,6 +153,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     companion object {
+        private const val TAG = "MissionFragment"
         private const val POSITION_FIRST = 0
         private const val VISIBLE_FAB_POSITION = 4
     }

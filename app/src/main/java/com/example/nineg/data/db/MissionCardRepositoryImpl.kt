@@ -50,12 +50,12 @@ class MissionCardRepositoryImpl @Inject constructor(
         return listOf()
     }
 
-    override suspend fun bookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun bookmarkMissionCard(id: Int) {
+        localMissionCardImpl.bookmarkMissionCard(id)
     }
 
-    override suspend fun unBookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun unBookmarkMissionCard(id: Int) {
+        localMissionCardImpl.unBookmarkMissionCard(id)
     }
 
     override fun getIsFirstLaunch(): Boolean {

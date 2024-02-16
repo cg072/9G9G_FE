@@ -23,7 +23,7 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
-        TODO("Not yet implemented")
+        missionCardDao.insertMissionCard(missionCardInfo)
     }
 
     override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
@@ -42,11 +42,11 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun bookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun bookmarkMissionCard(id: Int) {
+        missionCardDao.bookmarkMissionCard(id, true)
     }
 
-    override suspend fun unBookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun unBookmarkMissionCard(id: Int) {
+        missionCardDao.bookmarkMissionCard(id, false)
     }
 }

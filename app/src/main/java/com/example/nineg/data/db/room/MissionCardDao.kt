@@ -26,6 +26,9 @@ interface MissionCardDao {
         }
     }
 
+    @Query("UPDATE missionCardInfo SET isBookmarked = :isBookmarked WHERE id = :id")
+    suspend fun bookmarkMissionCard(id: Int, isBookmarked: Boolean)
+
     @Query("DELETE FROM missionCardInfo")
     suspend fun clearMissionCard() {
         getMissionCardList().forEach {
