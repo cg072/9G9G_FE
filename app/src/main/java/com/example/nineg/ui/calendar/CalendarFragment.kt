@@ -1,7 +1,6 @@
 package com.example.nineg.ui.calendar
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -17,12 +16,10 @@ import com.example.nineg.base.BaseFragment
 import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.FragmentCalendarBinding
 import com.example.nineg.dialog.CalendarFilterDialog
-import com.example.nineg.ui.creation.PostingFormActivity
-import com.example.nineg.ui.detail.RecordDetailActivity
+import com.example.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
 @AndroidEntryPoint
 class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
@@ -49,7 +46,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d(TAG, "kch startRecordDetailActivityForResult")
                 val intent = result.data
-                val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                val ssaid =
+                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
                 viewModel.requestGoodyList(ssaid, calendar)
             }
         }
@@ -58,7 +56,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d(TAG, "kch startPostingFormActivityForResult")
-                val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                val ssaid =
+                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
                 viewModel.requestGoodyList(ssaid, calendar)
 
                 val intent = result.data
@@ -66,7 +65,13 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
                     intent?.getParcelableExtra(EXTRA_SAVE_GOODY, Goody::class.java)
                 } else {
                     intent?.getParcelableExtra(EXTRA_SAVE_GOODY)
-                }?.let { goody -> startRecordDetailActivity(goody) }
+                }?.let { goody ->
+                    ActivityUtil.startRecordDetailActivity(
+                        binding.root.context,
+                        goody,
+                        startRecordDetailActivityForResult
+                    )
+                }
             }
         }
 
@@ -112,7 +117,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         }
 
         binding.fragmentCalendarFloatingBtn.setOnClickListener {
-            startPostingFormActivity()
+            ActivityUtil.startPostingFormActivity(
+                binding.root.context,
+                startPostingFormActivityForResult
+            )
         }
     }
 
@@ -132,7 +140,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
     private fun initCalendarRecyclerView() {
         adapter = CalendarAdapter {
-            startRecordDetailActivity(it)
+            ActivityUtil.startRecordDetailActivity(
+                binding.root.context,
+                it,
+                startRecordDetailActivityForResult
+            )
         }
         binding.fragmentCalendarRecyclerView.adapter = adapter
         binding.fragmentCalendarRecyclerView.layoutManager =
@@ -157,31 +169,5 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         }
 
         dialog.show()
-    }
-
-    private fun startPostingFormActivity() {
-        /**
-         * 1. 카드 선택할 경우 이미지, 타이틀, 내용 갖고 진입 (타이틀은 텍스트, 내용은 가이드 힌트)
-         * 2. 직접 작성 선택할 경우, 내용 - 가이드 노출 일상 속에서 어떤 낭만을 찾아내셨나요? / 느꼈던 감정과 생각을 자유롭게 적어주세요 (선택)
-         * 타이틀은 힌트 카드의 제목을 작성해주세요
-         */
-
-        startPostingFormActivityForResult.launch(
-            Intent(
-                binding.root.context,
-                PostingFormActivity::class.java
-            )
-        )
-    }
-
-    private fun startRecordDetailActivity(goody: Goody) {
-        startRecordDetailActivityForResult.launch(
-            Intent(
-                binding.root.context,
-                RecordDetailActivity::class.java
-            ).apply {
-                putExtra(RecordDetailActivity.EXTRA_GOODY, goody)
-            }
-        )
     }
 }
