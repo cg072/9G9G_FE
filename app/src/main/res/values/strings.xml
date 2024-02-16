@@ -3,6 +3,8 @@
     <string name="mission_title">구디</string>
     <string name="calendar_title">달력</string>
     <string name="my_page_title">마이페이지</string>
+    <string name="goody_profile_name">춤추는구디</string>
+    <string name="goody_profile_text">오늘의 낭만을 즐겨보세요!</string>
 
     <string name="TEXT_TODAYS_GOODY">Today\'s goody</string>
     <string name="TEXT_CREATE_MISSION">직접 작성하기</string>
@@ -34,4 +36,9 @@
     <string name="TEXT_TUTORIAL_SLIDE_MISSION_CARD">마음에 드는 구디 카드를 찾아,\n오른쪽으로 넘겨보세요</string>
     <string name="TEXT_TUTORIAL_CREATE_MISSION_CARD">마음에 쏙 드는 카드가 없다면,\n직접 구디카드를 작성해 보세요</string>
     <string name="TEXT_TUTORIAL_CALENDAR">내 기록을 한눈에 확인할 수 있어요</string>
+
+    <string name="privacy_policy">개인정보 처리방침</string>
+    <string name="terms_of_service">서비스 이용약관</string>
+    <string name="goody_card_forms">구디카드 요청하기</string>
+    <string name="contact_us">문의하기</string>
 </resources>

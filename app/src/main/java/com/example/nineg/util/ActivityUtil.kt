@@ -2,6 +2,7 @@ package com.example.nineg.util
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.ui.creation.PostingFormActivity
@@ -34,5 +35,10 @@ object ActivityUtil {
                 PostingFormActivity::class.java
             )
         )
+    }
+
+    fun startExternalBrowser(context: Context, url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        context.startActivity(intent)
     }
 }
