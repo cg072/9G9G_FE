@@ -2,6 +2,7 @@ package com.example.nineg.ui.calendar
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -28,6 +29,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
     companion object {
         private const val TAG = "CalendarFragment"
+        const val EXTRA_SAVE_GOODY = "save_goody"
     }
 
     enum class GridType {
@@ -56,7 +58,15 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d(TAG, "kch startPostingFormActivityForResult")
+                val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                viewModel.requestGoodyList(ssaid, calendar)
+
                 val intent = result.data
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent?.getParcelableExtra(EXTRA_SAVE_GOODY, Goody::class.java)
+                } else {
+                    intent?.getParcelableExtra(EXTRA_SAVE_GOODY)
+                }?.let { goody -> startRecordDetailActivity(goody) }
             }
         }
 

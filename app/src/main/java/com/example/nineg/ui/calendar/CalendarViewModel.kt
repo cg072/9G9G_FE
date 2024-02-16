@@ -1,6 +1,5 @@
 package com.example.nineg.ui.calendar
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,7 +30,6 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
     val calendarUiList: LiveData<List<CalendarUI>> get() = _calendarUiList
 
     private var goodyMap: Map<String, Goody> = emptyMap()
-
     private val format = SimpleDateFormat("yyyy-MM-", Locale.getDefault())
 
 
@@ -57,14 +55,12 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
             calendar.set(Calendar.DAY_OF_MONTH, 1)
 
             val emptyDateSize = calendar.get(Calendar.DAY_OF_WEEK) - 1
-            calendar.printDateFormat()
 
             val cloneCalendar = calendar.clone() as Calendar
             cloneCalendar.add(Calendar.MONTH, 1)
             cloneCalendar.add(Calendar.DATE, -1)
 
             val dateSize = cloneCalendar.get(Calendar.DATE)
-            cloneCalendar.printDateFormat()
 
             val dayAttributeList = listOf(
                 DayAttribute(R.string.sunday),
@@ -97,11 +93,6 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
                 }
             )
         }
-    }
-
-    private fun Calendar.printDateFormat() {
-        val format = SimpleDateFormat("yyyy MM월 dd일", Locale.getDefault())
-        Log.d(TAG, "kch calendar date format : ${format.format(this.time)}")
     }
 
     fun getFeed() {
