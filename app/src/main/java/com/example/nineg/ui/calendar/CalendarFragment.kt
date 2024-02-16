@@ -45,13 +45,17 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "kch startRecordDetailActivityForResult")
                 val intent = result.data
+                val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                viewModel.requestGoodyList(ssaid, calendar)
             }
         }
 
     private val startPostingFormActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "kch startPostingFormActivityForResult")
                 val intent = result.data
             }
         }
@@ -166,7 +170,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
                 binding.root.context,
                 RecordDetailActivity::class.java
             ).apply {
-                putExtra("goody", goody)
+                putExtra(RecordDetailActivity.EXTRA_GOODY, goody)
             }
         )
     }
