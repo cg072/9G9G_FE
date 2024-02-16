@@ -25,7 +25,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
             image = missionCardInfo.image,
             level = missionCardInfo.level,
             title = missionCardInfo.title,
-            subTitle = missionCardInfo.guide,
+            guide = missionCardInfo.guide,
             isBookmarked = missionCardInfo.isBookmarked
         ).apply { missionCardList.add(this) }
     }
@@ -39,7 +39,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
                 image = it.image,
                 level = it.level,
                 title = it.title,
-                subTitle = it.guide,
+                guide = it.guide,
             )
         }
         this.missionCardList.addAll(missionCardList)
@@ -53,7 +53,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
                 image = it.image,
                 level = it.level,
                 title = it.title,
-                subTitle = it.guide,
+                guide = it.guide,
                 isBookmarked = it.isBookmarked
             )
         }

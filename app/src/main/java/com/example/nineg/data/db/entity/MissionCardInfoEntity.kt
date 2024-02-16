@@ -3,6 +3,9 @@ package com.example.nineg.data.db.entity
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.nineg.data.db.domain.Goody
+import com.example.nineg.data.db.domain.MissionCard
+import com.example.nineg.data.db.dto.GoodyDto
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -19,4 +22,7 @@ data class MissionCardInfoEntity(
     // 상세 설명
     val content: String,
     var isBookmarked: Boolean = false
-): Parcelable
+) : Parcelable
+
+fun MissionCardInfoEntity.asDomainModel() =
+    MissionCard(id,0, image, level, title, guide, content, isBookmarked)

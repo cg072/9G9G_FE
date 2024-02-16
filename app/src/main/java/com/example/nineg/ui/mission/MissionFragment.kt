@@ -2,6 +2,7 @@ package com.example.nineg.ui.mission
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,8 +14,11 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
+
 import com.example.nineg.data.db.domain.MissionCard
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.FragmentMissionBinding
+import com.example.nineg.ui.calendar.CalendarFragment
 import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
@@ -39,6 +43,13 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY, Goody::class.java)
+                } else {
+                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
+                }?.let { goody ->
+
+                }
             }
         }
 
