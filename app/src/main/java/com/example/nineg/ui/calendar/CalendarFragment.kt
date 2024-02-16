@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.nineg.R
 import com.example.nineg.adapter.CalendarAdapter
 import com.example.nineg.base.BaseFragment
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.FragmentCalendarBinding
 import com.example.nineg.dialog.CalendarFilterDialog
 import com.example.nineg.ui.creation.PostingFormActivity
@@ -66,8 +67,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         initCalendarRecyclerView()
         initObserve()
         val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.requestGoodyList(ssaid)
-        viewModel.getCalendarList(calendar)
+        Log.d(TAG, "kch ssaid : ${ssaid}")
+        viewModel.requestGoodyList(ssaid, calendar)
     }
 
     private fun initData() {
@@ -98,14 +99,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
         binding.fragmentCalendarFloatingBtn.setOnClickListener {
             startPostingFormActivity()
-//            startRecordDetailActivity()
-        }
-
-        /**
-         * 제거 예정 임시로 생성
-         */
-        binding.fragmentCalendarTitle.setOnClickListener {
-            startRecordDetailActivity()
         }
     }
 
@@ -124,7 +117,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     }
 
     private fun initCalendarRecyclerView() {
-        adapter = CalendarAdapter()
+        adapter = CalendarAdapter {
+            startRecordDetailActivity(it)
+        }
         binding.fragmentCalendarRecyclerView.adapter = adapter
         binding.fragmentCalendarRecyclerView.layoutManager =
             GridLayoutManager(binding.root.context, 7)
@@ -133,10 +128,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     private fun initObserve() {
         viewModel.calendarUiList.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
-        }
-
-        viewModel.goodyList.observe(viewLifecycleOwner) { list ->
-            Log.d(TAG, "kch goodyList : ${list}")
         }
     }
 
@@ -169,12 +160,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         )
     }
 
-    private fun startRecordDetailActivity() {
+    private fun startRecordDetailActivity(goody: Goody) {
         startRecordDetailActivityForResult.launch(
             Intent(
                 binding.root.context,
                 RecordDetailActivity::class.java
-            )
+            ).apply {
+                putExtra("goody", goody)
+            }
         )
     }
 }
