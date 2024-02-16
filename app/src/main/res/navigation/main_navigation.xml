@@ -15,4 +15,9 @@
         android:name="com.example.nineg.ui.calendar.CalendarFragment"
         android:label="CalendarFragment"
         tools:layout="@layout/fragment_calendar"/>
+    <MaintainStatusNavigator
+        android:id="@+id/myPageFragment"
+        android:name="com.example.nineg.ui.my.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page"/>
 </navigation>

@@ -116,7 +116,7 @@
                         android:id="@+id/fragmentRecordDetailLevelOne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_goody"
+                        android:src="@drawable/ic_level_goody"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 
@@ -124,7 +124,7 @@
                         android:id="@+id/fragmentRecordDetailLevelTwo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_goody"
+                        android:src="@drawable/ic_level_goody"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 
@@ -132,7 +132,7 @@
                         android:id="@+id/fragmentRecordDetailLevelThree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_goody"
+                        android:src="@drawable/ic_level_goody"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 
