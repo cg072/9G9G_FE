@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,7 +65,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initBinding() {
-        binding.tvDate.text = DateUtil.getToday()
+        binding.tvDate.text = DateUtil.getTodayWithDay()
         binding.view = this
         binding.viewModel = viewModel
     }

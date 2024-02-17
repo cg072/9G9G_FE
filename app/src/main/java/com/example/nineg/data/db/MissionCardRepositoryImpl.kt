@@ -3,11 +3,13 @@ package com.example.nineg.data.db
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.data.db.dto.asEntityModel
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
 import com.example.nineg.retrofit.ApiResult
+import com.example.nineg.util.DateUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -40,9 +42,21 @@ class MissionCardRepositoryImpl @Inject constructor(
         localMissionCardImpl.clearMissionCard()
     }
 
-    override suspend fun getTodayMissionCard(): MissionCardInfoEntity? {
-//        TODO("Not yet implemented")
-        return null
+    override suspend fun getTodayMissionCard(userId: String): GoodyDto? {
+        val result = remoteMissionCardImpl.getTodayMissionCard(userId)
+
+        when (result) {
+            is ApiResult.Success -> {
+                if(result.value.filter { it.dueDate == DateUtil.getSimpleToday() }.isEmpty()) {
+                    return null
+                }
+                return result.value.filter { it.dueDate == DateUtil.getSimpleToday() }[0]
+            }
+
+            is ApiResult.Error -> {
+                return null
+            }
+        }
     }
 
     override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity> {
@@ -65,6 +79,14 @@ class MissionCardRepositoryImpl @Inject constructor(
         statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
     }
 
+    override fun getUserId(): String? {
+        return statusPref.getString(USER_ID, "")
+    }
+
+    override fun setUserId(userId: String) {
+        statusPref.edit().putString(USER_ID, userId).apply()
+    }
+
     override suspend fun downloadMissionCardList() {
         val result = remoteMissionCardImpl.downloadMissionCardList()
 
@@ -84,5 +106,6 @@ class MissionCardRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "MissionCardRepositoryIm"
         private const val IS_FIRST_LAUNCH = "isFirstLaunch"
+        private const val USER_ID = "userId"
     }
 }

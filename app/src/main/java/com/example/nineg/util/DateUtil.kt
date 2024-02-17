@@ -11,13 +11,23 @@ import java.util.Locale
 object DateUtil {
     private const val FULL_DATE_FORMAT = "yyyy년 MM월 dd일 E요일"
     @SuppressLint("SimpleDateFormat")
-    fun getToday(): String {
+    fun getTodayWithDay(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val currentDateTime = LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일", Locale.KOREAN)
             currentDateTime.format(formatter)
         } else {
             SimpleDateFormat(FULL_DATE_FORMAT).format(Date())
+        }
+    }
+
+    fun getSimpleToday(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val currentDateTime = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREAN)
+            currentDateTime.format(formatter)
+        } else {
+            SimpleDateFormat("yyyy-MM-dd").format(Date())
         }
     }
 }

@@ -34,7 +34,6 @@ class MissionCardViewHolder(
     }
 
     fun bind(cardInfo: MissionCard) {
-        Log.d(TAG, "bind: $cardInfo")
         itemView.apply {
             binding.ivMissionImage.post {
                 binding.ivMissionImage.load(cardInfo.image) {
@@ -49,9 +48,13 @@ class MissionCardViewHolder(
             }
 
             when (cardInfo.level) {
-                1 -> binding.ivLevel.load(R.drawable.ic_level_1)
-                2 -> binding.ivLevel.load(R.drawable.ic_level_2)
-                3 -> binding.ivLevel.load(R.drawable.ic_level_3)
+                TODAY_GOODY -> {
+                    binding.ivLevel.visibility = android.view.View.INVISIBLE
+                    binding.ivBookmark.visibility = android.view.View.INVISIBLE
+                }
+                MISSION_LEVEL_1 -> binding.ivLevel.load(R.drawable.ic_level_1)
+                MISSION_LEVEL_2 -> binding.ivLevel.load(R.drawable.ic_level_2)
+                MISSION_LEVEL_3 -> binding.ivLevel.load(R.drawable.ic_level_3)
                 else -> binding.ivLevel.load(R.drawable.ic_level_1)
             }
 
@@ -67,5 +70,9 @@ class MissionCardViewHolder(
     companion object {
         private const val TAG = "MissionCardViewHolder"
         const val ROUNDED_CORNERS_VALUE = 30f
+        const val TODAY_GOODY = 0
+        const val MISSION_LEVEL_1 = 1
+        const val MISSION_LEVEL_2 = 2
+        const val MISSION_LEVEL_3 = 3
     }
 }

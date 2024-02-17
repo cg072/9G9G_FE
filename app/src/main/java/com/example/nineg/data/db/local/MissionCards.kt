@@ -2,19 +2,21 @@ package com.example.nineg.data.db.local
 
 import android.util.Log
 import com.example.nineg.data.db.domain.MissionCard
+import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
-data class MissionCards(private val missionCardList: MutableList<MissionCard> = mutableListOf(), private val bookmarkedMissionCardList: MutableList<MissionCard> = mutableListOf()) {
+data class MissionCards(
+    private val missionCardList: MutableList<MissionCard> = mutableListOf(),
+    private val bookmarkedMissionCardList: MutableList<MissionCard> = mutableListOf(),
+    private var todayGoody: MutableList<MissionCard> = mutableListOf()
+) {
 
     private var count = 0
 
     // 카드 리스트 반환
     fun getMissionCardList(): List<MissionCard> {
-        val a = arrayListOf<MissionCard>()
-        a.addAll( bookmarkedMissionCardList + missionCardList)
-        Log.d(TAG, "getMissionCardList: missionCardList - ${System.identityHashCode(missionCardList)}")
-        Log.d(TAG, "getMissionCardList: a ->  ${System.identityHashCode(a)}")
-        return a.toList()
+
+        return todayGoody.toList() + bookmarkedMissionCardList.toList() + missionCardList.toList()
     }
 
     // 카드 추가.
@@ -26,6 +28,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
             level = missionCardInfo.level,
             title = missionCardInfo.title,
             guide = missionCardInfo.guide,
+            content = missionCardInfo.content,
             isBookmarked = missionCardInfo.isBookmarked
         ).apply { missionCardList.add(this) }
     }
@@ -39,6 +42,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
                 image = it.image,
                 level = it.level,
                 title = it.title,
+                content = it.content,
                 guide = it.guide,
             )
         }
@@ -54,6 +58,7 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
                 level = it.level,
                 title = it.title,
                 guide = it.guide,
+                content = it.content,
                 isBookmarked = it.isBookmarked
             )
         }
@@ -62,23 +67,46 @@ data class MissionCards(private val missionCardList: MutableList<MissionCard> = 
 
     // 즐겨찾기 등록
     fun bookmarkMissionCard(id: Int) {
-        Log.d(TAG, "bookmarkMissionCard 1: ${missionCardList.filter { it.id == id }[0]}")
-        missionCardList.filter { it.id == id }.forEach {
-            it.isBookmarked = true
+        Log.d(TAG, "bookmarkMissionCard: ${System.identityHashCode(missionCardList)}")
+
+        val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = true)
+
+        for ((i, missionCard) in missionCardList.withIndex()) {
+            if (missionCard.id == id) {
+                missionCardList[i] = newItem
+            }
         }
-        Log.d(TAG, "bookmarkMissionCard 2: ${missionCardList.filter { it.id == id }[0]}")
+
         bookmarkedMissionCardList.add(missionCardList.filter { it.id == id }[0])
     }
 
     // 즐겨찾기 해제
     fun unBookmarkMissionCard(id: Int) {
-        Log.d(TAG, "unBookmarkMissionCard 1: ${missionCardList.filter { it.id == id }[0]}")
-
-        missionCardList.filter { it.id == id }.forEach {
-            it.isBookmarked = false
-        }
-        Log.d(TAG, "unBookmarkMissionCard 1: ${missionCardList.filter { it.id == id }[0]}")
+        Log.d(TAG, "unBookmarkMissionCard: ${System.identityHashCode(missionCardList)}")
         bookmarkedMissionCardList.remove(missionCardList.filter { it.id == id }[0])
+
+        val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = false)
+
+        for ((i, missionCard) in missionCardList.withIndex()) {
+            if (missionCard.id == id) {
+                missionCardList[i] = newItem
+            }
+        }
+
+    }
+
+    fun updateTodayGoody(goodyDto: GoodyDto) {
+        todayGoody = mutableListOf(
+            MissionCard(
+                id = goodyDto.id.toInt(),
+                index = count++,
+                image = goodyDto.photoUrl,
+                level = 0,
+                title = goodyDto.title,
+                guide = null,
+                content = goodyDto.content,
+            )
+        )
     }
 
     override fun hashCode(): Int {

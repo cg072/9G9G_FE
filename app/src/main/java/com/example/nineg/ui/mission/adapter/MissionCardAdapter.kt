@@ -28,7 +28,7 @@ class MissionCardAdapter(private val recyclerViewClickListener: MissionCardRecyc
         private const val TAG = "MissionCardAdapter"
         private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCard>() {
             override fun areItemsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {
-                return (oldItem.index == newItem.index) && (oldItem.isBookmarked == newItem.isBookmarked)
+                return oldItem.index == newItem.index
             }
 
             override fun areContentsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {

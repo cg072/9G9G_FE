@@ -1,6 +1,5 @@
 package com.example.nineg.ui.mission
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,6 +26,10 @@ class MissionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            val todayGoody = missionCardRepository.getUserId()?.let { missionCardRepository.getTodayMissionCard("userDevice13") }
+            todayGoody?.let {
+                missionCards.updateTodayGoody(it)
+            }
             missionCardRepository.downloadMissionCardList()
             addMissionCard()
         }
@@ -46,9 +49,7 @@ class MissionViewModel @Inject constructor(
         }
     }
 
-    private fun updateMissionCardList() {
-        _missionCardList.postValue(missionCards.getMissionCardList().toList())
-    }
+
 
     fun isFirstLaunch(): Boolean {
         return missionCardRepository.getIsFirstLaunch()
@@ -72,6 +73,10 @@ class MissionViewModel @Inject constructor(
             // 변경 내역이 실시간으로 적용되어야함.
             updateMissionCardList()
         }
+    }
+
+    private fun updateMissionCardList() {
+        _missionCardList.postValue(missionCards.getMissionCardList())
     }
 
     companion object {
