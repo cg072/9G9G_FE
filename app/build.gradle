@@ -81,6 +81,8 @@ dependencies {
     // showcaseView
     implementation 'com.github.mreram:showcaseview:1.4.1'
 
+    implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
+
     // Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

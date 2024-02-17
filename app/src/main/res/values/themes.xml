@@ -49,5 +49,9 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-
+    <style name="Theme.MySplashScreen.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@drawable/bg_splash_screen</item>
+        <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="postSplashScreenTheme">@style/Theme.NineG</item>
+    </style>
 </resources>
