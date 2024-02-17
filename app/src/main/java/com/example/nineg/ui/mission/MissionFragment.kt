@@ -4,11 +4,11 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +23,7 @@ import com.example.nineg.ui.calendar.CalendarFragment
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
 import com.example.nineg.util.ActivityUtil
+import com.example.nineg.util.ActivityUtil.startPostingFormActivity
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +59,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                 } else {
                     intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
                 }?.let { goody ->
-
+                    viewModel.updateTodayGoody()
                 }
             }
         }
@@ -69,9 +70,8 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initObserve()
         initBinding()
         initTutorial()
-
         binding.btnEdit.setOnClickListener {
-            findNavController().navigate(R.id.action_missionFragment_to_postingFormActivity)
+            startPostingFormActivity(requireContext(), startForResult)
         }
     }
 
@@ -93,17 +93,16 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                 viewModel.updateBookmarkMissionCard(cardInfo)
             }
 
-            override fun onClickRecyclerViewItem(cardInfo: MissionCard) {
-                if (cardInfo.level == 0) {
-                    val goody = cardInfo.asGoody(DateUtil.getSimpleToday())
+            override fun onClickRecyclerViewItem(missionCard: MissionCard) {
+                if (missionCard.level == 0) {
+                    val goody = missionCard.asGoody(DateUtil.getSimpleToday())
                     ActivityUtil.startRecordDetailActivity(
                         binding.root.context,
                         goody,
                         startRecordDetailActivityForResult
                     )
                 } else {
-                    val action = MissionFragmentDirections.actionMissionFragmentToPostingFormActivity(cardInfo)
-                    findNavController().navigate(action)
+                    startPostingFormActivity(requireContext(), startForResult, missionCard)
                 }
             }
         })

@@ -38,7 +38,6 @@ import java.util.*
 class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private val viewModel: PostingFormViewModel by viewModels()
-    private val args by navArgs<PostingFormActivityArgs>()
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
     private var imageUrl: MultipartBody.Part? = null
@@ -106,18 +105,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     }
 
     private fun initData() {
-        try {
-            if(args.missionCard != null) {
-                binding.activityPostingFormImage.load(args.missionCard?.image) {
-                    transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
-                }
-                binding.activityPostingFormTitleEditText.setText(args.missionCard?.title)
-                binding.activityPostingFormContentEditText.setText(args.missionCard?.content)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent?.getParcelableExtra(EXTRA_MISSION_CARD, MissionCard::class.java)
         } else {
