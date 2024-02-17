@@ -1,9 +1,9 @@
 package com.example.nineg.ui.mission
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,11 +17,12 @@ import com.example.nineg.base.BaseFragment
 
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.domain.Goody
+import com.example.nineg.data.db.domain.asGoody
 import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.calendar.CalendarFragment
-import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
+import com.example.nineg.util.ActivityUtil
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,15 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private lateinit var missionCardAdapter: MissionCardAdapter
     private val viewModel: MissionViewModel by activityViewModels()
+
+    private val startRecordDetailActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val ssaid =
+                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+            }
+        }
+
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -84,8 +94,17 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             }
 
             override fun onClickRecyclerViewItem(cardInfo: MissionCard) {
-                val action = MissionFragmentDirections.actionMissionFragmentToPostingFormActivity(cardInfo)
-                findNavController().navigate(action)
+                if (cardInfo.level == 0) {
+                    val goody = cardInfo.asGoody(DateUtil.getSimpleToday())
+                    ActivityUtil.startRecordDetailActivity(
+                        binding.root.context,
+                        goody,
+                        startRecordDetailActivityForResult
+                    )
+                } else {
+                    val action = MissionFragmentDirections.actionMissionFragmentToPostingFormActivity(cardInfo)
+                    findNavController().navigate(action)
+                }
             }
         })
         binding.rvMission.apply {
@@ -112,7 +131,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initTutorial() {
-        if(viewModel.isFirstLaunch()) {
+        if (viewModel.isFirstLaunch()) {
             tutorialMissionCard()
             viewModel.setIsFirstLaunch(false)
         }

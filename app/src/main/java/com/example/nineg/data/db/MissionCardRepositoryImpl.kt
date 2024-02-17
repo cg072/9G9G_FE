@@ -47,7 +47,7 @@ class MissionCardRepositoryImpl @Inject constructor(
 
         when (result) {
             is ApiResult.Success -> {
-                if(result.value.filter { it.dueDate == DateUtil.getSimpleToday() }.isEmpty()) {
+                if(result.value.none { it.dueDate == DateUtil.getSimpleToday() }) {
                     return null
                 }
                 return result.value.filter { it.dueDate == DateUtil.getSimpleToday() }[0]
@@ -79,8 +79,8 @@ class MissionCardRepositoryImpl @Inject constructor(
         statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
     }
 
-    override fun getUserId(): String? {
-        return statusPref.getString(USER_ID, "")
+    override fun getUserId(): String {
+        return statusPref.getString(USER_ID, "").toString()
     }
 
     override fun setUserId(userId: String) {
@@ -92,12 +92,11 @@ class MissionCardRepositoryImpl @Inject constructor(
 
         when (result) {
             is ApiResult.Success -> {
-                Log.d(TAG, "downloadMissionCardList: ${result.value}")
                 addMissionCardList(result.value.asEntityModel())
             }
 
             is ApiResult.Error -> {
-                Log.e(TAG, "downloadMissionCardList: ${result.exception}")
+                Log.e(TAG, "downloadMissionCardList: ${result.exception?.message}")
             }
         }
     }

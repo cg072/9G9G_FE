@@ -25,3 +25,6 @@ data class MissionCard(
 
 fun MissionCard.asEntityModel() =
     MissionCardInfoEntity(id, image, level, title, guide, content, isBookmarked)
+
+fun MissionCard.asGoody(today: String) =
+    Goody(id.toString(),  title, content, image, level, today)

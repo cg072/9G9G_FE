@@ -38,6 +38,6 @@ interface MissionCardRepository {
 
     suspend fun downloadMissionCardList()
 
-    fun getUserId(): String?
+    fun getUserId(): String
     fun setUserId(userId: String)
 }

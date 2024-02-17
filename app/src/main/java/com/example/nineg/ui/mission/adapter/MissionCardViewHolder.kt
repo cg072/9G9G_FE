@@ -22,11 +22,9 @@ class MissionCardViewHolder(
 
             if (clickedPosition == centerPosition) {
                 // 화면 중앙의 아이템을 클릭했다면 아이템 정보를 다른 프레그먼트에 전달합니다.
-                Log.d(TAG, "카드 중앙 선택 ")
                 recyclerViewClickListener.onClickRecyclerViewItem(cardInfo)
             } else {
                 // 화면 중앙이 아닌 아이템을 클릭했다면 해당 위치로 이동합니다.
-                Log.d(TAG, "화면 이동")
                 recyclerView.smoothScrollToPosition(clickedPosition)
             }
         }
