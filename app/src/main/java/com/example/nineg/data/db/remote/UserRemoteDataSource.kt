@@ -12,4 +12,5 @@ interface UserRemoteDataSource {
     ): Response<UserDto>
 
     suspend fun searchUser(deviceId: String): Response<UserDto>
+    suspend fun createUser(deviceId: String): Response<UserDto>
 }

@@ -1,5 +1,6 @@
 package com.example.nineg.data.db.remote
 
+import android.util.Log
 import com.example.nineg.data.db.dto.UserDto
 import com.example.nineg.retrofit.RetrofitService
 import retrofit2.Response
@@ -20,6 +21,15 @@ class UserRemoteDataSourceImpl @Inject constructor(private val service: Retrofit
         param["age"] = age
         param["gender"] = gender
 
+        return service.createUser(param)
+    }
+
+    override suspend fun createUser(
+        deviceId: String,
+    ): Response<UserDto> {
+        val param = HashMap<String, String>()
+        param["deviceId"] = deviceId
+        Log.d("TAG", "createUser: ")
         return service.createUser(param)
     }
 
