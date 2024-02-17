@@ -59,7 +59,7 @@ class MissionCardViewHolder(
             }
 
             binding.tvMissionTitle.text = cardInfo.title
-            binding.tvMissionDescription.text = cardInfo.guide
+            binding.tvMissionGuide.text = cardInfo.guide
 
             binding.ivBookmark.setOnClickListener {
                 recyclerViewClickListener.onRecyclerViewBookMarkClick(cardInfo)
