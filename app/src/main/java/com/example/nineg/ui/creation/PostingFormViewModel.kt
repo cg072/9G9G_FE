@@ -9,6 +9,7 @@ import com.example.nineg.base.UiState
 import com.example.nineg.data.db.GoodyRepository
 import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.retrofit.ApiResult
+import com.example.nineg.ui.calendar.CalendarViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,10 @@ class PostingFormViewModel @Inject constructor(private val repository: GoodyRepo
 
     private val _goodyState = MutableLiveData<UiState<Goody>>()
     val goodyState: LiveData<UiState<Goody>> get() = _goodyState
+
+    private var dueDateSet: Set<String> = emptySet()
+
+    fun getDueDateSet() = dueDateSet
 
     fun registerGoody(
         deviceId: String,
@@ -38,6 +43,21 @@ class PostingFormViewModel @Inject constructor(private val repository: GoodyRepo
                 }
                 is ApiResult.Error -> {
                     _goodyState.postValue(UiState.Error(result.code, result.exception))
+                    result.exception?.printStackTrace()
+                }
+            }
+        }
+    }
+
+    fun requestGoodyList(deviceId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getGoodyList(deviceId)
+
+            when (result) {
+                is ApiResult.Success -> {
+                    dueDateSet = result.value.map { it.dueDate }.toSet()
+                }
+                is ApiResult.Error -> {
                     result.exception?.printStackTrace()
                 }
             }

@@ -96,6 +96,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         initListener()
         observe()
         onBackPressedDispatcher.addCallback(this, callback)
+        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.requestGoodyList(ssaid)
     }
 
     override fun onDestroy() {
@@ -146,15 +148,22 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val dueDate = inputFormat.format(calendar.time)
+
+            if (!validDueDate(dueDate)) {
+                Toast.makeText(this, R.string.goody_due_date_error_message, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (validContent() && imageUrl != null) {
                 val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
                 viewModel.registerGoody(
                     ssaid,
                     binding.activityPostingFormTitleEditText.text.toString(),
                     binding.activityPostingFormContentEditText.text.toString(),
-                    inputFormat.format(calendar.time),
+                    dueDate,
                     imageUrl!!
                 )
             }
@@ -185,6 +194,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
     }
 
+    private fun validDueDate(dueDate: String) = !viewModel.getDueDateSet().contains(dueDate)
+
     private fun observe() {
         viewModel.goodyState.observe(this) { state ->
             when (state) {
@@ -200,7 +211,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
                 is UiState.Success -> {
                     Toast.makeText(
                         this,
-                        "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})",
+                        R.string.goody_register_success_message,
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -213,7 +224,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
                 is UiState.Error -> {
                     Toast.makeText(
                         this,
-                        "저장에 실패했습니다.(${state.code} - ${state.exception?.message})",
+                        R.string.goody_register_error_message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
