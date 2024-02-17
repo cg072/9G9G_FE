@@ -1,13 +1,15 @@
 package com.example.nineg.ui.creation
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,9 +19,12 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
+import com.example.nineg.base.UiState
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.dialog.PostingFormExitDialog
 import com.example.nineg.extension.hideKeyboard
+import com.example.nineg.ui.calendar.CalendarFragment
 import com.example.nineg.util.ImageUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -86,11 +91,10 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        calendar = Calendar.getInstance()
-        binding.activityPostingFormDate.text = format.format(calendar.time)
+        initData()
         initContentEditTextActionEvent()
         initListener()
+        observe()
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
@@ -98,6 +102,23 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         binding.activityPostingFormTitleEditText.removeTextChangedListener(titleTextWatcher)
         binding.activityPostingFormContentEditText.removeTextChangedListener(contentTextWatcher)
         super.onDestroy()
+    }
+
+    private fun initData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(EXTRA_MISSION_CARD, MissionCard::class.java)
+        } else {
+            intent?.getParcelableExtra(EXTRA_MISSION_CARD)
+        }?.let { missionCard ->
+            binding.activityPostingFormImage.load(missionCard.image) {
+                transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
+            }
+            binding.activityPostingFormTitleEditText.setText(missionCard.title)
+            binding.activityPostingFormContentEditText.setText(missionCard.content)
+        }
+
+        calendar = Calendar.getInstance()
+        binding.activityPostingFormDate.text = format.format(calendar.time)
     }
 
     private fun initContentEditTextActionEvent() {
@@ -126,17 +147,16 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
             if (validContent() && imageUrl != null) {
-                // TODO : calendar 이용하여 저장 처리 로직 추가
                 val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                viewModel.registerGoody2(
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+                viewModel.registerGoody(
                     ssaid,
                     binding.activityPostingFormTitleEditText.text.toString(),
-                    binding.activityPostingFormTitleEditText.text.toString(),
                     binding.activityPostingFormContentEditText.text.toString(),
-                    "",
+                    inputFormat.format(calendar.time),
                     imageUrl!!
                 )
-                Log.d("PostingFormActivity", "Goody Card save")
             }
         }
 
@@ -162,6 +182,42 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             }
 
             return@setOnEditorActionListener false
+        }
+    }
+
+    private fun observe() {
+        viewModel.goodyState.observe(this) { state ->
+            when (state) {
+                is UiState.Uninitialized -> {
+
+                }
+                is UiState.Loading -> {
+
+                }
+                is UiState.Empty -> {
+
+                }
+                is UiState.Success -> {
+                    Toast.makeText(
+                        this,
+                        "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val intent = Intent().apply {
+                        putExtra(CalendarFragment.EXTRA_SAVE_GOODY, state.data)
+                    }
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
+                is UiState.Error -> {
+                    Toast.makeText(
+                        this,
+                        "저장에 실패했습니다.(${state.code} - ${state.exception?.message})",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
@@ -214,5 +270,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
         private const val MAX_TEXT_LENGTH = 28
+        const val EXTRA_MISSION_CARD = "mission_card"
     }
 }
