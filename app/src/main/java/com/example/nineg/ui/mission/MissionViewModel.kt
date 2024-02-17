@@ -25,6 +25,9 @@ class MissionViewModel @Inject constructor(
     private val _startNavShowCase = MutableLiveData<Any>()
     val startNavShowCase: LiveData<Any> = _startNavShowCase
 
+    private val _backToFirstPosition = MutableLiveData<Any>()
+    val backToFirstPosition: LiveData<Any> = _backToFirstPosition
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             updateTodayGoody()
@@ -80,6 +83,7 @@ class MissionViewModel @Inject constructor(
             val todayGoody = missionCardRepository.getUserId().let { missionCardRepository.getTodayMissionCard(userId) }
             todayGoody?.let { missionCards.updateTodayGoody(it) }
             updateMissionCardList()
+            _backToFirstPosition.postValue(Any())
         }
     }
 

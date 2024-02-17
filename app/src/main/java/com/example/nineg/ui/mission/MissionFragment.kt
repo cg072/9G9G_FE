@@ -85,6 +85,9 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         viewModel.missionCardList.observe(viewLifecycleOwner) {
             missionCardAdapter.submitList(it)
         }
+        viewModel.backToFirstPosition.observe(viewLifecycleOwner) {
+            backToFirstPosition()
+        }
     }
 
     private fun initRecyclerView() {
