@@ -8,6 +8,7 @@ import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -60,7 +61,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initTutorial()
 
         binding.btnEdit.setOnClickListener {
-            startForResult.launch(Intent(binding.root.context, PostingFormActivity::class.java))
+            findNavController().navigate(R.id.action_missionFragment_to_postingFormActivity)
         }
     }
 
@@ -78,8 +79,13 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun initRecyclerView() {
         missionCardAdapter = MissionCardAdapter(object : MissionCardRecyclerViewClickListener {
-            override fun onRecyclerViewBookMarkClick(cardInfo: MissionCard) {
+            override fun onClickRecyclerViewBookMark(cardInfo: MissionCard) {
                 viewModel.updateBookmarkMissionCard(cardInfo)
+            }
+
+            override fun onClickRecyclerViewItem(cardInfo: MissionCard) {
+                val action = MissionFragmentDirections.actionMissionFragmentToPostingFormActivity(cardInfo)
+                findNavController().navigate(action)
             }
         })
         binding.rvMission.apply {

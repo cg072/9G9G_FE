@@ -9,20 +9,37 @@
         android:id="@+id/missionFragment"
         android:name="com.example.nineg.ui.mission.MissionFragment"
         android:label="MissionFragment"
-        tools:layout="@layout/fragment_mission"/>
+        tools:layout="@layout/fragment_mission">
+        <action
+            android:id="@+id/action_missionFragment_to_postingFormActivity"
+            app:destination="@id/postingFormActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </MaintainStatusNavigator>
     <MaintainStatusNavigator
         android:id="@+id/calendarFragment"
         android:name="com.example.nineg.ui.calendar.CalendarFragment"
         android:label="CalendarFragment"
-        tools:layout="@layout/fragment_calendar"/>
+        tools:layout="@layout/fragment_calendar" />
     <MaintainStatusNavigator
         android:id="@+id/networkErrorFragment"
         android:name="com.example.nineg.ui.error.NetworkErrorFragment"
         android:label="NetworkErrorFragment"
-        tools:layout="@layout/fragment_network_error"/>
+        tools:layout="@layout/fragment_network_error" />
     <MaintainStatusNavigator
         android:id="@+id/myPageFragment"
         android:name="com.example.nineg.ui.my.MyPageFragment"
         android:label="MyPageFragment"
-        tools:layout="@layout/fragment_my_page"/>
+        tools:layout="@layout/fragment_my_page" />
+    <activity
+        android:id="@+id/postingFormActivity"
+        android:name="com.example.nineg.ui.creation.PostingFormActivity"
+        android:label="PostingFormActivity"
+        tools:layout="@layout/activity_posting_form">
+        <argument
+            android:name="missionCard"
+            app:argType="com.example.nineg.data.db.domain.MissionCard" />
+    </activity>
 </navigation>
