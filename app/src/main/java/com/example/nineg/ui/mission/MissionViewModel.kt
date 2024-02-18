@@ -71,8 +71,8 @@ class MissionViewModel @Inject constructor(
     fun updateTodayGoody() {
         viewModelScope.launch(Dispatchers.IO) {
             val userId = missionCardRepository.getUserId()
-            val todayGoody = missionCardRepository.getUserId().let { missionCardRepository.getTodayMissionCard(userId) }
-            todayGoody?.let { missionCards.updateTodayGoody(it) }
+            val todayMissionCard = missionCardRepository.getTodayMissionCard(userId)
+            missionCards.updateTodayGoody(todayMissionCard)
             updateMissionCardList()
             _backToFirstPosition.postValue(Any())
         }

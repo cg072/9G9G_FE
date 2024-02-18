@@ -3,10 +3,11 @@ package com.example.nineg.data.db
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.example.nineg.data.db.dto.GoodyDto
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.dto.asEntityModel
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.local.MissionCardLocalDataSource
+import com.example.nineg.data.db.remote.GoodyRemoteDataSource
 import com.example.nineg.data.db.remote.MissionCardRemoteDataSource
 import com.example.nineg.retrofit.ApiResult
 import com.example.nineg.util.DateUtil
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class MissionCardRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val localMissionCardImpl: MissionCardLocalDataSource,
-    private val remoteMissionCardImpl: MissionCardRemoteDataSource
+    private val remoteMissionCardImpl: MissionCardRemoteDataSource,
+    private val goodyRemoteDataSource: GoodyRemoteDataSource
 ) : MissionCardRepository {
 
     private val statusPref: SharedPreferences =
@@ -42,20 +44,27 @@ class MissionCardRepositoryImpl @Inject constructor(
         localMissionCardImpl.clearMissionCard()
     }
 
-    override suspend fun getTodayMissionCard(userId: String): GoodyDto? {
-        val result = remoteMissionCardImpl.getTodayMissionCard(userId)
+    override suspend fun getTodayMissionCard(userId: String): MissionCard? {
+        return try {
+            val response = goodyRemoteDataSource.getGoodyList(userId)
 
-        when (result) {
-            is ApiResult.Success -> {
-                if(result.value.none { it.dueDate == DateUtil.getSimpleToday() }) {
-                    return null
+            if (response.isSuccessful && response.body() != null) {
+                response.body()?.find { it.dueDate == DateUtil.getSimpleToday() }?.let { goodyDto ->
+                    MissionCard(
+                        id = goodyDto.id.toInt(),
+                        index = 0,
+                        image = goodyDto.photoUrl,
+                        level = 0,
+                        title = goodyDto.title,
+                        guide = null,
+                        content = goodyDto.content,
+                    )
                 }
-                return result.value.filter { it.dueDate == DateUtil.getSimpleToday() }[0]
+            } else {
+                null
             }
-
-            is ApiResult.Error -> {
-                return null
-            }
+        } catch (throwable: Throwable) {
+            return null
         }
     }
 
