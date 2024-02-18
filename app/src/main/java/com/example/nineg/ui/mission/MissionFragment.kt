@@ -1,36 +1,30 @@
 package com.example.nineg.ui.mission
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
-
 import com.example.nineg.data.db.domain.MissionCard
-import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.data.db.domain.asGoody
 import com.example.nineg.databinding.FragmentMissionBinding
-import com.example.nineg.ui.calendar.CalendarFragment
+import com.example.nineg.ui.main.MainViewModel
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
 import com.example.nineg.util.ActivityUtil
-import com.example.nineg.util.ActivityUtil.startPostingFormActivity
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
-import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener
 
 @AndroidEntryPoint
 class MissionFragment : BaseFragment<FragmentMissionBinding>() {
@@ -39,13 +33,13 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         get() = R.layout.fragment_mission
 
     private lateinit var missionCardAdapter: MissionCardAdapter
-    private val viewModel: MissionViewModel by activityViewModels()
+    private val viewModel: MissionViewModel by viewModels()
+    private val activityViewModel: MainViewModel by activityViewModels()
 
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val ssaid =
-                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                activityViewModel.refreshScreen()
             }
         }
 
@@ -53,14 +47,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY, Goody::class.java)
-                } else {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
-                }?.let { goody ->
-                    viewModel.updateTodayGoody()
-                }
+                activityViewModel.refreshScreen()
             }
         }
 
@@ -71,7 +58,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initBinding()
         initTutorial()
         binding.btnEdit.setOnClickListener {
-            startPostingFormActivity(requireContext(), startForResult)
+            ActivityUtil.startPostingFormActivity(requireContext(), startForResult)
         }
     }
 
@@ -88,6 +75,10 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         viewModel.backToFirstPosition.observe(viewLifecycleOwner) {
             backToFirstPosition()
         }
+
+        activityViewModel.refreshScreen.observe(viewLifecycleOwner) {
+            viewModel.updateTodayGoody()
+        }
     }
 
     private fun initRecyclerView() {
@@ -96,16 +87,20 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                 viewModel.updateBookmarkMissionCard(cardInfo)
             }
 
-            override fun onClickRecyclerViewItem(missionCard: MissionCard) {
-                if (missionCard.level == 0) {
-                    val goody = missionCard.asGoody(DateUtil.getSimpleToday())
+            override fun onClickRecyclerViewItem(cardInfo: MissionCard) {
+                if (cardInfo.level == 0) {
+                    val goody = cardInfo.asGoody(DateUtil.getSimpleToday())
                     ActivityUtil.startRecordDetailActivity(
                         binding.root.context,
                         goody,
                         startRecordDetailActivityForResult
                     )
                 } else {
-                    startPostingFormActivity(requireContext(), startForResult, missionCard)
+                    ActivityUtil.startPostingFormActivityFromMissionCard(
+                        requireContext(),
+                        cardInfo,
+                        startForResult
+                    )
                 }
             }
         })
@@ -145,11 +140,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.ivPointMissionCard)
             .setGravity(Gravity.center)
-            .setGuideListener(object : GuideListener {
-                override fun onDismiss(view: View?) {
-                    tutorialEditButton()
-                }
-            })
+            .setGuideListener { tutorialEditButton() }
             .build()
             .show()
     }
@@ -158,13 +149,8 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         GuideView.Builder(requireActivity())
             .setContentText(getString(R.string.TEXT_TUTORIAL_CREATE_MISSION_CARD))
             .setDismissType(DismissType.anywhere)
-
             .setTargetView(binding.btnEdit)
-            .setGuideListener(object : GuideListener {
-                override fun onDismiss(view: View?) {
-                    viewModel.startTutorialNav()
-                }
-            })
+            .setGuideListener { activityViewModel.startTutorialNav() }
             .build()
             .show()
     }

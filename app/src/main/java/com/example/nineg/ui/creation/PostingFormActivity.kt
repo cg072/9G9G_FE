@@ -1,6 +1,7 @@
 package com.example.nineg.ui.creation
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -15,12 +16,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import androidx.navigation.navArgs
+import coil.ImageLoader
 import coil.load
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.base.UiState
+import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ActivityPostingFormBinding
 import com.example.nineg.dialog.PostingFormExitDialog
@@ -30,6 +34,9 @@ import com.example.nineg.util.ImageUtil
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,7 +47,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     private val viewModel: PostingFormViewModel by viewModels()
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
-    private var imageUrl: MultipartBody.Part? = null
+    private var imageMultipart: MultipartBody.Part? = null
+    private var updateGoodyInfo: Goody? = null
 
     private val titleTextWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -75,7 +83,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
                     binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
                     binding.activityPostingFormSaveBtn.isSelected = validContent()
-                    imageUrl = ImageUtil.getMultipartBody(contentResolver, it)
+                    imageMultipart = ImageUtil.getMultipartBody(contentResolver, it)
                 }
             }
         }
@@ -96,6 +104,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         initListener()
         observe()
         onBackPressedDispatcher.addCallback(this, callback)
+        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.requestGoodyList(ssaid)
     }
 
     override fun onDestroy() {
@@ -115,6 +125,30 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             }
             binding.activityPostingFormTitleEditText.setText(missionCard.title)
             binding.activityPostingFormContentEditText.setText(missionCard.content)
+
+            binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
+            binding.activityPostingFormSaveBtn.isSelected = validContent()
+
+            setImageMultipartBody(missionCard.image)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(EXTRA_UPDATE_GOODY, Goody::class.java)
+        } else {
+            intent?.getParcelableExtra(EXTRA_UPDATE_GOODY)
+        }?.let { goody ->
+            binding.activityPostingFormImage.load(goody.photoUrl) {
+                transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
+            }
+            binding.activityPostingFormTitleEditText.setText(goody.title)
+            binding.activityPostingFormContentEditText.setText(goody.content)
+
+            binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
+            binding.activityPostingFormSaveBtn.isSelected = true
+
+            setImageMultipartBody(goody.photoUrl)
+
+            updateGoodyInfo = goody
         }
 
         calendar = Calendar.getInstance()
@@ -136,7 +170,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormImageCancelBtn.setOnClickListener {
-            imageUrl = null
+            imageMultipart = null
             binding.activityPostingFormImage.setImageDrawable(null)
             binding.activityPostingFormEmptyImageContainer.visibility = View.VISIBLE
         }
@@ -146,17 +180,13 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         binding.activityPostingFormSaveBtn.setOnClickListener {
-            if (validContent() && imageUrl != null) {
-                val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val dueDate = inputFormat.format(calendar.time)
 
-                viewModel.registerGoody(
-                    ssaid,
-                    binding.activityPostingFormTitleEditText.text.toString(),
-                    binding.activityPostingFormContentEditText.text.toString(),
-                    inputFormat.format(calendar.time),
-                    imageUrl!!
-                )
+            if (updateGoodyInfo == null) {
+                registerGoody(dueDate)
+            } else {
+                updateGoody(dueDate)
             }
         }
 
@@ -185,6 +215,46 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
     }
 
+    private fun registerGoody(dueDate: String) {
+        if (!validDueDate(dueDate)) {
+            Toast.makeText(this, R.string.goody_due_date_error_message, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (validContent() && imageMultipart != null) {
+            val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+
+            viewModel.registerGoody(
+                ssaid,
+                binding.activityPostingFormTitleEditText.text.toString(),
+                binding.activityPostingFormContentEditText.text.toString(),
+                dueDate,
+                imageMultipart!!
+            )
+        }
+    }
+
+    private fun updateGoody(dueDate: String) {
+        if (!validDueDate(dueDate) && dueDate != updateGoodyInfo?.dueDate) {
+            Toast.makeText(this, R.string.goody_due_date_error_message, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (validContent() && imageMultipart != null) {
+            updateGoodyInfo?.id?.let { goodyId ->
+                viewModel.updateGoody(
+                    goodyId,
+                    binding.activityPostingFormTitleEditText.text.toString(),
+                    binding.activityPostingFormContentEditText.text.toString(),
+                    dueDate,
+                    imageMultipart
+                )
+            }
+        }
+    }
+
+    private fun validDueDate(dueDate: String) = !viewModel.getDueDateSet().contains(dueDate)
+
     private fun observe() {
         viewModel.goodyState.observe(this) { state ->
             when (state) {
@@ -200,7 +270,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
                 is UiState.Success -> {
                     Toast.makeText(
                         this,
-                        "저장 되었습니다.(${state.data.title} - ${state.data.dueDate})",
+                        R.string.goody_register_success_message,
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -213,7 +283,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
                 is UiState.Error -> {
                     Toast.makeText(
                         this,
-                        "저장에 실패했습니다.(${state.code} - ${state.exception?.message})",
+                        R.string.goody_register_error_message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -266,11 +336,27 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
     }
 
+    private fun setImageMultipartBody(photoUrl: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val loader = ImageLoader(this@PostingFormActivity)
+            val request = ImageRequest.Builder(this@PostingFormActivity)
+                .data(photoUrl)
+                .allowHardware(false)
+                .build()
+
+            val result = (loader.execute(request) as SuccessResult).drawable
+            val bitmap = (result as BitmapDrawable).bitmap
+
+            imageMultipart = ImageUtil.getMultipartBody(bitmap)
+        }
+    }
+
     companion object {
         private const val TAG = "PostingFormActivity"
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
         private const val MAX_TEXT_LENGTH = 28
         const val EXTRA_MISSION_CARD = "mission_card"
+        const val EXTRA_UPDATE_GOODY = "update_goody"
     }
 }

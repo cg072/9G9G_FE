@@ -1,6 +1,5 @@
 package com.example.nineg.data.db.remote
 
-import com.example.nineg.data.db.dto.GoodyDto
 import com.example.nineg.data.db.dto.MissionCardDto
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.retrofit.ApiResult
@@ -20,20 +19,6 @@ class MissionCardRemoteDataSourceImpl @Inject constructor(private val service: R
 
     override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
         TODO("Not yet implemented")
-    }
-
-    override suspend fun getTodayMissionCard(userId: String): ApiResult<List<GoodyDto>> {
-        return try {
-            val response = service.fetchGoodyList(userId)
-            if (response.isSuccessful && response.body() != null) {
-                ApiResult.Success(response.body()!!)
-            } else {
-                ApiResult.Error(response.code(), null)
-            }
-        } catch (throwable: Throwable) {
-            val code = (throwable as? HttpException)?.code()
-            ApiResult.Error(code, throwable)
-        }
     }
 
     override suspend fun getBookmarkedMissionCardList(): MutableList<MissionCardInfoEntity> {

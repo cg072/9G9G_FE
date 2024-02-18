@@ -10,7 +10,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
-class GoodyRemoteDataSourceImpl @Inject constructor(private val service: RetrofitService) : GoodyRemoteDataSource {
+class GoodyRemoteDataSourceImpl @Inject constructor(private val service: RetrofitService) :
+    GoodyRemoteDataSource {
     override suspend fun registerGoody(
         deviceId: String,
         title: String,
@@ -24,11 +25,33 @@ class GoodyRemoteDataSourceImpl @Inject constructor(private val service: Retrofi
         json.addProperty("content", content)
         json.addProperty("dueDate", dueDate)
 
-        return service.registerGoody(image, json.toString().toRequestBody("application/json".toMediaTypeOrNull()))
+        return service.registerGoody(
+            image,
+            json.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        )
     }
 
     override suspend fun removeGoody(goodyId: String): Response<Unit> {
         return service.removeGoody(goodyId)
+    }
+
+    override suspend fun updateGoody(
+        goodyId: String,
+        title: String?,
+        content: String?,
+        dueDate: String?,
+        image: MultipartBody.Part?
+    ): Response<GoodyDto> {
+        val json = JsonObject()
+        json.addProperty("title", title)
+        json.addProperty("content", content)
+        json.addProperty("dueDate", dueDate)
+
+        return service.updateGoody(
+            goodyId,
+            image,
+            json.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        )
     }
 
     override suspend fun getGoodyList(deviceId: String): Response<List<GoodyDto>> {

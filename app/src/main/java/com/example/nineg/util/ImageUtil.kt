@@ -1,17 +1,35 @@
 package com.example.nineg.util
 
 import android.content.ContentResolver
+import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okio.BufferedSink
 import okio.source
+import java.io.File
 
 object ImageUtil {
     private const val IMAGE_NAME = "image"
+
+    fun getMultipartBody(bitmap: Bitmap): MultipartBody.Part {
+        val requestBody = object : RequestBody() {
+            override fun contentType(): MediaType? = "image/jpeg".toMediaTypeOrNull()
+
+            override fun writeTo(sink: BufferedSink) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, sink.outputStream())
+            }
+        }
+
+        val fileName = "$IMAGE_NAME.jpeg"
+
+        return MultipartBody.Part.createFormData(IMAGE_NAME, fileName, requestBody)
+    }
 
     fun getMultipartBody(
         contentResolver: ContentResolver,

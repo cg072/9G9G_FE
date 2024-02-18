@@ -1,17 +1,16 @@
 package com.example.nineg.ui.main
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nineg.data.db.MissionCardRepository
 import com.example.nineg.data.db.remote.UserRemoteDataSource
 import com.example.nineg.util.MutableSingleLiveData
+import com.example.nineg.util.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.net.ConnectException
 import javax.inject.Inject
 
@@ -27,6 +26,12 @@ class MainViewModel @Inject constructor(
     private var _isNetworkSuccess = MutableSingleLiveData<Boolean>()
     val isNetworkError: MutableSingleLiveData<Boolean>
         get() = _isNetworkSuccess
+
+    private val _startNavShowCase = MutableLiveData<Any>()
+    val startNavShowCase: LiveData<Any> = _startNavShowCase
+
+    private val _refreshScreen = MutableLiveData<Unit>()
+    val refreshScreen: LiveData<Unit> get() = _refreshScreen
 
     init {
         viewModelScope.launch {
@@ -45,6 +50,7 @@ class MainViewModel @Inject constructor(
             val isSuccessNetwork = searchUser(deviceId).await() || createUser(deviceId).await()
 
             finishNetwork = true
+
             if (isSuccessNetwork) {
                 _isNetworkSuccess.postValue(true)
             } else {
@@ -91,6 +97,14 @@ class MainViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun startTutorialNav() {
+        _startNavShowCase.postValue(Any())
+    }
+
+    fun refreshScreen() {
+        _refreshScreen.value = Unit
     }
 
     companion object {

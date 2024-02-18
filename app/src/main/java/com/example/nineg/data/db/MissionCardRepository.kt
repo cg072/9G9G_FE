@@ -1,6 +1,6 @@
 package com.example.nineg.data.db
 
-import com.example.nineg.data.db.dto.GoodyDto
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.entity.MissionCardInfoEntity
 
 interface MissionCardRepository {
@@ -21,7 +21,7 @@ interface MissionCardRepository {
     suspend fun clearMissionCard()
 
     // 등록된 오늘의 구디 카드 반환
-    suspend fun getTodayMissionCard(userId: String): GoodyDto?
+    suspend fun getTodayMissionCard(userId: String): MissionCard?
 
     // 즐겨찾기된 카드 리스트 반환
     suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity>

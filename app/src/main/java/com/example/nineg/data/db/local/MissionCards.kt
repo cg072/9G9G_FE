@@ -8,7 +8,7 @@ import com.example.nineg.data.db.entity.MissionCardInfoEntity
 data class MissionCards(
     private val missionCardList: MutableList<MissionCard> = mutableListOf(),
     private val bookmarkedMissionCardList: MutableList<MissionCard> = mutableListOf(),
-    private var todayGoody: MutableList<MissionCard> = mutableListOf()
+    private var todayGoody: List<MissionCard> = mutableListOf()
 ) {
 
     private var count = 0
@@ -95,18 +95,11 @@ data class MissionCards(
 
     }
 
-    fun updateTodayGoody(goodyDto: GoodyDto) {
-        todayGoody = mutableListOf(
-            MissionCard(
-                id = goodyDto.id.toInt(),
-                index = count++,
-                image = goodyDto.photoUrl,
-                level = 0,
-                title = goodyDto.title,
-                guide = null,
-                content = goodyDto.content,
-            )
-        )
+    fun updateTodayGoody(missionCard: MissionCard?) {
+        todayGoody = missionCard?.let {
+            it.index = count++
+            listOf(it)
+        } ?: emptyList()
     }
 
     override fun hashCode(): Int {

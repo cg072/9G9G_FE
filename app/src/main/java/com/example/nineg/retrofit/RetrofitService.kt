@@ -40,6 +40,14 @@ interface RetrofitService {
         @Path("id") goodyId: String
     ): Response<Unit>
 
+    @Multipart
+    @PUT("/records/{id}")
+    suspend fun updateGoody(
+        @Path("id") goodyId: String,
+        @Part image: MultipartBody.Part?,
+        @Part("recordUpdateDto") body: RequestBody
+    ): Response<GoodyDto>
+
     @GET("/records/user/{deviceId}")
     suspend fun fetchGoodyList(
         @Path("deviceId") deviceId: String

@@ -4,7 +4,6 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
-    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -43,7 +42,7 @@ android {
 dependencies {
     def lifecycle_version = "2.5.1"
     def dagger_hilt_version = "2.44"
-    def navigation_version = "2.5.0"
+    def navigation_version = "2.3.5"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

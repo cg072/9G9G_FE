@@ -17,5 +17,13 @@ interface GoodyRepository {
 
     suspend fun removeGoody(goodyId: String): ApiResult<Unit>
 
+    suspend fun updateGoody(
+        goodyId: String,
+        title: String?,
+        content: String?,
+        dueDate: String?,
+        image: MultipartBody.Part?
+    ): ApiResult<Goody>
+
     suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>>
 }

@@ -28,18 +28,42 @@ object ActivityUtil {
 
     fun startPostingFormActivity(
         context: Context,
-        launcher: ActivityResultLauncher<Intent>,
-        missionCard: MissionCard? = null
+        launcher: ActivityResultLauncher<Intent>
     ) {
         launcher.launch(
+            Intent(
+                context,
+                PostingFormActivity::class.java
+            )
+        )
+    }
 
+    fun startPostingFormActivityFromMissionCard(
+        context: Context,
+        missionCard: MissionCard,
+        launcher: ActivityResultLauncher<Intent>,
+    ) {
+        launcher.launch(
             Intent(
                 context,
                 PostingFormActivity::class.java
             ).apply {
-                if(missionCard != null) {
-                    putExtra(PostingFormActivity.EXTRA_MISSION_CARD, missionCard)
-                }
+                putExtra(PostingFormActivity.EXTRA_MISSION_CARD, missionCard)
+            }
+        )
+    }
+
+    fun startUpdateFormActivity(
+        context: Context,
+        goody: Goody,
+        launcher: ActivityResultLauncher<Intent>
+    ) {
+        launcher.launch(
+            Intent(
+                context,
+                PostingFormActivity::class.java
+            ).apply {
+                putExtra(PostingFormActivity.EXTRA_UPDATE_GOODY, goody)
             }
         )
     }
