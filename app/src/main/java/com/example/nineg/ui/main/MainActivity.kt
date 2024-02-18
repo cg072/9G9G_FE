@@ -61,11 +61,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
 
         viewModel.isNetworkError.observe(this) { isSuccess ->
-            if (isSuccess) {
-                navController.navigate(R.id.missionFragment)
-            } else {
-                navController.navigate(R.id.networkErrorFragment)
-            }
+            // TODO : navController.navigate 해당 로직 동작시 사이드 이펙트 발생
+//            if (isSuccess) {
+//                navController.navigate(R.id.missionFragment)
+//            } else {
+//                navController.navigate(R.id.networkErrorFragment)
+//            }
         }
     }
 
