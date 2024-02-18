@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.nineg.data.db.MissionCardRepository
 import com.example.nineg.data.db.remote.UserRemoteDataSource
 import com.example.nineg.util.MutableSingleLiveData
+import com.example.nineg.util.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.net.ConnectException
@@ -28,6 +29,9 @@ class MainViewModel @Inject constructor(
 
     private val _startNavShowCase = MutableLiveData<Any>()
     val startNavShowCase: LiveData<Any> = _startNavShowCase
+
+    private val _refreshScreen = MutableLiveData<Unit>()
+    val refreshScreen: LiveData<Unit> get() = _refreshScreen
 
     init {
         viewModelScope.launch {
@@ -97,6 +101,10 @@ class MainViewModel @Inject constructor(
 
     fun startTutorialNav() {
         _startNavShowCase.postValue(Any())
+    }
+
+    fun refreshScreen() {
+        _refreshScreen.value = Unit
     }
 
     companion object {

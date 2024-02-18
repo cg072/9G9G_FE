@@ -7,12 +7,14 @@ import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
 import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.FragmentCalendarBinding
+import com.example.nineg.ui.main.MainViewModel
 import com.example.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,22 +22,19 @@ import dagger.hilt.android.AndroidEntryPoint
 class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
     private val viewModel: CalendarViewModel by viewModels()
+    private val activityViewModel: MainViewModel by activityViewModels()
 
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val ssaid =
-                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-                viewModel.requestGoodyList(ssaid)
+                activityViewModel.refreshScreen()
             }
         }
 
     private val startPostingFormActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val ssaid =
-                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-                viewModel.requestGoodyList(ssaid)
+                activityViewModel.refreshScreen()
 
                 val intent = result.data
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -57,8 +56,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initListener()
+        initObserve()
         val ssaid =
             Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
         viewModel.requestGoodyList(ssaid)
@@ -77,6 +76,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
                 binding.root.context,
                 startPostingFormActivityForResult
             )
+        }
+    }
+
+    private fun initObserve() {
+        activityViewModel.refreshScreen.observe(viewLifecycleOwner) {
+            val ssaid =
+                Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+            viewModel.requestGoodyList(ssaid)
         }
     }
 

@@ -1,9 +1,7 @@
 package com.example.nineg.ui.mission
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,11 +12,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
-import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.domain.asGoody
 import com.example.nineg.databinding.FragmentMissionBinding
-import com.example.nineg.ui.calendar.CalendarFragment
 import com.example.nineg.ui.main.MainViewModel
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
@@ -43,8 +39,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val ssaid =
-                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+                activityViewModel.refreshScreen()
             }
         }
 
@@ -52,14 +47,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY, Goody::class.java)
-                } else {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
-                }?.let { goody ->
-                    viewModel.updateTodayGoody()
-                }
+                activityViewModel.refreshScreen()
             }
         }
 
@@ -86,6 +74,10 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         }
         viewModel.backToFirstPosition.observe(viewLifecycleOwner) {
             backToFirstPosition()
+        }
+
+        activityViewModel.refreshScreen.observe(viewLifecycleOwner) {
+            viewModel.updateTodayGoody()
         }
     }
 
