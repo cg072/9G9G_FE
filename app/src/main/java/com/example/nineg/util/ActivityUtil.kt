@@ -44,6 +44,21 @@ object ActivityUtil {
         )
     }
 
+    fun startUpdateFormActivity(
+        context: Context,
+        goody: Goody,
+        launcher: ActivityResultLauncher<Intent>
+    ) {
+        launcher.launch(
+            Intent(
+                context,
+                PostingFormActivity::class.java
+            ).apply {
+                putExtra(PostingFormActivity.EXTRA_UPDATE_GOODY, goody)
+            }
+        )
+    }
+
     fun startExternalBrowser(context: Context, url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         context.startActivity(intent)

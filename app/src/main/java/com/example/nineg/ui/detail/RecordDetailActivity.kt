@@ -1,9 +1,13 @@
 package com.example.nineg.ui.detail
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -13,6 +17,8 @@ import com.example.nineg.data.db.domain.Goody
 import com.example.nineg.databinding.ActivityRecordDetailBinding
 import com.example.nineg.dialog.RecordDeleteDialog
 import com.example.nineg.dialog.RecordOptionDialog
+import com.example.nineg.ui.calendar.CalendarFragment
+import com.example.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +26,20 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
 
     private val viewModel: RecordDetailViewModel by viewModels()
     private var goody: Goody? = null
+
+    private val startPostingFormActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                goody = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY, Goody::class.java)
+                } else {
+                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
+                }
+                initGoody()
+                setResult(RESULT_OK)
+            }
+        }
 
     override val layoutResourceId: Int
         get() = R.layout.activity_record_detail
@@ -58,19 +78,7 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     private fun initListener() {
         binding.fragmentRecordDetailBackBtn.setOnClickListener { finish() }
         binding.fragmentRecordDetailOptionBtn.setOnClickListener {
-            val dialog = RecordOptionDialog(binding.root.context, it.left, it.bottom,
-                object : RecordOptionDialog.OnClickListener {
-                    override fun onEdit() {
-                        // TODO : 수정하기 로직 추가
-                        setResult(RESULT_OK)
-                    }
-
-                    override fun onDelete() {
-                        showDeleteDialog()
-                    }
-                })
-
-            dialog.show()
+            showOptionDialog(it)
         }
     }
 
@@ -84,6 +92,27 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
             setResult(RESULT_OK)
             finish()
         }
+    }
+
+    private fun showOptionDialog(view: View) {
+        val dialog = RecordOptionDialog(binding.root.context, view.left, view.bottom,
+            object : RecordOptionDialog.OnClickListener {
+                override fun onEdit() {
+                    goody?.let {
+                        ActivityUtil.startUpdateFormActivity(
+                            binding.root.context,
+                            it,
+                            startPostingFormActivityForResult
+                        )
+                    }
+                }
+
+                override fun onDelete() {
+                    showDeleteDialog()
+                }
+            })
+
+        dialog.show()
     }
 
     private fun showDeleteDialog() {
