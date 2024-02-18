@@ -23,7 +23,6 @@ import com.example.nineg.ui.main.MainViewModel
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
 import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
 import com.example.nineg.util.ActivityUtil
-import com.example.nineg.util.ActivityUtil.startPostingFormActivity
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,7 +70,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initBinding()
         initTutorial()
         binding.btnEdit.setOnClickListener {
-            startPostingFormActivity(requireContext(), startForResult)
+            ActivityUtil.startPostingFormActivity(requireContext(), startForResult)
         }
     }
 
@@ -105,7 +104,11 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                         startRecordDetailActivityForResult
                     )
                 } else {
-                    startPostingFormActivity(requireContext(), startForResult, cardInfo)
+                    ActivityUtil.startPostingFormActivityFromMissionCard(
+                        requireContext(),
+                        cardInfo,
+                        startForResult
+                    )
                 }
             }
         })
