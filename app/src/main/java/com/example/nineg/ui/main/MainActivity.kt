@@ -1,9 +1,7 @@
 package com.example.nineg.ui.main
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
@@ -13,8 +11,6 @@ import com.example.nineg.R
 import com.example.nineg.base.BaseActivity
 import com.example.nineg.databinding.ActivityMainBinding
 import com.example.nineg.navigation.MaintainStatusNavigator
-import com.example.nineg.ui.mission.MissionViewModel
-
 import dagger.hilt.android.AndroidEntryPoint
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
@@ -25,8 +21,6 @@ import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private val viewModel: MainViewModel by viewModels()
-    private val missionViewModel: MissionViewModel by viewModels()
-
     private lateinit var navController: NavController
 
     override val layoutResourceId: Int
@@ -35,9 +29,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         initSplashScreen()
         super.onCreate(savedInstanceState)
-
         initNavigation()
         initObserve()
+        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.initUserData(ssaid)
     }
 
     private fun initNavigation() {
@@ -50,23 +45,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         navController.navigatorProvider.addNavigator(navigator)
         navController.setGraph(R.navigation.main_navigation)
         binding.bottomNavView.setupWithNavController(navController)
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            val dest: String = try {
-                resources.getResourceName(destination.id)
-            } catch (e: Resources.NotFoundException) {
-                destination.id.toString()
-            }
-        }
-
-        initObserve()
-        initUser()
-
-    }
-
-    private fun initUser() {
-        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.initUserData(ssaid)
     }
 
     private fun initSplashScreen() {
@@ -77,17 +55,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    private fun setupBottomNavMenu(navController: NavController) {
-        binding.bottomNavView.setupWithNavController(navController)
-    }
-
     private fun initObserve() {
-        missionViewModel.startNavShowCase.observe(this) {
+        viewModel.startNavShowCase.observe(this) {
             tutorialBottomNav()
         }
 
         viewModel.isNetworkError.observe(this) { isSuccess ->
-            if(isSuccess) {
+            if (isSuccess) {
                 navController.navigate(R.id.missionFragment)
             } else {
                 navController.navigate(R.id.networkErrorFragment)

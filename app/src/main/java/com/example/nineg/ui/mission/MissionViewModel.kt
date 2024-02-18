@@ -1,6 +1,5 @@
 package com.example.nineg.ui.mission
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,10 +20,6 @@ class MissionViewModel @Inject constructor(
     private val missionCards = MissionCards()
     private val _missionCardList = MutableLiveData<List<MissionCard>>()
     val missionCardList: LiveData<List<MissionCard>> = _missionCardList
-
-    private val _startNavShowCase = MutableLiveData<Any>()
-    val startNavShowCase: LiveData<Any> = _startNavShowCase
-
     private val _backToFirstPosition = MutableLiveData<Any>()
     val backToFirstPosition: LiveData<Any> = _backToFirstPosition
 
@@ -34,10 +29,6 @@ class MissionViewModel @Inject constructor(
             missionCardRepository.downloadMissionCardList()
             addMissionCard()
         }
-    }
-
-    fun startTutorialNav() {
-        _startNavShowCase.postValue(Any())
     }
 
     fun addMissionCard() {
