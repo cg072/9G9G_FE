@@ -31,6 +31,10 @@ interface RetrofitService {
         @Part("recordDto") body: RequestBody
     ): Response<GoodyDto>
 
+    @GET("/missions")
+    suspend fun getMissionCardList(
+    ): Response<MissionCardDto>
+
     @DELETE("/records/{id}")
     suspend fun removeGoody(
         @Path("id") goodyId: String

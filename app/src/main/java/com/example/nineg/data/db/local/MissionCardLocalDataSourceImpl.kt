@@ -9,11 +9,21 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
 ): MissionCardLocalDataSource {
     override suspend fun getMissionCardList(): List<MissionCardInfoEntity> {
         return missionCardDao.getMissionCardList()
-        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMissionCardPack(): List<MissionCardInfoEntity> {
+        val missionCardList = missionCardDao.getMissionCardList().shuffled()
+
+        val levelCardCount = mapOf(1 to 2, 2 to 2, 3 to 1)
+
+        return missionCardList.groupBy { it.level }
+            .flatMap { (level, cards) ->
+                cards.take(levelCardCount[level] ?: 0)
+            }
     }
 
     override suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity) {
-        TODO("Not yet implemented")
+        missionCardDao.insertMissionCard(missionCardInfo)
     }
 
     override suspend fun addMissionCardList(missionCardInfoList: List<MissionCardInfoEntity>) {
@@ -29,14 +39,14 @@ class MissionCardLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity> {
-        TODO("Not yet implemented")
+        return missionCardDao.getBookmarkedMissionCardList()
     }
 
-    override suspend fun bookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun bookmarkMissionCard(id: Int) {
+        missionCardDao.bookmarkMissionCard(id, true)
     }
 
-    override suspend fun unBookmarkMissionCard(position: Int) {
-        TODO("Not yet implemented")
+    override suspend fun unBookmarkMissionCard(id: Int) {
+        missionCardDao.bookmarkMissionCard(id, false)
     }
 }

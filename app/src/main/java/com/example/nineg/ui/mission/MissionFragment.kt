@@ -1,9 +1,9 @@
 package com.example.nineg.ui.mission
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
@@ -14,12 +14,16 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nineg.R
 import com.example.nineg.base.BaseFragment
+
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.data.db.domain.Goody
+import com.example.nineg.data.db.domain.asGoody
 import com.example.nineg.databinding.FragmentMissionBinding
 import com.example.nineg.ui.calendar.CalendarFragment
-import com.example.nineg.ui.creation.PostingFormActivity
 import com.example.nineg.ui.mission.adapter.MissionCardAdapter
+import com.example.nineg.ui.mission.adapter.MissionCardRecyclerViewClickListener
 import com.example.nineg.util.ActivityUtil
+import com.example.nineg.util.ActivityUtil.startPostingFormActivity
 import com.example.nineg.util.DateUtil
 import com.example.nineg.util.HorizontalMarginItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +41,15 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private lateinit var missionCardAdapter: MissionCardAdapter
     private val viewModel: MissionViewModel by activityViewModels()
 
+    private val startRecordDetailActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val ssaid =
+                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+            }
+        }
+
+
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -46,7 +59,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                 } else {
                     intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
                 }?.let { goody ->
-
+                    viewModel.updateTodayGoody()
                 }
             }
         }
@@ -57,27 +70,45 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initObserve()
         initBinding()
         initTutorial()
-
         binding.btnEdit.setOnClickListener {
-            startForResult.launch(Intent(binding.root.context, PostingFormActivity::class.java))
+            startPostingFormActivity(requireContext(), startForResult)
         }
     }
 
     private fun initBinding() {
-        binding.tvDate.text = DateUtil.getToday()
+        binding.tvDate.text = DateUtil.getTodayWithDay()
         binding.view = this
         binding.viewModel = viewModel
     }
 
     private fun initObserve() {
-        viewModel.missionCards.observe(viewLifecycleOwner) {
-            Log.d(TAG, "initObserve: $it")
+        viewModel.missionCardList.observe(viewLifecycleOwner) {
             missionCardAdapter.submitList(it)
+        }
+        viewModel.backToFirstPosition.observe(viewLifecycleOwner) {
+            backToFirstPosition()
         }
     }
 
     private fun initRecyclerView() {
-        missionCardAdapter = MissionCardAdapter()
+        missionCardAdapter = MissionCardAdapter(object : MissionCardRecyclerViewClickListener {
+            override fun onClickRecyclerViewBookMark(cardInfo: MissionCard) {
+                viewModel.updateBookmarkMissionCard(cardInfo)
+            }
+
+            override fun onClickRecyclerViewItem(missionCard: MissionCard) {
+                if (missionCard.level == 0) {
+                    val goody = missionCard.asGoody(DateUtil.getSimpleToday())
+                    ActivityUtil.startRecordDetailActivity(
+                        binding.root.context,
+                        goody,
+                        startRecordDetailActivityForResult
+                    )
+                } else {
+                    startPostingFormActivity(requireContext(), startForResult, missionCard)
+                }
+            }
+        })
         binding.rvMission.apply {
             setHasFixedSize(true)
             layoutManager =
@@ -102,7 +133,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     }
 
     private fun initTutorial() {
-        if(viewModel.isFirstLaunch()) {
+        if (viewModel.isFirstLaunch()) {
             tutorialMissionCard()
             viewModel.setIsFirstLaunch(false)
         }
@@ -131,7 +162,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             .setTargetView(binding.btnEdit)
             .setGuideListener(object : GuideListener {
                 override fun onDismiss(view: View?) {
-                    Log.d(TAG, "onDismiss: btnEdit")
                     viewModel.startTutorialNav()
                 }
             })
@@ -148,7 +178,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
     private fun adjustFabVisibilityOnScroll(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val visiblePosition = layoutManager.findLastVisibleItemPosition()
-        Log.d(TAG, "adjustFabVisibilityOnScroll: $visiblePosition")
         if (visiblePosition >= VISIBLE_FAB_POSITION) {
             binding.fabBackToFirst.show()
         } else {

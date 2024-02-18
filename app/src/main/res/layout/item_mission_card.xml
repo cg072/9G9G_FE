@@ -51,27 +51,28 @@
 
                 <TextView
                     android:id="@+id/tvMissionTitle"
+                    style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginTop="12dp"
                     android:gravity="top"
                     android:lineSpacingExtra="2sp"
+                    android:maxLines="2"
                     android:textColor="@color/white"
-                    android:translationY="-0.87sp"
-                    android:text="Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다."/>
+                    android:translationY="-0.87sp" />
 
                 <TextView
-                    android:id="@+id/tvMissionDescription"
+                    android:id="@+id/tvMissionGuide"
+                    style="@style/TextAppearance.AppCompat.Body1"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="12dp"
                     android:gravity="top"
                     android:lineSpacingExtra="5sp"
+                    android:maxLines="2"
                     android:textColor="@color/white"
                     android:translationY="-2.45sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:text="Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다."
-                    />
+                    app:layout_constraintBottom_toBottomOf="parent" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

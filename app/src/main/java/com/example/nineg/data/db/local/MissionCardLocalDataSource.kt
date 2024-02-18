@@ -7,6 +7,8 @@ interface MissionCardLocalDataSource {
     // 카드 리스트 반환
     suspend fun getMissionCardList(): List<MissionCardInfoEntity>
 
+    suspend fun getMissionCardPack(): List<MissionCardInfoEntity>
+
     // 카드 추가.
     suspend fun addMissionCard(missionCardInfo: MissionCardInfoEntity)
 
@@ -23,8 +25,8 @@ interface MissionCardLocalDataSource {
     suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity>
 
     // 즐겨찾기 등록
-    suspend fun bookmarkMissionCard(position: Int)
+    suspend fun bookmarkMissionCard(id: Int)
 
     // 즐겨찾기 해제
-    suspend fun unBookmarkMissionCard(position: Int)
+    suspend fun unBookmarkMissionCard(id: Int)
 }

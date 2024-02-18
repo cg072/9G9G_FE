@@ -15,6 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.navigation.navArgs
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.example.nineg.R
@@ -37,7 +38,6 @@ import java.util.*
 class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private val viewModel: PostingFormViewModel by viewModels()
-
     private lateinit var calendar: Calendar
     private val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
     private var imageUrl: MultipartBody.Part? = null
@@ -278,6 +278,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     }
 
     companion object {
+        private const val TAG = "PostingFormActivity"
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
         private const val MAX_TEXT_LENGTH = 28

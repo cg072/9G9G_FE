@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.nineg.data.db.entity.MissionCardInfoEntity
+import com.example.nineg.data.db.domain.MissionCard
 import com.example.nineg.databinding.ItemMissionCardBinding
 
-class MissionCardAdapter: ListAdapter<MissionCardInfoEntity, MissionCardViewHolder>(MissionCardDiffUtil) {
+class MissionCardAdapter(private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) : ListAdapter<MissionCard, MissionCardViewHolder>(MissionCardDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionCardViewHolder {
         return MissionCardViewHolder(
@@ -15,7 +15,7 @@ class MissionCardAdapter: ListAdapter<MissionCardInfoEntity, MissionCardViewHold
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ), recyclerViewClickListener
         )
     }
 
@@ -25,13 +25,18 @@ class MissionCardAdapter: ListAdapter<MissionCardInfoEntity, MissionCardViewHold
     }
 
     companion object {
-        private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCardInfoEntity>() {
-            override fun areItemsTheSame(oldItem: MissionCardInfoEntity, newItem: MissionCardInfoEntity): Boolean {
-                return oldItem.id == newItem.id
+        private const val TAG = "MissionCardAdapter"
+        private val MissionCardDiffUtil = object : DiffUtil.ItemCallback<MissionCard>() {
+            override fun areItemsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {
+                return oldItem.index == newItem.index
             }
 
-            override fun areContentsTheSame(oldItem: MissionCardInfoEntity, newItem: MissionCardInfoEntity): Boolean {
+            override fun areContentsTheSame(oldItem: MissionCard, newItem: MissionCard): Boolean {
                 return oldItem == newItem
+            }
+
+            override fun getChangePayload(oldItem: MissionCard, newItem: MissionCard): Boolean {
+                return oldItem.isBookmarked == newItem.isBookmarked
             }
         }
     }

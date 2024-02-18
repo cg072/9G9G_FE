@@ -12,17 +12,17 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "missionCardInfo")
 data class MissionCardInfoEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
     val image: String,
     val level: Int,
     // 제목
     val title: String,
     // 가이드
-    val guide: String,
+    val guide: String?,
     // 상세 설명
     val content: String,
-    var isBookmarked: Boolean = true
+    var isBookmarked: Boolean = false
 ) : Parcelable
 
 fun MissionCardInfoEntity.asDomainModel() =
-    MissionCard(id, image, level, title, guide, content, isBookmarked)
+    MissionCard(id,0, image, level, title, guide, content, isBookmarked)

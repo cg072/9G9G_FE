@@ -1,11 +1,13 @@
 package com.example.nineg.ui.mission
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nineg.data.db.entity.MissionCardInfoEntity
 import com.example.nineg.data.db.MissionCardRepository
+import com.example.nineg.data.db.domain.MissionCard
+import com.example.nineg.data.db.local.MissionCards
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,14 +17,23 @@ import javax.inject.Inject
 class MissionViewModel @Inject constructor(
     private val missionCardRepository: MissionCardRepository
 ) : ViewModel() {
-    private val _missionCards = MutableLiveData<List<MissionCardInfoEntity>>()
-    val missionCards: LiveData<List<MissionCardInfoEntity>> = _missionCards
+
+    private val missionCards = MissionCards()
+    private val _missionCardList = MutableLiveData<List<MissionCard>>()
+    val missionCardList: LiveData<List<MissionCard>> = _missionCardList
 
     private val _startNavShowCase = MutableLiveData<Any>()
     val startNavShowCase: LiveData<Any> = _startNavShowCase
 
+    private val _backToFirstPosition = MutableLiveData<Any>()
+    val backToFirstPosition: LiveData<Any> = _backToFirstPosition
+
     init {
-        addMissionCard()
+        viewModelScope.launch(Dispatchers.IO) {
+            updateTodayGoody()
+            missionCardRepository.downloadMissionCardList()
+            addMissionCard()
+        }
     }
 
     fun startTutorialNav() {
@@ -31,40 +42,12 @@ class MissionViewModel @Inject constructor(
 
     fun addMissionCard() {
         viewModelScope.launch(Dispatchers.IO) {
-            missionCardRepository.addMissionCardList(createMissionCard())
-            missionCardRepository.getMissionCardList().also {
-                _missionCards.postValue((it))
-            }
+            val cardList = missionCardRepository.getMissionCardPack().sortedBy { it.level }
+            val bookmarkedCardList = missionCardRepository.getBookmarkedMissionCardList()
+            missionCards.addMissionCardList(cardList)
+            missionCards.addBookmarkedMissionCardList(bookmarkedCardList)
+            updateMissionCardList()
         }
-    }
-
-    private fun createMissionCard(): List<MissionCardInfoEntity> {
-        return listOf(
-            MissionCardInfoEntity(
-                image = "https://i.ytimg.com/vi/RncY8aNDr8U/maxresdefault.jpg",
-                level = 1,
-                title = "유나 입니다. Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "유나",
-                isBookmarked = false
-            ),
-            MissionCardInfoEntity(
-                image = "https://m.segye.com/content/image/2023/07/06/20230706511066.jpg",
-                level = 2,
-                title = "예지 입니다.Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "예지",
-                isBookmarked = false
-            ),
-            MissionCardInfoEntity(
-                image = "https://img2.sbs.co.kr/img/seditor/VD/2022/05/11/0Df1652234259596-640-0.jpg",
-                level = 3,
-                title = "카즈하 입니다. Title 최대 2줄로 들어갔을 때 영역입니다. 최대 영역입니다.",
-                guide = "Body 2줄로 들어갔을 때 최대 영역입니다. Body 2줄로 들어갔을 때 최대 영역입니다.",
-                content = "카즈하",
-                isBookmarked = true
-            )
-        )
     }
 
     fun isFirstLaunch(): Boolean {
@@ -73,5 +56,38 @@ class MissionViewModel @Inject constructor(
 
     fun setIsFirstLaunch(isFirstLaunch: Boolean) {
         missionCardRepository.setIsFirstLaunch(isFirstLaunch)
+    }
+
+    fun updateBookmarkMissionCard(cardInfo: MissionCard) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            if (cardInfo.isBookmarked) {
+                missionCardRepository.unBookmarkMissionCard(cardInfo.id)
+                missionCards.unBookmarkMissionCard(cardInfo.id)
+            } else {
+                missionCardRepository.bookmarkMissionCard(cardInfo.id)
+                missionCards.bookmarkMissionCard(cardInfo.id)
+            }
+
+            updateMissionCardList()
+        }
+    }
+
+    private fun updateMissionCardList() {
+        _missionCardList.postValue(missionCards.getMissionCardList())
+    }
+
+    fun updateTodayGoody() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userId = missionCardRepository.getUserId()
+            val todayGoody = missionCardRepository.getUserId().let { missionCardRepository.getTodayMissionCard(userId) }
+            todayGoody?.let { missionCards.updateTodayGoody(it) }
+            updateMissionCardList()
+            _backToFirstPosition.postValue(Any())
+        }
+    }
+
+    companion object {
+        private const val TAG = "MissionViewModel"
     }
 }

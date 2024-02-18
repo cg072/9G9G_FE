@@ -3,6 +3,7 @@ package com.example.nineg.ui.main
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nineg.data.db.MissionCardRepository
 import com.example.nineg.data.db.remote.UserRemoteDataSource
 import com.example.nineg.util.MutableSingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
+    private val missionCardRepository: MissionCardRepository
 ) : ViewModel() {
 
     private var isWaiting = false
@@ -39,6 +41,7 @@ class MainViewModel @Inject constructor(
 
     fun initUserData(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            missionCardRepository.setUserId(deviceId)
             val isSuccessNetwork = searchUser(deviceId).await() || createUser(deviceId).await()
 
             finishNetwork = true
