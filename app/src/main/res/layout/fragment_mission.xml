@@ -6,11 +6,11 @@
 
         <variable
             name="viewModel"
-            type="com.example.nineg.ui.mission.MissionViewModel" />
+            type="com.team.nineg.ui.mission.MissionViewModel" />
 
         <variable
             name="view"
-            type="com.example.nineg.ui.mission.MissionFragment" />
+            type="com.team.nineg.ui.mission.MissionFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -200,7 +200,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/activityPostingFormTitle"
                     app:layout_constraintStart_toEndOf="@+id/activityPostingFormTitle"/>
 
-                <com.example.nineg.view.ClearEditText
+                <com.team.nineg.view.ClearEditText
                     android:id="@+id/activityPostingFormTitleEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -259,7 +259,7 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/activityPostingFormContentTitle"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <com.example.nineg.view.ClearEditText
+                <com.team.nineg.view.ClearEditText
                     android:id="@+id/activityPostingFormContentEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

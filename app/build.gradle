@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.nineg'
+    namespace 'com.team.nineg'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.nineg"
+        applicationId "com.team.nineg"
         minSdk 23
         targetSdk 33
         versionCode 1
