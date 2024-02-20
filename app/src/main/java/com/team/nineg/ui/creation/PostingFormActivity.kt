@@ -18,6 +18,7 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import coil.ImageLoader
 import coil.load
+import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.transform.RoundedCornersTransformation
@@ -344,8 +345,14 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
                 .allowHardware(false)
                 .build()
 
-            val result = (loader.execute(request) as SuccessResult).drawable
-            val bitmap = (result as BitmapDrawable).bitmap
+            val bitmap = when (val responseResult = loader.execute(request)) {
+                is SuccessResult -> {
+                    (responseResult.drawable as BitmapDrawable).bitmap
+                }
+                is ErrorResult -> {
+                    (responseResult.drawable as BitmapDrawable).bitmap
+                }
+            }
 
             imageMultipart = ImageUtil.getMultipartBody(bitmap)
         }
