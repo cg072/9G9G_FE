@@ -27,7 +27,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initSplashScreen()
         super.onCreate(savedInstanceState)
         initNavigation()
         initObserve()
@@ -45,14 +44,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         navController.navigatorProvider.addNavigator(navigator)
         navController.setGraph(R.navigation.main_navigation)
         binding.bottomNavView.setupWithNavController(navController)
-    }
-
-    private fun initSplashScreen() {
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepVisibleCondition {
-            // true == 지속 false == 종료
-            !viewModel.isUReady()
-        }
     }
 
     private fun initObserve() {
