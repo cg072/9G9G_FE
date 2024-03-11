@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@id/missionFragment"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="@string/mission_title" />
+
     <item
         android:id="@id/calendarFragment"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_calendar"
         android:title="@string/calendar_title" />
+    <item
+        android:id="@id/missionFragment"
+        android:icon="@drawable/ic_goody"
+        android:title="@string/mission_title" />
+    <item
+        android:id="@id/myPageFragment"
+        android:icon="@drawable/ic_my_page"
+        android:title="@string/my_page_title" />
 </menu>

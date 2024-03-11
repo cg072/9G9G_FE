@@ -5,14 +5,25 @@
     android:id="@+id/main_navigation"
     app:startDestination="@id/missionFragment">
 
-    <fragment
+    <MaintainStatusNavigator
         android:id="@+id/missionFragment"
-        android:name="com.example.nineg.ui.mission.MissionFragment"
+        android:name="com.team.nineg.ui.mission.MissionFragment"
         android:label="MissionFragment"
         tools:layout="@layout/fragment_mission"/>
-    <fragment
+    <MaintainStatusNavigator
         android:id="@+id/calendarFragment"
-        android:name="com.example.nineg.ui.calendar.CalendarFragment"
+        android:name="com.team.nineg.ui.calendar.CalendarFragment"
         android:label="CalendarFragment"
         tools:layout="@layout/fragment_calendar"/>
+    <MaintainStatusNavigator
+        android:id="@+id/networkErrorFragment"
+        android:name="com.team.nineg.ui.error.NetworkErrorFragment"
+        android:label="NetworkErrorFragment"
+        tools:layout="@layout/fragment_network_error"/>
+    <MaintainStatusNavigator
+        android:id="@+id/myPageFragment"
+        android:name="com.team.nineg.ui.my.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page"/>
+
 </navigation>

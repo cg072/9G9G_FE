@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:background="@drawable/dialog_record_option_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dialogRecordOptionEditContainer"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/dialogRecordOptionEditImg"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/option_edit"
+                android:src="@drawable/option_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="14dp"
+                android:textColor="@color/grayscale_20"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="@string/option_edit"
+                app:layout_constraintStart_toEndOf="@+id/dialogRecordOptionEditImg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dialogRecordOptionDeleteContainer"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/dialogRecordOptionDeleteImg"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/option_delete"
+                android:src="@drawable/option_delete"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="14dp"
+                android:textColor="@color/grayscale_20"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="@string/option_delete"
+                app:layout_constraintStart_toEndOf="@+id/dialogRecordOptionDeleteImg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</layout>
