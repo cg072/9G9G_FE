@@ -6,4 +6,5 @@ import com.team.nineg.retrofit.ApiResult
 interface UserRepository {
     suspend fun createUser(deviceId: String): ApiResult<User>
     suspend fun searchUser(deviceId: String): ApiResult<User>
+    suspend fun loginUser(deviceId: String): ApiResult<User>
 }

@@ -37,8 +37,8 @@ class NetworkErrorFragment : BaseFragment<FragmentNetworkErrorBinding>() {
 
     private fun initObserve() {
         networkErrorViewModel.retryConnection.observe(viewLifecycleOwner) {
-            val ssaid = Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID)
-            mainViewModel.initUserData(ssaid)
+//            val ssaid = Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID)
+//            mainViewModel.initUserData(ssaid)
         }
     }
 

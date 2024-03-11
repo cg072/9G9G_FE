@@ -1,9 +1,7 @@
 package com.team.nineg.ui.main
 
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.viewModels
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -30,8 +28,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
         initNavigation()
         initObserve()
-        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.initUserData(ssaid)
     }
 
     private fun initNavigation() {
@@ -49,15 +45,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun initObserve() {
         viewModel.startNavShowCase.observe(this) {
             tutorialBottomNav()
-        }
-
-        viewModel.isNetworkError.observe(this) { isSuccess ->
-            // TODO : navController.navigate 해당 로직 동작시 사이드 이펙트 발생
-//            if (isSuccess) {
-//                navController.navigate(R.id.missionFragment)
-//            } else {
-//                navController.navigate(R.id.networkErrorFragment)
-//            }
         }
     }
 

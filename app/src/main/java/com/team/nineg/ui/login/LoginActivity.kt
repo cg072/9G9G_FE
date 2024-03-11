@@ -2,18 +2,21 @@ package com.team.nineg.ui.login
 
 import android.animation.ObjectAnimator
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AnticipateInterpolator
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.postDelayed
 import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
+import com.team.nineg.base.UiState
 import com.team.nineg.databinding.ActivityLoginBinding
+import com.team.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,6 +33,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         initSplashScreenListener()
+        observe()
+        listener()
         binding.root.postDelayed(2000) {
             isReady = true
         }
@@ -63,6 +68,28 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                 }
             }
         })
+    }
+
+    private fun listener() {
+        binding.activityLoginKakaoBtn.setOnClickListener {
+            val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+            viewModel.initUserData(ssaid)
+        }
+    }
+
+    private fun observe() {
+        viewModel.state.observe(this) { state ->
+            when (state) {
+                is UiState.Success -> {
+                    ActivityUtil.startMainActivity(this)
+                    finish()
+                }
+                is UiState.Error -> {
+                    Toast.makeText(this, R.string.login_error_message, Toast.LENGTH_SHORT).show()
+                }
+                else -> {}
+            }
+        }
     }
 
 }
