@@ -10,11 +10,11 @@
         tools:background="@drawable/dialog_default_bg">
 
         <TextView
-            android:id="@+id/dialogRecordDeleteTitle"
+            android:id="@+id/dialogLogoutTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="정말 기록을 삭제하시겠어요?"
+            android:text="로그아웃 하시겠어요?"
             android:textColor="@color/black"
             android:textSize="16dp"
             android:fontFamily="@font/pretendard_medium"
@@ -22,53 +22,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/dialogRecordDeleteMessage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="삭제한 구디카드는 복구할 수 없어요 "
-            android:textSize="16dp"
-            android:textColor="@color/grayscale_10"
-            android:fontFamily="@font/pretendard_medium"
-            app:layout_constraintTop_toBottomOf="@+id/dialogRecordDeleteTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
         <LinearLayout
-            android:id="@+id/dialogRecordDeleteBtnContainer"
+            android:id="@+id/dialogLogoutBtnContainer"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/dialogRecordDeleteMessage"
+            app:layout_constraintTop_toBottomOf="@+id/dialogLogoutTitle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
-                android:id="@+id/dialogRecordCancelBtn"
+                android:id="@+id/dialogLogoutCancelBtn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:background="@drawable/button_cancel_bg"
-                android:text="취소하기"
+                android:text="아니오"
                 android:textColor="@color/grayscale_20"
                 android:textSize="16dp"
                 android:fontFamily="@font/pretendard_medium"/>
 
             <TextView
-                android:id="@+id/dialogRecordDeleteBtn"
+                android:id="@+id/dialogLogoutBtn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:gravity="center"
-                android:background="@drawable/button_error_bg"
-                android:text="삭제하기"
-                android:textColor="@color/error"
+                android:background="@drawable/button_confirm_bg"
+                android:text="로그아웃"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:fontFamily="@font/pretendard_medium"/>
 
