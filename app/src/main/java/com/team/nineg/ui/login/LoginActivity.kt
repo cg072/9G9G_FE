@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AnticipateInterpolator
@@ -12,6 +13,11 @@ import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.postDelayed
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
 import com.team.nineg.base.UiState
@@ -23,8 +29,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     private val viewModel: LoginViewModel by viewModels()
-
     private var isReady = false
+
+    val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        if (error != null) {
+            Log.e(TAG, "카카오계정으로 로그인 실패", error)
+            logout()
+        } else if (token != null) {
+            Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+            successLogin()
+        }
+    }
 
     override val layoutResourceId: Int
         get() = R.layout.activity_login
@@ -72,8 +87,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     private fun listener() {
         binding.activityLoginKakaoBtn.setOnClickListener {
-            val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-            viewModel.initUserData(ssaid)
+            loginKakao()
         }
     }
 
@@ -92,4 +106,43 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         }
     }
 
+    private fun loginKakao() {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                if (error != null) {
+                    Log.e(TAG, "카카오톡으로 로그인 실패", error)
+
+                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                        return@loginWithKakaoTalk
+                    }
+
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+                } else if (token != null) {
+                    Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                    successLogin()
+                }
+            }
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+        }
+    }
+
+    private fun logout() {
+        UserApiClient.instance.logout { error ->
+            if (error != null) {
+                Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+            } else {
+                Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
+            }
+        }
+    }
+
+    private fun successLogin() {
+        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        viewModel.initUserData(ssaid)
+    }
+
+    companion object {
+        private const val TAG = "LoginActivity"
+    }
 }
