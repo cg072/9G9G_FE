@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.kakao.sdk.user.UserApiClient
@@ -48,14 +50,16 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
         binding.fragmentMyPageLogoutBtn.setOnClickListener {
             val dialog = LogoutDialog(binding.root.context) {
-                logout()
+                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
+//                logout()
             }
             dialog.show()
         }
 
         binding.fragmentMyPageRevokeBtn.setOnClickListener {
             val dialog = RevokeDialog(binding.root.context) {
-                revoke()
+                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
+//                revoke()
             }
             dialog.show()
         }
@@ -66,6 +70,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
             if (error != null) {
                 Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
             } else {
+                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
                 Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
             }
         }
