@@ -10,7 +10,9 @@ import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.databinding.ItemMissionCardBinding
 
 class MissionCardViewHolder(
-    private val binding: ItemMissionCardBinding, private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) :
+    private val binding: ItemMissionCardBinding,
+    private val recyclerViewClickListener: MissionCardRecyclerViewClickListener
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(cardInfo: MissionCard) {
@@ -18,7 +20,8 @@ class MissionCardViewHolder(
             val clickedPosition = adapterPosition
             val recyclerView = itemView.parent as RecyclerView
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val centerPosition = layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
+            val centerPosition =
+                layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
 
             if (clickedPosition == centerPosition) {
                 // 화면 중앙의 아이템을 클릭했다면 아이템 정보를 다른 프레그먼트에 전달합니다.
