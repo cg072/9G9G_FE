@@ -1,5 +1,6 @@
 package com.team.nineg.ui.mission.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -41,11 +42,10 @@ class MissionCardViewHolder(
                 binding.ivBookmark.load(R.drawable.ic_bookmark_off)
             }
 
+            binding.ivLevel.setVisibleOrInvisible(cardInfo.level != TODAY_GOODY)
+            binding.ivBookmark.setVisibleOrInvisible(cardInfo.level != TODAY_GOODY)
+
             when (cardInfo.level) {
-                TODAY_GOODY -> {
-                    binding.ivLevel.visibility = android.view.View.INVISIBLE
-                    binding.ivBookmark.visibility = android.view.View.INVISIBLE
-                }
                 MISSION_LEVEL_1 -> binding.ivLevel.load(R.drawable.ic_level_1)
                 MISSION_LEVEL_2 -> binding.ivLevel.load(R.drawable.ic_level_2)
                 MISSION_LEVEL_3 -> binding.ivLevel.load(R.drawable.ic_level_3)
@@ -59,6 +59,10 @@ class MissionCardViewHolder(
                 recyclerViewClickListener.onClickRecyclerViewBookMark(cardInfo)
             }
         }
+    }
+
+    private fun View.setVisibleOrInvisible(isVisible: Boolean) {
+        visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
     }
 
     companion object {
