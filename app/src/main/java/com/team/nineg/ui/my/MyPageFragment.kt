@@ -3,7 +3,9 @@ package com.team.nineg.ui.my
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import coil.load
@@ -16,10 +18,12 @@ import com.team.nineg.databinding.FragmentMyPageBinding
 import com.team.nineg.dialog.LogoutDialog
 import com.team.nineg.dialog.RevokeDialog
 import com.team.nineg.ui.detail.RecordDetailActivity
+import com.team.nineg.ui.login.UserViewModel
 import com.team.nineg.util.ActivityUtil
 
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
+    private val userViewModel: UserViewModel by activityViewModels()
     private val viewModel: MyPageViewModel by viewModels()
 
     override val layoutResourceId: Int
@@ -50,7 +54,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
         binding.fragmentMyPageLogoutBtn.setOnClickListener {
             val dialog = LogoutDialog(binding.root.context) {
+                userViewModel.logout()
                 findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
+
+//                val navController = findNavController()
+//                val startDestination = navController.graph.startDestination
+//                val navOptions = NavOptions.Builder()
+//                    .setPopUpTo(startDestination, true)
+//                    .build()
+//                navController.navigate(startDestination, null, navOptions)
 //                logout()
             }
             dialog.show()
@@ -58,6 +70,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
         binding.fragmentMyPageRevokeBtn.setOnClickListener {
             val dialog = RevokeDialog(binding.root.context) {
+                userViewModel.revoke()
                 findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
 //                revoke()
             }

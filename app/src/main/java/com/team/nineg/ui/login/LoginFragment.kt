@@ -5,7 +5,8 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -20,7 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: UserViewModel by activityViewModels()
+    private lateinit var savedStateHandle: SavedStateHandle
 
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -37,13 +39,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+        savedStateHandle[LOGIN_SUCCESSFUL] = false
+
         observe()
         listener()
     }
 
     private fun listener() {
         binding.activityLoginKakaoBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_missionFragment)
+            viewModel.success()
+            savedStateHandle[LOGIN_SUCCESSFUL] = true
+            findNavController().popBackStack()
 //            loginKakao()
         }
     }
@@ -52,7 +59,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Success -> {
-                    findNavController().navigate(R.id.action_loginFragment_to_missionFragment)
+                    savedStateHandle[LOGIN_SUCCESSFUL] = true
+                    findNavController().popBackStack()
                 }
                 is UiState.Error -> {
                     Toast.makeText(binding.root.context, R.string.login_error_message, Toast.LENGTH_SHORT).show()
@@ -100,5 +108,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     companion object {
         private const val TAG = "LoginActivity"
+        const val LOGIN_SUCCESSFUL: String = "LOGIN_SUCCESSFUL"
     }
 }

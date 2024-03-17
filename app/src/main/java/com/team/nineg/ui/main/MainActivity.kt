@@ -33,7 +33,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
     private var isReady = false
-    private var isLogin = false
 
     override val layoutResourceId: Int
         get() = R.layout.activity_main
@@ -85,15 +84,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .findFragmentById(R.id.navHostFragmentContainer) as? NavHostFragment? ?: return
 
         navController = host.navController
-        val navGraph = navController.navInflater.inflate(R.navigation.main_navigation)
-
-        if (isLogin) {
-            navGraph.setStartDestination(R.id.missionFragment)
-        } else {
-            navGraph.setStartDestination(R.id.loginFragment)
-        }
-
-        navController.setGraph(navGraph, intent.extras)
         binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

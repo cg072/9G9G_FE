@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_navigation">
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/missionFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -20,7 +21,11 @@
         android:id="@+id/missionFragment"
         android:name="com.team.nineg.ui.mission.MissionFragment"
         android:label="MissionFragment"
-        tools:layout="@layout/fragment_mission" />
+        tools:layout="@layout/fragment_mission" >
+        <action
+            android:id="@+id/action_missionFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.team.nineg.ui.calendar.CalendarFragment"

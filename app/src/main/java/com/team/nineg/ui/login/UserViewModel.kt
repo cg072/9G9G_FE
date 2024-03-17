@@ -14,10 +14,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
+    private val _user = MutableLiveData<User?>(null)
+    val user: LiveData<User?> get() = _user
     private val _state = MutableLiveData<UiState<User>>()
     val state: LiveData<UiState<User>> get() = _state
+
+    fun success() {
+        _user.value = User("c2914b032aba411c", "1", 10, "male")
+    }
 
     fun initUserData(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -25,6 +31,7 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
 
             when (result) {
                 is ApiResult.Success -> {
+                    _user.postValue(result.value)
                     _state.postValue(UiState.Success(result.value))
                 }
                 is ApiResult.Error -> {
@@ -32,6 +39,14 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
                 }
             }
         }
+    }
+
+    fun logout() {
+        _user.value = null
+    }
+
+    fun revoke() {
+        _user.value = null
     }
 
     companion object {
