@@ -8,7 +8,6 @@ import com.team.nineg.data.db.remote.UserRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.HttpException
-import retrofit2.Response
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -19,10 +18,12 @@ class UserRepositoryImpl @Inject constructor(
     private val statusPref: SharedPreferences =
         context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
 
-    override suspend fun createUser(deviceId: String): ApiResult<User> {
-        val response = userRemoteDataSource.createUser(deviceId, "", "", "")
+    override suspend fun login(accessToken: String): ApiResult<User> {
+        val response = userRemoteDataSource.login(accessToken)
+
         return try {
             if (response.isSuccessful && response.body() != null) {
+                statusPref.edit().putString(USER_ID, response.body()?.deviceId).apply()
                 ApiResult.Success(response.body()!!.asDomainModel())
             } else {
                 ApiResult.Error(response.code(), null)
@@ -33,30 +34,20 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun searchUser(deviceId: String): ApiResult<User> {
-        val response = userRemoteDataSource.searchUser(deviceId)
+    override suspend fun logout(): ApiResult<Unit> {
+        statusPref.edit().remove(USER_ID).apply()
+        return ApiResult.Success(Unit)
+    }
+
+    override suspend fun revoke(deviceId: String): ApiResult<User> {
+        val response = userRemoteDataSource.revoke(deviceId)
+
         return try {
             if (response.isSuccessful && response.body() != null) {
-                statusPref.edit().putString(USER_ID, deviceId).apply()
+                statusPref.edit().remove(USER_ID).apply()
                 ApiResult.Success(response.body()!!.asDomainModel())
             } else {
                 ApiResult.Error(response.code(), null)
-            }
-        } catch (throwable: Throwable) {
-            val code = (throwable as? HttpException)?.code()
-            ApiResult.Error(code, throwable)
-        }
-    }
-
-    override suspend fun loginUser(deviceId: String): ApiResult<User> {
-        val response = userRemoteDataSource.searchUser(deviceId)
-
-        return try {
-            if (response.isSuccessful && response.body() != null) {
-                statusPref.edit().putString(USER_ID, deviceId).apply()
-                ApiResult.Success(response.body()!!.asDomainModel())
-            } else {
-                createUser(deviceId)
             }
         } catch (throwable: Throwable) {
             val code = (throwable as? HttpException)?.code()

@@ -15,26 +15,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
-
     private val _user = MutableLiveData<User?>(null)
     val user: LiveData<User?> get() = _user
-    private val _state = MutableLiveData<UiState<User>>()
-    val state: LiveData<UiState<User>> get() = _state
+    private val _state = MutableLiveData<UiState<Unit>>()
+    val state: LiveData<UiState<Unit>> get() = _state
 
-    fun success() {
-        _user.value = User("c2914b032aba411c", "1", 10, "male")
-    }
-
-    fun initUserData(deviceId: String) {
+    fun login(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = userRepository.loginUser(deviceId)
+            val result = userRepository.login(accessToken)
 
             when (result) {
                 is ApiResult.Success -> {
                     _user.postValue(result.value)
-                    _state.postValue(UiState.Success(result.value))
+                    _state.postValue(UiState.Success(Unit))
                 }
                 is ApiResult.Error -> {
+                    _user.postValue(null)
                     _state.postValue(UiState.Error(result.code, result.exception))
                 }
             }
@@ -42,15 +38,24 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
     }
 
     fun logout() {
-        _user.value = null
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.logout()
+            _user.postValue(null)
+        }
     }
 
     fun revoke() {
-        _user.value = null
-    }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = userRepository.revoke(user.value?.deviceId!!)
 
-    companion object {
-        private const val TAG = "MainViewModel"
-        private const val DELAY_SPLASH_TIME = 2000L
+            when (result) {
+                is ApiResult.Success -> {
+                    _user.postValue(null)
+                }
+                is ApiResult.Error -> {
+                    // error message
+                }
+            }
+        }
     }
 }

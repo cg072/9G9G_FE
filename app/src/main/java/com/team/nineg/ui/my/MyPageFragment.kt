@@ -18,6 +18,7 @@ import com.team.nineg.databinding.FragmentMyPageBinding
 import com.team.nineg.dialog.LogoutDialog
 import com.team.nineg.dialog.RevokeDialog
 import com.team.nineg.ui.detail.RecordDetailActivity
+import com.team.nineg.ui.login.LoginFragment
 import com.team.nineg.ui.login.UserViewModel
 import com.team.nineg.util.ActivityUtil
 
@@ -54,27 +55,22 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
         binding.fragmentMyPageLogoutBtn.setOnClickListener {
             val dialog = LogoutDialog(binding.root.context) {
-                userViewModel.logout()
-                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
-
-//                val navController = findNavController()
-//                val startDestination = navController.graph.startDestination
-//                val navOptions = NavOptions.Builder()
-//                    .setPopUpTo(startDestination, true)
-//                    .build()
-//                navController.navigate(startDestination, null, navOptions)
-//                logout()
+                logout()
             }
             dialog.show()
         }
 
         binding.fragmentMyPageRevokeBtn.setOnClickListener {
             val dialog = RevokeDialog(binding.root.context) {
-                userViewModel.revoke()
-                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
-//                revoke()
+                revoke()
             }
             dialog.show()
+        }
+
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user == null) {
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -83,8 +79,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
             if (error != null) {
                 Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
             } else {
-                findNavController().navigate(R.id.action_myPageFragment_to_loginFragment)
                 Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
+                userViewModel.logout()
             }
         }
     }
@@ -95,6 +91,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
                 Log.e(TAG, "연결 끊기 실패", error)
             } else {
                 Log.i(TAG, "연결 끊기 성공. SDK에서 토큰 삭제 됨")
+                userViewModel.revoke()
             }
         }
     }

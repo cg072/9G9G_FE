@@ -14,15 +14,14 @@ interface RetrofitService {
     suspend fun getGitHubUserData(
     ): Response<MissionCardDto>
 
-    @POST("/users")
-    suspend fun createUser(
-        @Body params: HashMap<String, String>
+    @Headers("Content-Type: application/json")
+    @GET("/oauth/kakao")
+    suspend fun login(
+        @Header("Authorization") accessToken: String
     ): Response<UserDto>
 
-    @GET("/users/{deviceId}")
-    suspend fun searchUser(
-        @Path("deviceId") deviceId: String
-    ): Response<UserDto>
+    @DELETE("/user/kakaoId")
+    suspend fun revoke(deviceId: String): Response<UserDto>
 
     @Multipart
     @POST("/records")

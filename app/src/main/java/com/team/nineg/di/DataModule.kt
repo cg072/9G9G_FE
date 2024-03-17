@@ -18,17 +18,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
-
-    // 저장소
-
     @Binds
     abstract fun bindMissionCardRepository(missionCardRepository: MissionCardRepositoryImpl): MissionCardRepository
 
     @Binds
     abstract fun bindCUserRepository(repository: UserRepositoryImpl): UserRepository
-
-    @Binds
-    abstract fun bindCalendarRepository(repository: CalendarRepositoryImpl): CalendarRepository
 
     @Binds
     abstract fun bindGoodyRepository(repository: GoodyRepositoryImpl): GoodyRepository

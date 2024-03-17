@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
             logout()
         } else if (token != null) {
             Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-            successLogin()
+            viewModel.login(token.accessToken)
         }
     }
 
@@ -48,22 +48,26 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     private fun listener() {
         binding.activityLoginKakaoBtn.setOnClickListener {
-            viewModel.success()
-            savedStateHandle[LOGIN_SUCCESSFUL] = true
-            findNavController().popBackStack()
-//            loginKakao()
+            loginKakao()
         }
     }
 
     private fun observe() {
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                savedStateHandle[LOGIN_SUCCESSFUL] = true
+                findNavController().popBackStack()
+            }
+        }
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is UiState.Success -> {
-                    savedStateHandle[LOGIN_SUCCESSFUL] = true
-                    findNavController().popBackStack()
-                }
+                is UiState.Success -> {}
                 is UiState.Error -> {
-                    Toast.makeText(binding.root.context, R.string.login_error_message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        binding.root.context,
+                        R.string.login_error_message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 else -> {}
             }
@@ -83,7 +87,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
                     UserApiClient.instance.loginWithKakaoAccount(binding.root.context, callback = callback)
                 } else if (token != null) {
                     Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                    successLogin()
+                    viewModel.login(token.accessToken)
                 }
             }
         } else {
@@ -99,11 +103,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
                 Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
             }
         }
-    }
-
-    private fun successLogin() {
-        val ssaid = Settings.Secure.getString(requireActivity().contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.initUserData(ssaid)
     }
 
     companion object {
