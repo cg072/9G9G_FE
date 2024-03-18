@@ -8,7 +8,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -76,7 +75,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         initObserve()
         initRecyclerView()
         initBinding()
-        initTutorial()
         binding.btnEdit.setOnClickListener {
             ActivityUtil.startPostingFormActivity(requireContext(), startForResult)
         }
@@ -88,6 +86,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
                 findNavController().navigate(R.id.action_missionFragment_to_loginFragment)
             } else {
                 Toast.makeText(binding.root.context, "login success", Toast.LENGTH_SHORT).show()
+                showTutorial()
             }
         }
     }
@@ -158,7 +157,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         binding.rvMission.getChildAdapterPosition(binding.rvMission.getChildAt(0))
     }
 
-    private fun initTutorial() {
+    private fun showTutorial() {
         if (viewModel.isFirstLaunch()) {
             tutorialMissionCard()
             viewModel.setIsFirstLaunch(false)
