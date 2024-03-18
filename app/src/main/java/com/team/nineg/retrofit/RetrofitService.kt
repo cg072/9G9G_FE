@@ -10,18 +10,14 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitService {
-    @GET("/todo")
-    suspend fun getGitHubUserData(
-    ): Response<MissionCardDto>
-
     @Headers("Content-Type: application/json")
     @GET("/oauth/kakao")
     suspend fun login(
         @Header("Authorization") accessToken: String
     ): Response<UserDto>
 
-    @DELETE("/user/kakaoId")
-    suspend fun revoke(deviceId: String): Response<UserDto>
+    @DELETE("/users/{id}")
+    suspend fun revoke(@Path("id")deviceId: String): Response<UserDto>
 
     @Multipart
     @POST("/records")
