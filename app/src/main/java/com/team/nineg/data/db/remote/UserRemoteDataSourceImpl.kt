@@ -1,5 +1,6 @@
 package com.team.nineg.data.db.remote
 
+import com.team.nineg.data.db.dto.RevokeDto
 import com.team.nineg.data.db.dto.UserDto
 import com.team.nineg.retrofit.RetrofitService
 import retrofit2.Response
@@ -11,7 +12,7 @@ class UserRemoteDataSourceImpl @Inject constructor(private val service: Retrofit
         return service.login("Bearer $accessToken")
     }
 
-    override suspend fun revoke(deviceId: String): Response<UserDto> {
+    override suspend fun revoke(deviceId: String): Response<RevokeDto> {
         return service.revoke(deviceId)
     }
 }

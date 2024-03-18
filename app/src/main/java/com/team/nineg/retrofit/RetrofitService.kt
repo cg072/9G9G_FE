@@ -1,9 +1,6 @@
 package com.team.nineg.retrofit
 
-import com.team.nineg.data.db.dto.BookmarkDto
-import com.team.nineg.data.db.dto.GoodyDto
-import com.team.nineg.data.db.dto.MissionCardDto
-import com.team.nineg.data.db.dto.UserDto
+import com.team.nineg.data.db.dto.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -17,7 +14,7 @@ interface RetrofitService {
     ): Response<UserDto>
 
     @DELETE("/users/{id}")
-    suspend fun revoke(@Path("id")deviceId: String): Response<UserDto>
+    suspend fun revoke(@Path("id") deviceId: String): Response<RevokeDto>
 
     @Multipart
     @POST("/records")

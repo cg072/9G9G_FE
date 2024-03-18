@@ -3,6 +3,7 @@ package com.team.nineg.data.db
 import android.content.Context
 import android.content.SharedPreferences
 import com.team.nineg.data.db.domain.User
+import com.team.nineg.data.db.dto.RevokeDto
 import com.team.nineg.data.db.dto.asDomainModel
 import com.team.nineg.data.db.remote.UserRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
@@ -39,13 +40,13 @@ class UserRepositoryImpl @Inject constructor(
         return ApiResult.Success(Unit)
     }
 
-    override suspend fun revoke(deviceId: String): ApiResult<User> {
+    override suspend fun revoke(deviceId: String): ApiResult<RevokeDto> {
         val response = userRemoteDataSource.revoke(deviceId)
 
         return try {
             if (response.isSuccessful && response.body() != null) {
                 statusPref.edit().remove(USER_ID).apply()
-                ApiResult.Success(response.body()!!.asDomainModel())
+                ApiResult.Success(response.body()!!)
             } else {
                 ApiResult.Error(response.code(), null)
             }
