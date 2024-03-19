@@ -2,24 +2,28 @@ package com.team.nineg.data.db
 
 import com.team.nineg.data.db.domain.Goody
 import com.team.nineg.data.db.dto.asDomainModel
+import com.team.nineg.data.db.local.UserLocalDataSource
 import com.team.nineg.data.db.remote.GoodyRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
 import okhttp3.MultipartBody
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class GoodyRepositoryImpl @Inject constructor(private val goodyRemoteDataSource: GoodyRemoteDataSource) :
-    GoodyRepository {
+class GoodyRepositoryImpl @Inject constructor(
+    private val goodyRemoteDataSource: GoodyRemoteDataSource,
+    private val userLocalDataSource: UserLocalDataSource
+) : GoodyRepository {
+
     override suspend fun registerGoody(
-        deviceId: String,
         title: String,
         content: String,
         dueDate: String,
         image: MultipartBody.Part
     ): ApiResult<Goody> {
         return try {
+            val userId = userLocalDataSource.getUser()?.deviceId ?: ""
             val response = goodyRemoteDataSource.registerGoody(
-                deviceId,
+                userId,
                 title,
                 content,
                 dueDate,
@@ -79,9 +83,10 @@ class GoodyRepositoryImpl @Inject constructor(private val goodyRemoteDataSource:
         }
     }
 
-    override suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>> {
+    override suspend fun getGoodyList(): ApiResult<List<Goody>> {
         return try {
-            val response = goodyRemoteDataSource.getGoodyList(deviceId)
+            val userId = userLocalDataSource.getUser()?.deviceId ?: ""
+            val response = goodyRemoteDataSource.getGoodyList(userId)
 
             if (response.isSuccessful && response.body() != null) {
                 ApiResult.Success(response.body()?.map { it.asDomainModel() } ?: emptyList())

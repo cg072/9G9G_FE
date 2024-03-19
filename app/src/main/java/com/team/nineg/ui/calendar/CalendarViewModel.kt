@@ -24,9 +24,9 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
     private val _goodyMap = MutableLiveData<Map<String, Goody>>()
     val goodyMap: LiveData<Map<String, Goody>> get() = _goodyMap
 
-    fun requestGoodyList(deviceId: String) {
+    fun requestGoodyList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getGoodyList(deviceId)
+            val result = repository.getGoodyList()
 
             when (result) {
                 is ApiResult.Success -> {

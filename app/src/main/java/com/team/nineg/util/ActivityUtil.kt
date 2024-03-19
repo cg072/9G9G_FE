@@ -8,8 +8,18 @@ import com.team.nineg.data.db.domain.Goody
 import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.ui.creation.PostingFormActivity
 import com.team.nineg.ui.detail.RecordDetailActivity
+import com.team.nineg.ui.main.MainActivity
 
 object ActivityUtil {
+
+    fun startMainActivity(context: Context) {
+        context.startActivity(
+            Intent(
+                context,
+                MainActivity::class.java
+            )
+        )
+    }
 
     fun startRecordDetailActivity(
         context: Context,

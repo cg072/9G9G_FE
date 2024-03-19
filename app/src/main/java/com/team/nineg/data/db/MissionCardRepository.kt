@@ -21,7 +21,7 @@ interface MissionCardRepository {
     suspend fun clearMissionCard()
 
     // 등록된 오늘의 구디 카드 반환
-    suspend fun getTodayMissionCard(userId: String): MissionCard?
+    suspend fun getTodayMissionCard(): MissionCard?
 
     // 즐겨찾기된 카드 리스트 반환
     suspend fun getBookmarkedMissionCardList(): List<MissionCardInfoEntity>
@@ -37,7 +37,4 @@ interface MissionCardRepository {
     fun setIsFirstLaunch(isFirstLaunch: Boolean)
 
     suspend fun downloadMissionCardList()
-
-    fun getUserId(): String
-    fun setUserId(userId: String)
 }

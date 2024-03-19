@@ -2,6 +2,8 @@ package com.team.nineg.di
 
 import com.team.nineg.data.db.local.MissionCardLocalDataSource
 import com.team.nineg.data.db.local.MissionCardLocalDataSourceImpl
+import com.team.nineg.data.db.local.UserLocalDataSource
+import com.team.nineg.data.db.local.UserLocalDataSourceImpl
 import com.team.nineg.data.db.remote.*
 import dagger.Binds
 import dagger.Module
@@ -26,4 +28,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindBookmarkRemoteDataSource(dataSource: BookmarkRemoteDataSourceImpl): BookmarkRemoteDataSource
+
+    @Binds
+    abstract fun bindUserLocalDataSource(dataSource: UserLocalDataSourceImpl): UserLocalDataSource
 }

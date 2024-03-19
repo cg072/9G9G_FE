@@ -7,6 +7,7 @@ import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.data.db.dto.asEntityModel
 import com.team.nineg.data.db.entity.MissionCardInfoEntity
 import com.team.nineg.data.db.local.MissionCardLocalDataSource
+import com.team.nineg.data.db.local.UserLocalDataSource
 import com.team.nineg.data.db.remote.GoodyRemoteDataSource
 import com.team.nineg.data.db.remote.MissionCardRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
@@ -18,7 +19,8 @@ class MissionCardRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val localMissionCardImpl: MissionCardLocalDataSource,
     private val remoteMissionCardImpl: MissionCardRemoteDataSource,
-    private val goodyRemoteDataSource: GoodyRemoteDataSource
+    private val goodyRemoteDataSource: GoodyRemoteDataSource,
+    private val userLocalDataSource: UserLocalDataSource
 ) : MissionCardRepository {
 
     private val statusPref: SharedPreferences =
@@ -44,8 +46,9 @@ class MissionCardRepositoryImpl @Inject constructor(
         localMissionCardImpl.clearMissionCard()
     }
 
-    override suspend fun getTodayMissionCard(userId: String): MissionCard? {
+    override suspend fun getTodayMissionCard(): MissionCard? {
         return try {
+            val userId = userLocalDataSource.getUser()?.deviceId ?: ""
             val response = goodyRemoteDataSource.getGoodyList(userId)
 
             if (response.isSuccessful && response.body() != null) {
@@ -88,14 +91,6 @@ class MissionCardRepositoryImpl @Inject constructor(
         statusPref.edit().putBoolean(IS_FIRST_LAUNCH, isFirstLaunch).apply()
     }
 
-    override fun getUserId(): String {
-        return statusPref.getString(USER_ID, "").toString()
-    }
-
-    override fun setUserId(userId: String) {
-        statusPref.edit().putString(USER_ID, userId).apply()
-    }
-
     override suspend fun downloadMissionCardList() {
         val result = remoteMissionCardImpl.downloadMissionCardList()
 
@@ -114,6 +109,5 @@ class MissionCardRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "MissionCardRepositoryIm"
         private const val IS_FIRST_LAUNCH = "isFirstLaunch"
-        private const val USER_ID = "userId"
     }
 }

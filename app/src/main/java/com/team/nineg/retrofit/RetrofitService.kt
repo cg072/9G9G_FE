@@ -1,28 +1,20 @@
 package com.team.nineg.retrofit
 
-import com.team.nineg.data.db.dto.BookmarkDto
-import com.team.nineg.data.db.dto.GoodyDto
-import com.team.nineg.data.db.dto.MissionCardDto
-import com.team.nineg.data.db.dto.UserDto
+import com.team.nineg.data.db.dto.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitService {
-    @GET("/todo")
-    suspend fun getGitHubUserData(
-    ): Response<MissionCardDto>
-
-    @POST("/users")
-    suspend fun createUser(
-        @Body params: HashMap<String, String>
+    @Headers("Content-Type: application/json")
+    @GET("/oauth/kakao")
+    suspend fun login(
+        @Header("Authorization") accessToken: String
     ): Response<UserDto>
 
-    @GET("/users/{deviceId}")
-    suspend fun searchUser(
-        @Path("deviceId") deviceId: String
-    ): Response<UserDto>
+    @DELETE("/users/{id}")
+    suspend fun revoke(@Path("id") deviceId: String): Response<RevokeDto>
 
     @Multipart
     @POST("/records")
