@@ -52,15 +52,7 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
 
     fun revoke() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = userRepository.revoke(user.value?.deviceId!!)
-            when (result) {
-                is ApiResult.Success -> {
-                    _user.postValue(userRepository.getUser())
-                }
-                is ApiResult.Error -> {
-                    // error message
-                }
-            }
+            userRepository.revoke(user.value?.deviceId!!)
             _user.postValue(userRepository.getUser())
         }
     }

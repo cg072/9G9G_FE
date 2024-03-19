@@ -47,11 +47,11 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun revoke(deviceId: String): ApiResult<RevokeDto> {
-        val response = userRemoteDataSource.revoke(deviceId)
-
         return try {
+            val response = userRemoteDataSource.revoke(deviceId)
+            userLocalDataSource.clear()
+
             if (response.isSuccessful && response.body() != null) {
-                userLocalDataSource.clear()
                 ApiResult.Success(response.body()!!)
             } else {
                 ApiResult.Error(response.code(), null)
