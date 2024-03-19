@@ -26,7 +26,6 @@ class PostingFormViewModel @Inject constructor(private val repository: GoodyRepo
     fun getDueDateSet() = dueDateSet
 
     fun registerGoody(
-        deviceId: String,
         title: String,
         content: String,
         dueDate: String,
@@ -34,7 +33,7 @@ class PostingFormViewModel @Inject constructor(private val repository: GoodyRepo
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val result =
-                repository.registerGoody(deviceId, title, content, dueDate, image)
+                repository.registerGoody(title, content, dueDate, image)
             when (result) {
                 is ApiResult.Success -> {
                     _goodyState.postValue(UiState.Success(result.value))
@@ -47,9 +46,9 @@ class PostingFormViewModel @Inject constructor(private val repository: GoodyRepo
         }
     }
 
-    fun requestGoodyList(deviceId: String) {
+    fun requestGoodyList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getGoodyList(deviceId)
+            val result = repository.getGoodyList()
 
             when (result) {
                 is ApiResult.Success -> {

@@ -41,12 +41,21 @@
     <string name="TEXT_NETWORK_CHECK_AND_RETRY">네트워크 상태를 확인 후 다시 시도해 주세요</string>
     <string name="TEXT_RETRY">다시 시도하기</string>
 
+    <string name="GoodyCardFormsTitle">나만의 작은 낭만이 있다면?</string>
+    <string name="GoodyCardFormsSubTitle">구디데이에게 알려주세요</string>
     <string name="privacy_policy">개인정보 처리방침</string>
     <string name="terms_of_service">서비스 이용약관</string>
-    <string name="goody_card_forms">구디카드 요청하기</string>
+    <string name="logout">로그아웃</string>
+    <string name="revoke">회원탈퇴</string>
     <string name="contact_us">문의하기</string>
+    <string name="version_data">버전정보</string>
 
     <string name="goody_due_date_error_message">오늘 이미 작성한 구디가 있어요</string>
     <string name="goody_register_success_message">구디카드가 저장되었어요</string>
     <string name="goody_register_error_message">저장 실패</string>
+
+    <string name="login_error_message">아이디, 비밀번호를 다시 확인해주세요.</string>
+
+    <string name="login_title">오늘은 \‘굳이\' 어떤 일을 해볼까요?</string>
+    <string name="kakao_btn_title">카카오로 시작하기</string>
 </resources>

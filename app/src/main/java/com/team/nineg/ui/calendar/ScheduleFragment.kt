@@ -2,8 +2,6 @@ package com.team.nineg.ui.calendar
 
 import android.app.Activity
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,9 +30,7 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>() {
     private val startRecordDetailActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val ssaid =
-                    Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-                activityViewModel.requestGoodyList(ssaid)
+                activityViewModel.requestGoodyList()
             }
         }
 
@@ -48,9 +44,6 @@ class ScheduleFragment : BaseFragment<FragmentScheduleBinding>() {
         initCalendarRecyclerView()
         initObserve()
         initListener()
-
-        val ssaid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-        Log.d(TAG, "kch ssaid : ${ssaid}")
         viewModel.getCalendarList(calendar)
     }
 

@@ -106,4 +106,6 @@
     <color name="calendar_filter_attr_unselect">#6049454F</color>
     <color name="calendar_check_filter_title">#1D1B20</color>
 
+    <color name="kakao_color">#FEE404</color>
+
 </resources>

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        tools:background="@drawable/dialog_record_delete_bg">
+        tools:background="@drawable/dialog_default_bg">
 
         <TextView
             android:id="@+id/dialogPostingFormExitTitle"
