@@ -2,9 +2,15 @@ package com.team.nineg.data.db
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.team.nineg.data.db.domain.User
 import com.team.nineg.data.db.dto.RevokeDto
 import com.team.nineg.data.db.dto.asDomainModel
+import com.team.nineg.data.db.dto.asEntityModel
+import com.team.nineg.data.db.entity.UserEntity
+import com.team.nineg.data.db.entity.asDomainModel
+import com.team.nineg.data.db.local.UserLocalDataSource
 import com.team.nineg.data.db.remote.UserRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -12,19 +18,19 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userLocalDataSource: UserLocalDataSource
 ): UserRepository {
-
-    private val statusPref: SharedPreferences =
-        context.getSharedPreferences("STATUS_PREFS", Context.MODE_PRIVATE)
+    override suspend fun getUser(): User? {
+        return userLocalDataSource.getUser()?.asDomainModel()
+    }
 
     override suspend fun login(accessToken: String): ApiResult<User> {
         val response = userRemoteDataSource.login(accessToken)
 
         return try {
             if (response.isSuccessful && response.body() != null) {
-                statusPref.edit().putString(USER_ID, response.body()?.deviceId).apply()
+                userLocalDataSource.insert(response.body()!!.asEntityModel())
                 ApiResult.Success(response.body()!!.asDomainModel())
             } else {
                 ApiResult.Error(response.code(), null)
@@ -36,7 +42,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout(): ApiResult<Unit> {
-        statusPref.edit().remove(USER_ID).apply()
+        userLocalDataSource.clear()
         return ApiResult.Success(Unit)
     }
 
@@ -45,7 +51,7 @@ class UserRepositoryImpl @Inject constructor(
 
         return try {
             if (response.isSuccessful && response.body() != null) {
-                statusPref.edit().remove(USER_ID).apply()
+                userLocalDataSource.clear()
                 ApiResult.Success(response.body()!!)
             } else {
                 ApiResult.Error(response.code(), null)
@@ -54,9 +60,5 @@ class UserRepositoryImpl @Inject constructor(
             val code = (throwable as? HttpException)?.code()
             ApiResult.Error(code, throwable)
         }
-    }
-
-    companion object {
-        private const val USER_ID = "userId"
     }
 }
