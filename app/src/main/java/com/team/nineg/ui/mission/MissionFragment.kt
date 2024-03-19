@@ -64,7 +64,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
         savedStateHandle.getLiveData<Boolean>(LoginFragment.LOGIN_SUCCESSFUL)
             .observe(currentBackStackEntry) { success ->
                 if (!success) {
-                    navController.navigate(R.id.action_missionFragment_to_loginFragment)
+                    activity?.finish()
                 }
             }
     }
