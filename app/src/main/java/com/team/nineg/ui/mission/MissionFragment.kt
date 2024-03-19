@@ -3,7 +3,6 @@ package com.team.nineg.ui.mission
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
@@ -85,7 +84,6 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
             if (user == null) {
                 findNavController().navigate(R.id.action_missionFragment_to_loginFragment)
             } else {
-                Toast.makeText(binding.root.context, "login success", Toast.LENGTH_SHORT).show()
                 showTutorial()
             }
         }
