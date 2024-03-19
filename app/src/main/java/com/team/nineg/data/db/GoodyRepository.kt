@@ -6,7 +6,6 @@ import okhttp3.MultipartBody
 
 interface GoodyRepository {
     suspend fun registerGoody(
-        deviceId: String,
         title: String,
         content: String,
         dueDate: String,
@@ -23,5 +22,5 @@ interface GoodyRepository {
         image: MultipartBody.Part?
     ): ApiResult<Goody>
 
-    suspend fun getGoodyList(deviceId: String): ApiResult<List<Goody>>
+    suspend fun getGoodyList(): ApiResult<List<Goody>>
 }

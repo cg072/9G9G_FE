@@ -3,7 +3,6 @@ package com.team.nineg.ui.calendar
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,9 +57,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
         super.onViewCreated(view, savedInstanceState)
         initListener()
         initObserve()
-        val ssaid =
-            Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.requestGoodyList(ssaid)
+        viewModel.requestGoodyList()
     }
 
     private fun initListener() {
@@ -81,9 +78,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
 
     private fun initObserve() {
         activityViewModel.refreshScreen.observe(viewLifecycleOwner) {
-            val ssaid =
-                Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-            viewModel.requestGoodyList(ssaid)
+            viewModel.requestGoodyList()
         }
     }
 

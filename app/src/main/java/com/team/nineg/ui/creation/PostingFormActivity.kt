@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -105,8 +104,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         initListener()
         observe()
         onBackPressedDispatcher.addCallback(this, callback)
-        val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        viewModel.requestGoodyList(ssaid)
+        viewModel.requestGoodyList()
     }
 
     override fun onDestroy() {
@@ -223,10 +221,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         }
 
         if (validContent() && imageMultipart != null) {
-            val ssaid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-
             viewModel.registerGoody(
-                ssaid,
                 binding.activityPostingFormTitleEditText.text.toString(),
                 binding.activityPostingFormContentEditText.text.toString(),
                 dueDate,
