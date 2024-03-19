@@ -5,11 +5,8 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import coil.load
-import coil.transform.RoundedCornersTransformation
 import com.kakao.sdk.user.UserApiClient
 import com.team.nineg.BuildConfig
 import com.team.nineg.R
@@ -17,11 +14,11 @@ import com.team.nineg.base.BaseFragment
 import com.team.nineg.databinding.FragmentMyPageBinding
 import com.team.nineg.dialog.LogoutDialog
 import com.team.nineg.dialog.RevokeDialog
-import com.team.nineg.ui.detail.RecordDetailActivity
-import com.team.nineg.ui.login.LoginFragment
 import com.team.nineg.ui.login.UserViewModel
 import com.team.nineg.util.ActivityUtil
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     private val userViewModel: UserViewModel by activityViewModels()
@@ -32,11 +29,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.fragmentMyPageName.setText(R.string.goody_profile_name)
-        binding.fragmentMyPageProfile.load(R.drawable.ic_goody_profile)
         binding.fragmentMyPageVersion.text = BuildConfig.VERSION_NAME
+        initListener()
+        observe()
+        viewModel.fetchProfile()
+    }
 
+    private fun initListener() {
         binding.fragmentMyPagePrivacyPolicyBtn.setOnClickListener {
             ActivityUtil.startExternalBrowser(binding.root.context, URL_PRIVACY_POLICY)
         }
@@ -65,6 +64,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
                 revoke()
             }
             dialog.show()
+        }
+    }
+
+    private fun observe() {
+        viewModel.profile.observe(viewLifecycleOwner) { user ->
+            binding.fragmentMyPageName.text = user.nickname ?: getString(R.string.goody_profile_name)
+            binding.fragmentMyPageProfile.load(user.profileImage ?: R.drawable.ic_goody_profile)
         }
 
         userViewModel.user.observe(viewLifecycleOwner) { user ->
