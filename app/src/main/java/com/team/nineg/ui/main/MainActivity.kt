@@ -10,18 +10,17 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.postDelayed
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
 import com.team.nineg.databinding.ActivityMainBinding
-import com.team.nineg.ui.calendar.CalendarFragment
-import com.team.nineg.ui.mission.MissionFragment
-import com.team.nineg.ui.my.MyPageFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
@@ -44,7 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         initNavigation()
         initObserve()
 
-        binding.root.postDelayed(2000) {
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(DELAY_SPLASH_TIME)
             isReady = true
         }
     }
@@ -131,5 +131,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val DELAY_SPLASH_TIME = 2000L
     }
 }
