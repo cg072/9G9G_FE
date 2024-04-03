@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.kakao.sdk.user.UserApiClient
 import com.team.nineg.BuildConfig
 import com.team.nineg.R
@@ -69,8 +70,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     private fun observe() {
         viewModel.profile.observe(viewLifecycleOwner) { user ->
-            binding.fragmentMyPageName.text = user.nickname ?: getString(R.string.goody_profile_name)
-            binding.fragmentMyPageProfile.load(user.profileImage ?: R.drawable.ic_goody_profile)
+            binding.fragmentMyPageName.text = user.nickname?.let { removeDot(it) } ?: getString(R.string.goody_profile_name)
+            binding.fragmentMyPageProfile.load(user.profileImage?.let { removeDot(it) } ?: R.drawable.ic_goody_profile) {
+                transformations(CircleCropTransformation())
+            }
         }
 
         userViewModel.user.observe(viewLifecycleOwner) { user ->
@@ -102,11 +105,20 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
+    private fun removeDot(str: String): String {
+        val regex = "^\"|\"$".toRegex()
+        return str.replace(regex, "")
+    }
+
     companion object {
         private const val TAG = "MyPageFragment"
-        private const val URL_PRIVACY_POLICY = "https://smooth-cut-9b7.notion.site/1f03a089c18e4527b27e811ba18da721?pvs=4"
-        private const val URL_TERMS_OF_SERVICE = "https://smooth-cut-9b7.notion.site/20078eea07894755879ed024f4a45b6e?pvs=4"
+        private const val URL_PRIVACY_POLICY =
+            "https://smooth-cut-9b7.notion.site/1f03a089c18e4527b27e811ba18da721?pvs=4"
+        private const val URL_TERMS_OF_SERVICE =
+            "https://smooth-cut-9b7.notion.site/20078eea07894755879ed024f4a45b6e?pvs=4"
         private const val URL_GOODY_CARD_FORMS = "https://forms.gle/jNGAigYCVigjpeR58"
         private const val URL_CONTACT_US = "https://forms.gle/ayML38z73SKVRGc79"
+
+        private const val ROUNDED_CORNERS_VALUE = 30f
     }
 }
