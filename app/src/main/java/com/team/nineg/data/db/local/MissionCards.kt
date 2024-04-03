@@ -14,7 +14,6 @@ data class MissionCards(
 
     // 카드 리스트 반환
     fun getMissionCardList(): List<MissionCard> {
-
         return todayGoody.toList() + bookmarkedMissionCardList.toList() + missionCardList.toList()
     }
 
@@ -66,8 +65,6 @@ data class MissionCards(
 
     // 즐겨찾기 등록
     fun bookmarkMissionCard(id: Int) {
-        Log.d(TAG, "bookmarkMissionCard: ${System.identityHashCode(missionCardList)}")
-
         val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = true)
 
         for ((i, missionCard) in missionCardList.withIndex()) {
@@ -81,7 +78,6 @@ data class MissionCards(
 
     // 즐겨찾기 해제
     fun unBookmarkMissionCard(id: Int) {
-        Log.d(TAG, "unBookmarkMissionCard: ${System.identityHashCode(missionCardList)}")
         bookmarkedMissionCardList.remove(missionCardList.filter { it.id == id }[0])
 
         val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = false)

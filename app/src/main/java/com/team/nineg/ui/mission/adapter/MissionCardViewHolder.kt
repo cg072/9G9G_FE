@@ -1,5 +1,6 @@
 package com.team.nineg.ui.mission.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -9,7 +10,9 @@ import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.databinding.ItemMissionCardBinding
 
 class MissionCardViewHolder(
-    private val binding: ItemMissionCardBinding, private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) :
+    private val binding: ItemMissionCardBinding,
+    private val recyclerViewClickListener: MissionCardRecyclerViewClickListener
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(cardInfo: MissionCard) {
@@ -17,7 +20,8 @@ class MissionCardViewHolder(
             val clickedPosition = adapterPosition
             val recyclerView = itemView.parent as RecyclerView
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val centerPosition = layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
+            val centerPosition =
+                layoutManager.findFirstVisibleItemPosition() + (layoutManager.findLastVisibleItemPosition() - layoutManager.findFirstVisibleItemPosition()) / 2
 
             if (clickedPosition == centerPosition) {
                 // 화면 중앙의 아이템을 클릭했다면 아이템 정보를 다른 프레그먼트에 전달합니다.
@@ -41,11 +45,10 @@ class MissionCardViewHolder(
                 binding.ivBookmark.load(R.drawable.ic_bookmark_off)
             }
 
+            binding.ivLevel.setVisibleOrInvisible(cardInfo.level != TODAY_GOODY)
+            binding.ivBookmark.setVisibleOrInvisible(cardInfo.level != TODAY_GOODY)
+
             when (cardInfo.level) {
-                TODAY_GOODY -> {
-                    binding.ivLevel.visibility = android.view.View.INVISIBLE
-                    binding.ivBookmark.visibility = android.view.View.INVISIBLE
-                }
                 MISSION_LEVEL_1 -> binding.ivLevel.load(R.drawable.ic_level_1)
                 MISSION_LEVEL_2 -> binding.ivLevel.load(R.drawable.ic_level_2)
                 MISSION_LEVEL_3 -> binding.ivLevel.load(R.drawable.ic_level_3)
@@ -59,6 +62,10 @@ class MissionCardViewHolder(
                 recyclerViewClickListener.onClickRecyclerViewBookMark(cardInfo)
             }
         }
+    }
+
+    private fun View.setVisibleOrInvisible(isVisible: Boolean) {
+        visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
     }
 
     companion object {
