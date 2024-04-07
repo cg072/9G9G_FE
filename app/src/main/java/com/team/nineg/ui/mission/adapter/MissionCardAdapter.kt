@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.databinding.ItemMissionCardBinding
 
-class MissionCardAdapter(private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) : ListAdapter<MissionCard, MissionCardViewHolder>(MissionCardDiffUtil) {
+class MissionCardAdapter(private val recyclerViewClickListener: MissionCardRecyclerViewClickListener) :
+    ListAdapter<MissionCard, MissionCardViewHolder>(MissionCardDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissionCardViewHolder {
         return MissionCardViewHolder(
