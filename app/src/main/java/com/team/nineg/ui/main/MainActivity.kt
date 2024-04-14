@@ -131,6 +131,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val DELAY_SPLASH_TIME = 2000L
+        private const val DELAY_SPLASH_TIME = 1000L
     }
 }
