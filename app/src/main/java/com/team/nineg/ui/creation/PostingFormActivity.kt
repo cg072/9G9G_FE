@@ -114,6 +114,8 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     }
 
     private fun initData() {
+        calendar = Calendar.getInstance()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent?.getParcelableExtra(EXTRA_MISSION_CARD, MissionCard::class.java)
         } else {
@@ -141,9 +143,11 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             setImageMultipartBody(goody.photoUrl)
 
             updateGoodyInfo = goody
+
+            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            format.parse(goody.dueDate)?.let { calendar.time = it }
         }
 
-        calendar = Calendar.getInstance()
         binding.activityPostingFormDate.text = format.format(calendar.time)
     }
 
