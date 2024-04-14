@@ -19,6 +19,8 @@ import com.team.nineg.dialog.RecordOptionDialog
 import com.team.nineg.ui.calendar.CalendarFragment
 import com.team.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
@@ -65,7 +67,11 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
         }
 
         binding.fragmentRecordDetailImageCardText.text = goody?.title
-        binding.fragmentRecordDetailContentTitle.text = goody?.title
+
+        val format = SimpleDateFormat("yyyy년 MM월 dd일 EE요일", Locale.getDefault())
+        val parseFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = goody?.dueDate?.let { parseFormat.parse(it) } ?: ""
+        binding.fragmentRecordDetailContentDate.text = format.format(date)
         binding.fragmentRecordDetailContentText.text = goody?.content
 
         val level = goody?.level ?: 0
