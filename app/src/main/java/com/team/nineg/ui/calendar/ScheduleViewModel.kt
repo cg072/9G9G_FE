@@ -55,7 +55,7 @@ class ScheduleViewModel @Inject constructor() : ViewModel() {
             val yearMonthStr = format.format(calendar.time)
 
             val dateList = List(dateSize) { i -> i + 1 }.map {
-                val dueDate = yearMonthStr + it
+                val dueDate = yearMonthStr + String.format("%02d", it)
                 CalendarUI.Date(
                     Day(
                         it,
