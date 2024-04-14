@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import coil.load
 import com.team.nineg.R
 import com.team.nineg.base.BaseFragment
 import com.team.nineg.data.db.domain.Goody
@@ -63,8 +64,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
     private fun initListener() {
         binding.fragmentCalendarImageFilter.setOnClickListener {
             when (childFragmentManager.findFragmentById(R.id.fragmentCalendarFragmentContainerView)) {
-                is ScheduleFragment -> showFeedFragment()
-                is FeedFragment -> showScheduleFragment()
+                is ScheduleFragment -> {
+                    binding.fragmentCalendarImageFilter.load(R.drawable.ic_calendar)
+                    showFeedFragment()
+                }
+                is FeedFragment -> {
+                    binding.fragmentCalendarImageFilter.load(R.drawable.ab_grid)
+                    showScheduleFragment()
+                }
             }
         }
 
