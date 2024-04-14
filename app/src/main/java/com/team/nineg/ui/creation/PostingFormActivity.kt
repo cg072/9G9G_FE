@@ -59,6 +59,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         override fun afterTextChanged(p0: Editable?) {
             binding.activityPostingFormSaveBtn.isSelected = validContent()
+            binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
         }
     }
 
@@ -83,6 +84,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
                     binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
                     binding.activityPostingFormSaveBtn.isSelected = validContent()
+                    binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
                     imageMultipart = ImageUtil.getMultipartBody(contentResolver, it)
                 }
             }
@@ -148,6 +150,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             format.parse(goody.dueDate)?.let { calendar.time = it }
         }
 
+        binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
         binding.activityPostingFormDate.text = format.format(calendar.time)
     }
 
@@ -319,6 +322,9 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     private fun validContent() =
         !binding.activityPostingFormEmptyImageContainer.isVisible && binding.activityPostingFormTitleEditText.length() > 0
 
+    private fun isNotEmptyContent() =
+        !binding.activityPostingFormEmptyImageContainer.isVisible || binding.activityPostingFormTitleEditText.length() > 0 || binding.activityPostingFormContentEditText.length() > 0
+    
     private fun limitTitleText(sequence: CharSequence?) {
         val textLength = (sequence?.length ?: 0) - 1
         val trimTextLength = sequence?.trim()?.length ?: 0
