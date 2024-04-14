@@ -119,16 +119,9 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         } else {
             intent?.getParcelableExtra(EXTRA_MISSION_CARD)
         }?.let { missionCard ->
-            binding.activityPostingFormImage.load(missionCard.image) {
-                transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
-            }
             binding.activityPostingFormTitleEditText.setText(missionCard.title)
-            binding.activityPostingFormContentEditText.setText(missionCard.content)
-
-            binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
+            binding.activityPostingFormContentEditText.hint = missionCard.guide
             binding.activityPostingFormSaveBtn.isSelected = validContent()
-
-            setImageMultipartBody(missionCard.image)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
