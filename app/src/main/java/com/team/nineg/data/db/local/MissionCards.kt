@@ -3,6 +3,7 @@ package com.team.nineg.data.db.local
 import android.util.Log
 import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.data.db.entity.MissionCardInfoEntity
+import com.team.nineg.ui.mission.MissionFragment
 
 data class MissionCards(
     private val missionCardList: MutableList<MissionCard> = mutableListOf(),
@@ -65,29 +66,30 @@ data class MissionCards(
 
     // 즐겨찾기 등록
     fun bookmarkMissionCard(id: Int) {
-        val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = true)
+        missionCardList.find { it.id == id }?.copy(isBookmarked = true)?.let { card ->
+            if (bookmarkedMissionCardList.find { it.id == id } == null) {
+                bookmarkedMissionCardList.add(card)
+            }
 
-        for ((i, missionCard) in missionCardList.withIndex()) {
-            if (missionCard.id == id) {
-                missionCardList[i] = newItem
+            for ((i, item) in missionCardList.withIndex()) {
+                if (item.id == id) {
+                    missionCardList[i] = card
+                }
             }
         }
-
-        bookmarkedMissionCardList.add(missionCardList.filter { it.id == id }[0])
     }
 
     // 즐겨찾기 해제
     fun unBookmarkMissionCard(id: Int) {
-        bookmarkedMissionCardList.remove(missionCardList.filter { it.id == id }[0])
+        bookmarkedMissionCardList.removeAll { it.id == id }
 
-        val newItem = missionCardList.filter { it.id == id }[0].copy(isBookmarked = false)
-
-        for ((i, missionCard) in missionCardList.withIndex()) {
-            if (missionCard.id == id) {
-                missionCardList[i] = newItem
+        missionCardList.find { it.id == id }?.let { card ->
+            for ((i, item) in missionCardList.withIndex()) {
+                if (item.id == id) {
+                    missionCardList[i] = card.copy(isBookmarked = false)
+                }
             }
         }
-
     }
 
     fun updateTodayGoody(missionCard: MissionCard?) {
