@@ -59,7 +59,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         override fun afterTextChanged(p0: Editable?) {
             binding.activityPostingFormSaveBtn.isSelected = validContent()
-            binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
         }
     }
 
@@ -84,7 +83,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
                     binding.activityPostingFormEmptyImageContainer.visibility = View.GONE
                     binding.activityPostingFormSaveBtn.isSelected = validContent()
-                    binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
                     imageMultipart = ImageUtil.getMultipartBody(contentResolver, it)
                 }
             }
@@ -92,7 +90,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private val callback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            showExitDialog()
+            if (isNotEmptyContent()) showExitDialog() else finish()
         }
     }
 
@@ -150,7 +148,6 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             format.parse(goody.dueDate)?.let { calendar.time = it }
         }
 
-        binding.activityPostingFormBackBtn.isVisible = isNotEmptyContent()
         binding.activityPostingFormDate.text = format.format(calendar.time)
     }
 
@@ -161,7 +158,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
     private fun initListener() {
         binding.activityPostingFormBackBtn.setOnClickListener {
-            showExitDialog()
+            if (isNotEmptyContent()) showExitDialog() else finish()
         }
 
         binding.activityPostingFormDateBtn.setOnClickListener {
