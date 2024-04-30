@@ -153,8 +153,8 @@
 
                     <ImageView
                         android:id="@+id/activityPostingFormEmptyImage"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
                         android:src="@drawable/image_empty_card"
                         app:layout_constraintVertical_chainStyle="packed"
                         app:layout_constraintTop_toTopOf="parent"
@@ -168,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:text="탭해서 사진 올리기"
                         android:textColor="@color/grayscale_50"
-                        android:textSize="12dp"
+                        android:textSize="18dp"
                         android:fontFamily="@font/pretendard_medium"
                         app:layout_constraintTop_toBottomOf="@+id/activityPostingFormEmptyImage"
                         app:layout_constraintBottom_toBottomOf="parent"
