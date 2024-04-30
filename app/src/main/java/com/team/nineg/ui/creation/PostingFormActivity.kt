@@ -169,6 +169,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             imageMultipart = null
             binding.activityPostingFormImage.setImageDrawable(null)
             binding.activityPostingFormEmptyImageContainer.visibility = View.VISIBLE
+            binding.activityPostingFormSaveBtn.isSelected = validContent()
         }
 
         binding.activityPostingFormEmptyImageContainer.setOnClickListener {
