@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -13,11 +14,12 @@
 
             <ImageView
                 android:id="@+id/ivMissionImage"
-                adjustViewBounds="true"
+                android:adjustViewBounds="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/mission_card" />
 
             <View
                 android:layout_width="match_parent"
@@ -31,7 +33,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_bookmark_off"
+                android:contentDescription="@string/bookmark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +51,10 @@
                 <ImageView
                     android:id="@+id/ivLevel"
                     android:layout_width="68dp"
-                    android:layout_height="32dp" />
+                    android:layout_height="32dp"
+                    android:scaleType="fitStart"
+                    tools:src="@drawable/ic_level_1"
+                    android:contentDescription="@string/level" />
 
                 <TextView
                     android:id="@+id/tvMissionTitle"
@@ -59,7 +66,8 @@
                     android:lineSpacingExtra="2sp"
                     android:maxLines="2"
                     android:textColor="@color/white"
-                    android:translationY="-0.87sp" />
+                    android:translationY="-0.87sp"
+                    tools:text="춘천 닭갈비 먹으러 춘천가기"/>
 
                 <TextView
                     android:id="@+id/tvMissionGuide"
@@ -72,7 +80,8 @@
                     android:maxLines="2"
                     android:textColor="@color/white"
                     android:translationY="-2.45sp"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:text="동네에 있는 닭갈비집이 아닌, 진짜 춘천 닭갈비를 먹기 위해 춘천으로 떠나보세요"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
