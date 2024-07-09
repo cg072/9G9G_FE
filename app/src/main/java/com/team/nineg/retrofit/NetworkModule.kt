@@ -28,12 +28,6 @@ object NetworkModule {
         }
     }
 
-    private fun getGsonDateFormat(): Gson {
-        return GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-            .create()
-    }
-
     val builder = GsonBuilder().registerTypeAdapter(
             Date::class.java,
             JsonDeserializer<Any?> { jsonElement, type, context ->
