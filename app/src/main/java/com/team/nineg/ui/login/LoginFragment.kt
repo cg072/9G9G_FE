@@ -24,7 +24,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
     private val viewModel: UserViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
 
-    val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+    private val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.e(TAG, "카카오계정으로 로그인 실패", error)
             logout()
