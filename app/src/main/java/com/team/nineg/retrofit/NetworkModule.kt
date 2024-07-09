@@ -1,9 +1,8 @@
 package com.team.nineg.retrofit
 
-import com.team.nineg.BuildConfig
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
+import com.team.nineg.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +19,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private const val DESERIALIZE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+
     private fun getLoggingInterceptor(): HttpLoggingInterceptor {
         return if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -28,13 +29,13 @@ object NetworkModule {
         }
     }
 
-    val builder = GsonBuilder().registerTypeAdapter(
-            Date::class.java,
-            JsonDeserializer<Any?> { jsonElement, type, context ->
-                val simpleDateFormat =
-                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
-                simpleDateFormat.parse(jsonElement.asJsonPrimitive.asString)
-            })
+    private val builder = GsonBuilder().registerTypeAdapter(
+        Date::class.java,
+        JsonDeserializer<Any?> { jsonElement, _, _ ->
+            val simpleDateFormat =
+                SimpleDateFormat(DESERIALIZE_DATE_FORMAT, Locale.getDefault())
+            simpleDateFormat.parse(jsonElement.asJsonPrimitive.asString)
+        })
         .create()
 
     @Singleton
