@@ -1,7 +1,6 @@
 package com.team.nineg.ui.login
 
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -29,7 +28,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
             Log.e(TAG, "카카오계정으로 로그인 실패", error)
             logout()
         } else if (token != null) {
-            Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
+            Log.i(TAG, "카카오계정으로 로그인 성공")
             viewModel.login(token.accessToken)
         }
     }
@@ -84,9 +83,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
                         return@loginWithKakaoTalk
                     }
 
-                    UserApiClient.instance.loginWithKakaoAccount(binding.root.context, callback = callback)
+                    UserApiClient.instance.loginWithKakaoAccount(
+                        binding.root.context,
+                        callback = callback
+                    )
                 } else if (token != null) {
-                    Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
+                    Log.i(TAG, "카카오톡으로 로그인 성공")
                     viewModel.login(token.accessToken)
                 }
             }
