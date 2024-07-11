@@ -53,6 +53,8 @@
     <string name="goody_due_date_error_message">오늘 이미 작성한 구디가 있어요</string>
     <string name="goody_register_success_message">구디카드가 저장되었어요</string>
     <string name="goody_register_error_message">저장 실패</string>
+    <string name="goody_delete_success_message">삭제 되었습니다.</string>
+    <string name="goody_delete_error_message">삭제 실패</string>
 
     <string name="login_error_message">아이디, 비밀번호를 다시 확인해주세요.</string>
 
