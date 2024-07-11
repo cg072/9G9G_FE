@@ -6,8 +6,8 @@
     <string name="goody_profile_name">춤추는구디</string>
     <string name="goody_profile_text">오늘의 낭만을 즐겨보세요!</string>
 
-    <string name="TEXT_TODAYS_GOODY">Today\'s goody</string>
-    <string name="TEXT_CREATE_MISSION">직접 작성하기</string>
+    <string name="text_today_is_goody">Today\'s goody</string>
+    <string name="text_create_mission">직접 작성하기</string>
 
     <string name="sunday">일</string>
     <string name="monday">월</string>
@@ -33,16 +33,16 @@
     <string name="option_edit">수정하기</string>
     <string name="option_delete">삭제하기</string>
 
-    <string name="TEXT_TUTORIAL_SLIDE_MISSION_CARD">마음에 드는 구디 카드를 찾아,\n오른쪽으로 넘겨보세요</string>
-    <string name="TEXT_TUTORIAL_CREATE_MISSION_CARD">마음에 쏙 드는 카드가 없다면,\n직접 구디카드를 작성해 보세요</string>
-    <string name="TEXT_TUTORIAL_CALENDAR">내 기록을 한눈에 확인할 수 있어요</string>
+    <string name="text_tutorial_slide_mission_card">마음에 드는 구디 카드를 찾아,\n오른쪽으로 넘겨보세요</string>
+    <string name="text_tutorial_create_mission_card">마음에 쏙 드는 카드가 없다면,\n직접 구디카드를 작성해 보세요</string>
+    <string name="text_tutorial_calendar">내 기록을 한눈에 확인할 수 있어요</string>
 
-    <string name="TEXT_NETWORK_ERROR">인터넷 연결을 확인해 주세요</string>
-    <string name="TEXT_NETWORK_CHECK_AND_RETRY">네트워크 상태를 확인 후 다시 시도해 주세요</string>
-    <string name="TEXT_RETRY">다시 시도하기</string>
+    <string name="text_network_error">인터넷 연결을 확인해 주세요</string>
+    <string name="text_network_check_and_retry">네트워크 상태를 확인 후 다시 시도해 주세요</string>
+    <string name="text_retry">다시 시도하기</string>
 
-    <string name="GoodyCardFormsTitle">나만의 작은 낭만이 있다면?</string>
-    <string name="GoodyCardFormsSubTitle">구디데이에게 알려주세요</string>
+    <string name="goody_card_forms_title">나만의 작은 낭만이 있다면?</string>
+    <string name="goody_card_forms_sub_title">구디데이에게 알려주세요</string>
     <string name="privacy_policy">개인정보 처리방침</string>
     <string name="terms_of_service">서비스 이용약관</string>
     <string name="logout">로그아웃</string>

@@ -115,7 +115,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun tutorialBottomNav() {
         GuideView.Builder(this)
             .setTitle(getString(R.string.calendar_title))
-            .setContentText(getString(R.string.TEXT_TUTORIAL_CALENDAR))
+            .setContentText(getString(R.string.text_tutorial_calendar))
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.bottomNavView)
             .setGravity(Gravity.center)

@@ -164,7 +164,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun tutorialMissionCard() {
         GuideView.Builder(requireActivity())
-            .setContentText(getString(R.string.TEXT_TUTORIAL_SLIDE_MISSION_CARD))
+            .setContentText(getString(R.string.text_tutorial_slide_mission_card))
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.ivPointMissionCard)
             .setGravity(Gravity.center)
@@ -175,7 +175,7 @@ class MissionFragment : BaseFragment<FragmentMissionBinding>() {
 
     private fun tutorialEditButton() {
         GuideView.Builder(requireActivity())
-            .setContentText(getString(R.string.TEXT_TUTORIAL_CREATE_MISSION_CARD))
+            .setContentText(getString(R.string.text_tutorial_create_mission_card))
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.btnEdit)
             .setGuideListener { activityViewModel.startTutorialNav() }
