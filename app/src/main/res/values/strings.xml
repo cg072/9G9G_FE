@@ -64,4 +64,6 @@
     <string name="bookmark">북마크</string>
     <string name="mission_card">미션카드</string>
     <string name="level">난이도</string>
+
+    <string name="date_picker_title">Select date</string>
 </resources>

@@ -304,7 +304,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
 
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select date")
+                .setTitleText(R.string.date_picker_title)
                 .setSelection(calendar.timeInMillis)
                 .setCalendarConstraints(constraintsBuilder.build())
                 .build()
@@ -314,7 +314,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
             binding.activityPostingFormDate.text = format.format(calendar.time)
         }
 
-        datePicker.show(supportFragmentManager, "date_picker")
+        datePicker.show(supportFragmentManager, DATE_PICKER_TAG)
     }
 
     private fun validContent() =
@@ -359,6 +359,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
         private const val ROUNDED_CORNERS_VALUE = 30f
         private const val MIN_YEAR = 2024
         private const val MAX_TEXT_LENGTH = 28
+        private const val DATE_PICKER_TAG = "date_picker"
         const val EXTRA_MISSION_CARD = "mission_card"
         const val EXTRA_UPDATE_GOODY = "update_goody"
     }
