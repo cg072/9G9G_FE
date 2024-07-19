@@ -1,7 +1,6 @@
 package com.team.nineg.ui.detail
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -16,6 +15,7 @@ import com.team.nineg.data.db.domain.Goody
 import com.team.nineg.databinding.ActivityRecordDetailBinding
 import com.team.nineg.dialog.RecordDeleteDialog
 import com.team.nineg.dialog.RecordOptionDialog
+import com.team.nineg.extension.getParcelableExtraCompat
 import com.team.nineg.ui.calendar.CalendarFragment
 import com.team.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,13 +31,8 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     private val startPostingFormActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                goody = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY, Goody::class.java)
-                } else {
-                    intent?.getParcelableExtra(CalendarFragment.EXTRA_SAVE_GOODY)
-                }
-                initGoody()
+                goody = result.data?.getParcelableExtraCompat(CalendarFragment.EXTRA_SAVE_GOODY)
+                updateGoodyDetail(goody)
                 setResult(RESULT_OK)
             }
         }
@@ -47,19 +42,13 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        goody = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(EXTRA_GOODY, Goody::class.java)
-        } else {
-            intent?.getParcelableExtra(EXTRA_GOODY)
-        }
-
-        initGoody()
+        goody = intent?.getParcelableExtraCompat(EXTRA_GOODY)
         initListener()
         initObserve()
+        updateGoodyDetail(goody)
     }
 
-    private fun initGoody() {
+    private fun updateGoodyDetail(goody: Goody?) {
         binding.fragmentRecordDetailImageCard.post {
             binding.fragmentRecordDetailImageCard.load(goody?.photoUrl) {
                 transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
@@ -90,7 +79,8 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     private fun initObserve() {
         viewModel.deleteGoody.observe(this) { isDelete ->
             if (isDelete) {
-                Toast.makeText(this, R.string.goody_delete_success_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.goody_delete_success_message, Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 Toast.makeText(this, R.string.goody_delete_error_message, Toast.LENGTH_SHORT).show()
             }

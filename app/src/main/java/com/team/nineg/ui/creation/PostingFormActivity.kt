@@ -2,7 +2,6 @@ package com.team.nineg.ui.creation
 
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -30,6 +29,7 @@ import com.team.nineg.data.db.domain.Goody
 import com.team.nineg.data.db.domain.MissionCard
 import com.team.nineg.databinding.ActivityPostingFormBinding
 import com.team.nineg.dialog.PostingFormExitDialog
+import com.team.nineg.extension.getParcelableExtraCompat
 import com.team.nineg.extension.hideKeyboard
 import com.team.nineg.ui.calendar.CalendarFragment
 import com.team.nineg.util.ImageUtil
@@ -116,21 +116,13 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     private fun initData() {
         calendar = Calendar.getInstance()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(EXTRA_MISSION_CARD, MissionCard::class.java)
-        } else {
-            intent?.getParcelableExtra(EXTRA_MISSION_CARD)
-        }?.let { missionCard ->
+        intent?.getParcelableExtraCompat<MissionCard>(EXTRA_MISSION_CARD)?.let { missionCard ->
             binding.activityPostingFormTitleEditText.setText(missionCard.title)
             binding.activityPostingFormContentEditText.hint = missionCard.guide
             binding.activityPostingFormSaveBtn.isSelected = validContent()
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra(EXTRA_UPDATE_GOODY, Goody::class.java)
-        } else {
-            intent?.getParcelableExtra(EXTRA_UPDATE_GOODY)
-        }?.let { goody ->
+        intent?.getParcelableExtraCompat<Goody>(EXTRA_UPDATE_GOODY)?.let { goody ->
             binding.activityPostingFormImage.load(goody.photoUrl) {
                 transformations(RoundedCornersTransformation(ROUNDED_CORNERS_VALUE))
             }

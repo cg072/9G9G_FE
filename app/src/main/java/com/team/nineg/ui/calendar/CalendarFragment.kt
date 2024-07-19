@@ -1,7 +1,6 @@
 package com.team.nineg.ui.calendar
 
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.ActivityResult
@@ -14,6 +13,7 @@ import com.team.nineg.R
 import com.team.nineg.base.BaseFragment
 import com.team.nineg.data.db.domain.Goody
 import com.team.nineg.databinding.FragmentCalendarBinding
+import com.team.nineg.extension.getParcelableExtraCompat
 import com.team.nineg.ui.main.MainViewModel
 import com.team.nineg.util.ActivityUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,12 +36,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>() {
             if (result.resultCode == Activity.RESULT_OK) {
                 activityViewModel.refreshScreen()
 
-                val intent = result.data
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent?.getParcelableExtra(EXTRA_SAVE_GOODY, Goody::class.java)
-                } else {
-                    intent?.getParcelableExtra(EXTRA_SAVE_GOODY)
-                }?.let { goody ->
+                result.data?.getParcelableExtraCompat<Goody>(EXTRA_SAVE_GOODY)?.let { goody ->
                     ActivityUtil.startRecordDetailActivity(
                         binding.root.context,
                         goody,
