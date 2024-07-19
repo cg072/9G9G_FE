@@ -14,6 +14,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.load
 import coil.request.ErrorResult
@@ -34,7 +35,6 @@ import com.team.nineg.extension.hideKeyboard
 import com.team.nineg.ui.calendar.CalendarFragment
 import com.team.nineg.util.ImageUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -326,7 +326,7 @@ class PostingFormActivity : BaseActivity<ActivityPostingFormBinding>() {
     }
 
     private fun setImageMultipartBody(photoUrl: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val loader = ImageLoader(this@PostingFormActivity)
             val request = ImageRequest.Builder(this@PostingFormActivity)
                 .data(photoUrl)

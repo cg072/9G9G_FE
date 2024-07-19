@@ -9,6 +9,7 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -16,7 +17,6 @@ import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
 import com.team.nineg.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         initNavigation()
         initObserve()
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             delay(DELAY_SPLASH_TIME)
             isReady = true
         }
