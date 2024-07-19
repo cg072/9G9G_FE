@@ -90,9 +90,9 @@ class RecordDetailActivity : BaseActivity<ActivityRecordDetailBinding>() {
     private fun initObserve() {
         viewModel.deleteGoody.observe(this) { isDelete ->
             if (isDelete) {
-                Toast.makeText(this, "삭제 되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.goody_delete_success_message, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.goody_delete_error_message, Toast.LENGTH_SHORT).show()
             }
             setResult(RESULT_OK)
             finish()

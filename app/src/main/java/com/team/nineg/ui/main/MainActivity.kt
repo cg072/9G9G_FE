@@ -3,7 +3,6 @@ package com.team.nineg.ui.main
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AnticipateInterpolator
@@ -87,24 +86,19 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.d(TAG, "kch destination.navigatorName : ${destination.navigatorName}")
             when (destination.id) {
                 R.id.missionFragment -> {
-                    Log.d(TAG, "kch destination.id : missionFragment")
                     binding.bottomNavView.visibility = View.VISIBLE
                 }
 
                 R.id.calendarFragment -> {
-                    Log.d(TAG, "kch destination.id : calendarFragment")
                     binding.bottomNavView.visibility = View.VISIBLE
                 }
 
                 R.id.myPageFragment -> {
-                    Log.d(TAG, "kch destination.id : myPageFragment")
                     binding.bottomNavView.visibility = View.VISIBLE
                 }
                 else -> {
-                    Log.d(TAG, "kch destination.id : ${destination.id}")
                     binding.bottomNavView.visibility = View.GONE
                 }
             }
@@ -121,7 +115,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun tutorialBottomNav() {
         GuideView.Builder(this)
             .setTitle(getString(R.string.calendar_title))
-            .setContentText(getString(R.string.TEXT_TUTORIAL_CALENDAR))
+            .setContentText(getString(R.string.text_tutorial_calendar))
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.bottomNavView)
             .setGravity(Gravity.center)

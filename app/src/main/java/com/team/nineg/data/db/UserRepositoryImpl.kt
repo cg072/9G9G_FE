@@ -1,19 +1,13 @@
 package com.team.nineg.data.db
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.team.nineg.data.db.domain.User
 import com.team.nineg.data.db.dto.RevokeDto
 import com.team.nineg.data.db.dto.asDomainModel
 import com.team.nineg.data.db.dto.asEntityModel
-import com.team.nineg.data.db.entity.UserEntity
 import com.team.nineg.data.db.entity.asDomainModel
 import com.team.nineg.data.db.local.UserLocalDataSource
 import com.team.nineg.data.db.remote.UserRemoteDataSource
 import com.team.nineg.retrofit.ApiResult
-import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.HttpException
 import javax.inject.Inject
 

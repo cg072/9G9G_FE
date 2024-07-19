@@ -30,7 +30,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/pretendard_bold"
                 android:gravity="center"
-                android:text="@string/TEXT_NETWORK_ERROR"
+                android:text="@string/text_network_error"
                 android:textColor="@color/black"
                 android:textSize="24sp" />
 
@@ -40,7 +40,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/pretendard_light"
                 android:gravity="center"
-                android:text="@string/TEXT_NETWORK_CHECK_AND_RETRY"
+                android:text="@string/text_network_check_and_retry"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -52,7 +52,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="33dp"
                 android:background="@drawable/solid_button"
-                android:text="@string/TEXT_RETRY"
+                android:text="@string/text_retry"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:padding="10dp"
