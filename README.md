@@ -54,7 +54,7 @@
 |<img src="https://avatars.githubusercontent.com/u/29297942?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/89826723?v=4" width="150" height="150"/>|
 |:-:|:-:|
 |ChangHyun Kyong<br/>[@cg072](https://github.com/cg072)|OYJ<br/>[@oyj7677](https://github.com/oyj7677)|
-
+|메인화면 구조 설계, 구디카드 작성, 기록 아카이빙, 마이페이지|구디카드 탐색|
 
 
 # License
