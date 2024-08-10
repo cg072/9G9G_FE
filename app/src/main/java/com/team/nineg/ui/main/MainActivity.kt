@@ -9,6 +9,7 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -16,8 +17,6 @@ import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
 import com.team.nineg.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
@@ -42,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         initNavigation()
         initObserve()
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             delay(DELAY_SPLASH_TIME)
             isReady = true
         }
@@ -86,24 +85,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.missionFragment -> {
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-
-                R.id.calendarFragment -> {
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-
-                R.id.myPageFragment -> {
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-                else -> {
-                    binding.bottomNavView.visibility = View.GONE
-                }
-            }
+            binding.bottomNavView.visibility =
+                if (isBottomNavVisible(destination.id)) View.VISIBLE else View.GONE
         }
 
+    }
+
+    private fun isBottomNavVisible(destinationId: Int): Boolean {
+        return when (destinationId) {
+            R.id.missionFragment, R.id.calendarFragment, R.id.myPageFragment -> true
+            else -> false
+        }
     }
 
     private fun initObserve() {
