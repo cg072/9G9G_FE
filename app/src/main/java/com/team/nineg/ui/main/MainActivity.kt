@@ -3,13 +3,13 @@ package com.team.nineg.ui.main
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AnticipateInterpolator
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -17,8 +17,6 @@ import com.team.nineg.R
 import com.team.nineg.base.BaseActivity
 import com.team.nineg.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import smartdevelop.ir.eram.showcaseviewlib.GuideView
@@ -43,7 +41,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         initNavigation()
         initObserve()
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             delay(DELAY_SPLASH_TIME)
             isReady = true
         }
@@ -87,29 +85,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         binding.bottomNavView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.d(TAG, "kch destination.navigatorName : ${destination.navigatorName}")
-            when (destination.id) {
-                R.id.missionFragment -> {
-                    Log.d(TAG, "kch destination.id : missionFragment")
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-
-                R.id.calendarFragment -> {
-                    Log.d(TAG, "kch destination.id : calendarFragment")
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-
-                R.id.myPageFragment -> {
-                    Log.d(TAG, "kch destination.id : myPageFragment")
-                    binding.bottomNavView.visibility = View.VISIBLE
-                }
-                else -> {
-                    Log.d(TAG, "kch destination.id : ${destination.id}")
-                    binding.bottomNavView.visibility = View.GONE
-                }
-            }
+            binding.bottomNavView.visibility =
+                if (isBottomNavVisible(destination.id)) View.VISIBLE else View.GONE
         }
 
+    }
+
+    private fun isBottomNavVisible(destinationId: Int): Boolean {
+        return when (destinationId) {
+            R.id.missionFragment, R.id.calendarFragment, R.id.myPageFragment -> true
+            else -> false
+        }
     }
 
     private fun initObserve() {
@@ -121,7 +107,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun tutorialBottomNav() {
         GuideView.Builder(this)
             .setTitle(getString(R.string.calendar_title))
-            .setContentText(getString(R.string.TEXT_TUTORIAL_CALENDAR))
+            .setContentText(getString(R.string.text_tutorial_calendar))
             .setDismissType(DismissType.anywhere)
             .setTargetView(binding.bottomNavView)
             .setGravity(Gravity.center)

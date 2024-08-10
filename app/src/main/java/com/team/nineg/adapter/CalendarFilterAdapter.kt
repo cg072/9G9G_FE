@@ -50,6 +50,6 @@ object CalendarFilterDiffUtil : DiffUtil.ItemCallback<CheckFilterModel>() {
     }
 
     override fun areContentsTheSame(oldItem: CheckFilterModel, newItem: CheckFilterModel): Boolean {
-        return oldItem.isCheck == newItem.isCheck
+        return oldItem == newItem
     }
 }

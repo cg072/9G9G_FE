@@ -140,7 +140,7 @@ class CalendarAdapter(private val onClick: (Goody) -> Unit) :
 object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
     override fun areItemsTheSame(oldItem: CalendarUI, newItem: CalendarUI): Boolean {
         if (oldItem is CalendarUI.DayAttr && newItem is CalendarUI.DayAttr) {
-            return oldItem.dayAttribute == newItem.dayAttribute
+            return oldItem.dayAttribute.dayOfTheWeekRes == newItem.dayAttribute.dayOfTheWeekRes
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
             return oldItem.day.date == newItem.day.date
         } else if (oldItem is CalendarUI.Feed && newItem is CalendarUI.Feed) {
@@ -156,21 +156,9 @@ object CalendarDiffUtil : DiffUtil.ItemCallback<CalendarUI>() {
         if (oldItem is CalendarUI.DayAttr && newItem is CalendarUI.DayAttr) {
             return oldItem.dayAttribute == newItem.dayAttribute
         } else if (oldItem is CalendarUI.Date && newItem is CalendarUI.Date) {
-            if (oldItem.day.date != newItem.day.date) return false
-
-            if (oldItem.day.goody != newItem.day.goody) return false
-
-            if (oldItem.day.goody?.id != newItem.day.goody?.id) return false
-
-            if (oldItem.day.goody?.photoUrl != newItem.day.goody?.photoUrl) return false
-
-            return true
+            return oldItem.day == newItem.day
         } else if (oldItem is CalendarUI.Feed && newItem is CalendarUI.Feed) {
-            if (oldItem.goody != newItem.goody) return false
-
-            if (oldItem.goody.photoUrl != newItem.goody.photoUrl) return false
-
-            return true
+            return oldItem.goody == newItem.goody
         } else if (oldItem is CalendarUI.EmptyDate && newItem is CalendarUI.EmptyDate) {
             return oldItem == newItem
         }

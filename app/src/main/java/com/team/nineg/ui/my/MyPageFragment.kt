@@ -70,8 +70,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     private fun observe() {
         viewModel.profile.observe(viewLifecycleOwner) { user ->
-            binding.fragmentMyPageName.text = user.nickname?.let { removeDot(it) } ?: getString(R.string.goody_profile_name)
-            binding.fragmentMyPageProfile.load(user.profileImage?.let { removeDot(it) } ?: R.drawable.ic_goody_profile) {
+            binding.fragmentMyPageName.text = user.nickname?.removeQuotes() ?: getString(R.string.goody_profile_name)
+            binding.fragmentMyPageProfile.load(user.profileImage?.removeQuotes() ?: R.drawable.ic_goody_profile) {
                 transformations(CircleCropTransformation())
             }
         }
@@ -105,9 +105,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         }
     }
 
-    private fun removeDot(str: String): String {
+    /**
+     * TODO : 서버 응답에 ""가 포함된 문제로 서버쪽에서 문제 해결하면 제거할 예정
+     */
+    private fun String.removeQuotes(): String {
         val regex = "^\"|\"$".toRegex()
-        return str.replace(regex, "")
+        return this.replace(regex, "")
     }
 
     companion object {

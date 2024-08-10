@@ -1,6 +1,5 @@
 package com.team.nineg.ui.calendar
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,7 +29,6 @@ class CalendarViewModel @Inject constructor(private val repository: GoodyReposit
 
             when (result) {
                 is ApiResult.Success -> {
-                    Log.d(TAG, "kch ApiResult.Success ${result}")
                     _goodyMap.postValue(result.value.associateBy { it.dueDate })
                 }
                 is ApiResult.Error -> {
